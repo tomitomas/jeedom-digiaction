@@ -40,7 +40,7 @@ try {
         $eqLogic = digiaction::byId(init('eqId'));
         $verif = $eqLogic->verifCodeUser(init('userCode'), init('cmdId'));
         if (!$verif){
-          $eqLogic->checkAndUpdateCmd('digimessage', 'wrong password '. init('userCode') );
+          $eqLogic->checkAndUpdateCmd('digimessage', 'Code inconnu');
         }
         else{
           $digiCmd = digiactionCmd::byId(init('cmdId'));
