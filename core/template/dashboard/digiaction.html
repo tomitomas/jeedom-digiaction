@@ -1,0 +1,68 @@
+<div class="eqLogic eqLogic-widget digiaction allowResize allowReorderCmd #custom_layout# #eqLogic_class#" data-eqType="#eqType#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#" style="width: #width#;height: #height#;#style#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#">
+    <center class="widget-name"><a href="#" style="font-size : 1.1em;#hideEqLogicName#">#name_display# <span class="object_name">#object_name# ici</span></a></center>
+    
+    <div class="cmd cmd-widget #history#" data-type="info" data-subtype="string" data-template="default" data-cmd_id="#digimessage_id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#">
+        <div class="digiMessage">
+        </div>
+        <script>
+            jeedom.cmd.update['#digimessage_id#'] = function(_options) {
+                var cmd = $('.cmd[data-cmd_id=#digimessage_id#]');
+                cmd.find('.digiMessage').empty().append(_options.display_value);
+                setTimeout(function(){
+                    cmd.find('.digiMessage').empty(); 
+                  }, 5000);
+            }
+            jeedom.cmd.update['#digimessage_id#']({display_value:'#digimessage#'})
+        </script>
+    </div>
+    
+    <div class="digiactionMainPanel digiactionPanelMode">
+        <div class="digiactionDisplay">
+          #modeAvailable#
+        </div>
+    </div>
+
+
+    <div class="digiactionMainPanel digiactionPanelTimer">
+        <span class="countdowntimer"></span>
+        <span class="digiFunction digiFunctionTimerCancel">Annuler</span>
+    </div>
+    <div class="digiactionMainPanel digiactionPanelKeyboard">
+        <ul class="digiEvent"></ul>
+        <ul class="digiactionPanel" style="text-align:center;">
+            <div>
+                <li class="digiKeyboard">1</li>
+                <li class="digiKeyboard">2</li>
+                <li class="digiKeyboard">3</li>
+            </div>
+            <div>
+                <li class="digiKeyboard">4</li>
+                <li class="digiKeyboard">5</li>
+                <li class="digiKeyboard">6</li>
+            </div>
+            <div>
+                <li class="digiKeyboard">7</li>
+                <li class="digiKeyboard">8</li>
+                <li class="digiKeyboard">9</li>
+            </div>
+            <div>
+                <li class="digiKeyboard">A</li>
+                <li class="digiKeyboard">0</li>
+                <li class="digiKeyboard">B</li>
+            </div>
+            <div>
+                <li class="digiFunction digiFunctionValidate">V</li>
+                <li class="digiReset">RAZ</li>
+                <li class="digiFunction digiFunctionCancel">A</li>
+            </div>
+        </ul>
+    </div>
+
+
+</div>
+
+<script>
+    $.include([ 'plugins/digiaction/core/template/dashboard/js/dashboard.digiaction.js',
+    'plugins/digiaction/core/template/dashboard/css/digiaction.css'
+    ]);
+</script>

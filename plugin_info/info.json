@@ -1,0 +1,20 @@
+{
+	"id" : "digiaction",
+	"name" : "DigiAction",
+	"description" : "Ce plugin permet d'appliquer un mode réalisant une/des action(s) sous condition(s), et d'ajouter un contrôle par saisie de mot de passe (facultatif) via un digicode.",
+	"licence" : "AGPL",
+	"author" : "ToMtOm",
+	"require" : "4.1.19",
+	"category" : "security",
+	"hasDependency" : false,
+	"hasOwnDeamon" : false,
+	"maxDependancyInstallTime" : 0,
+	"changelog" : "https://jeedom.github.io/plugin-digiaction/#language#/changelog",
+	"documentation" : "https://jeedom.github.io/plugin-digiaction/#language#/",
+	"link" : {
+		"forum":"Lien vers le forum",
+		"todo" : "Lien vers le todo"
+	},
+	"language" : ["fr_FR"],
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"]
+}
