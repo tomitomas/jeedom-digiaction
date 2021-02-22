@@ -10,7 +10,7 @@
 
 ### param supplémentaire
 -------
-* ajouter une option pour que les messages soient permanent
+* ajouter une option pour que les messages soient permanent et/ou définir timeout
 
 ### questions
 -------
