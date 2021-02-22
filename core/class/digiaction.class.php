@@ -494,9 +494,9 @@ class digiactionCmd extends cmd {
             log::add('digiaction', 'debug', '│ global check TRUE' ) ;
             $eqLogic->doAction($newMode); 
             $currentMode->event($newMode);
-            $eqLogic->checkAndUpdateCmd('digimessage', 'Commande réalisée');
+            $eqLogic->checkAndUpdateCmd('digimessage', 'Commande réalisée pour ' . $newMode);
          }
-      
+         
          digiaction::addLogTemplate();
          return;
       }

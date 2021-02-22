@@ -1,5 +1,4 @@
-
-$('.digiactionDisplay').off('click', '.digiactionAction').on('click', '.digiactionAction',function(event){ 
+$('.digiaction').off('click', '.digiactionAction').on('click', '.digiactionAction',function(event){ 
   
   eqId =  $(this).closest('.eqLogic.digiaction').attr('data-eqlogic_id')  ;
   
@@ -53,19 +52,20 @@ $('.digiaction').off('click', '.digiFunctionCancel').on('click', '.digiFunctionC
 })
 
 // click on digit : create the password code
-$('.digiactionPanel').off('click', '.digiKeyboard').on('click', '.digiKeyboard',function(){
+$('.digiaction').off('click', '.digiKeyboard').on('click', '.digiKeyboard',function(){
+  
   keyPress = $(this).text();
   li = '<li class="digiFilled userCodeAttr" data-l1key="'+keyPress+'"></li>';
   $(this).closest('.digiactionPanelKeyboard').find('.digiEvent').append(li);
 })
 
 // remove input if RAZ is pressed
-$('.digiactionPanel').off('click', '.digiReset ').on('click', '.digiReset ',function(){
+$('.digiaction').off('click', '.digiReset ').on('click', '.digiReset ',function(){
   $(this).closest('.digiactionPanelKeyboard').find('.digiEvent').empty()
 })
 
 // stop timer and cancel action
-$('.digiactionPanelTimer').off('click', '.digiFunctionTimerCancel').on('click', '.digiFunctionTimerCancel',function(){
+$('.digiaction').off('click', '.digiFunctionTimerCancel').on('click', '.digiFunctionTimerCancel',function(){
   clearInterval(window.interval);
   $(this).closest('.digiactionPanelTimer').find('.countdowntimer').empty()
   showOnly( $(this), '.digiactionPanelMode' );

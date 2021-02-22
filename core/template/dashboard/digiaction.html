@@ -10,7 +10,7 @@
                 cmd.find('.digiMessage').empty().append(_options.display_value);
                 setTimeout(function(){
                     cmd.find('.digiMessage').empty(); 
-                  }, 5000);
+                  }, 10000);
             }
             jeedom.cmd.update['#digimessage_id#']({display_value:'#digimessage#'})
         </script>
@@ -61,8 +61,13 @@
 
 </div>
 
+<!--
 <script>
     $.include([ 'plugins/digiaction/core/template/dashboard/js/dashboard.digiaction.js',
     'plugins/digiaction/core/template/dashboard/css/digiaction.css'
     ]);
 </script>
+-->
+
+<script src="plugins/digiaction/core/template/dashboard/js/dashboard.digiaction.js"></script>
+<link rel="stylesheet" href="plugins/digiaction/core/template/dashboard/css/digiaction.css" />
