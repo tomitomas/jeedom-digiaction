@@ -135,7 +135,12 @@ function verifUserAndDoAction(_eqId, _userCode, _cmdId) {
           });
         }
         else{
-          getAvailableMode(_eqId);
+          if (data.result == '') {
+            getAvailableMode(_eqId);
+            $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiactionPanelTimer').hide();
+            $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiactionPanelKeyboard').hide();
+            $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiactionPanelMode').show();
+          }
         }
       }
     });
@@ -157,8 +162,6 @@ function digiTimer(_timer, _eqId, _userCode, _cmdId){
       },
       function() { // what to do after
         verifUserAndDoAction(_eqId, _userCode, _cmdId);
-        $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiactionPanelTimer').hide();
-        $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiactionPanelMode').show();
       }
     );
   }
