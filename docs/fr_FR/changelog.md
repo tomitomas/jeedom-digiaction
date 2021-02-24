@@ -11,13 +11,13 @@ Nouveautés :
   - le code utilisateur saisie est d'abord vérifié (inutile d'attendre la fin du timer pour savoir que le code n'est pas bon !)
   - les pré-check sont réalisés une première fois avant de lancer le timer
 - ajout de la configuration "pré-check erreur" : ensemble des actions à réaliser si les contrôles échouent
+- En cas d’erreur de code : on reste sur le clavier plutôt que de revenir au menu
 
 Fixes : 
 - Retouches CSS :
   - Adaptation de la taille du texte au bouton (surtout en cas de texte long)
   - Alignement des boutons (mode) « texte » et des boutons « images »
   - Alignement du compte à rebours et bouton « Annuler »
-- En cas d’erreur de code : on reste sur le clavier plutôt que de revenir au menu
 - En cas d’erreur de code successif, le message d'erreur « Code inconnu » est réaffiché  
 
 

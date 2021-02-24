@@ -60,7 +60,7 @@ C'est ici que vous définissez :
 6. ajoute un/des contrôle(s) à réaliser avant (l'ensemble des `Pré-check` utilisent l'opérateur 'ET')   
   6a. active/désactive le contrôle  
   6b. ouvre un pop-up pour sélectionner une commande de type `info`  
-7. ajoute une/des action(s) à réaliser si jamais le(s) pré-check (défins en 6) échouent   
+7. ajoute une/des action(s) à réaliser si jamais le(s) pré-check (défins en 6) échoue(nt)   
   7a. active/désactive l'action  
   7b. permet de choisir une commande
   7c. ouvre un pop-up pour sélectionner une commande de type `action`   
