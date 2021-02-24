@@ -329,27 +329,26 @@ class digiaction extends eqLogic {
          $modes = $this->getModeDetails() ;
          $eqId = $this->getId();
          
-         $result = '<div>' ; 
+         $result = '' ; 
          foreach ($modes as $mode) {
-            $tmpResult = '' ; 
+            $tmpResult = '<div>' ; 
             $cmd = $this->getCmd('action',  $mode['name']);
             $cmdId = $cmd->getId() ;
 
             $digi = ($mode['confirmDigicode'] == 1) ? 'digiactionEnterPin' : '';
             if ( ! empty($mode['icon'])){
-               $tmpResult .= '<span class="digiactionAction digiItem ' . $digi . '" digi-action="'.$mode['name'].'" digi-cmdId="'.$cmdId.'" digi-timer="'.$mode['timer'].'" title="mode '.$mode['name'].'">' ; 
-               $tmpResult .= $mode['icon']; 
+               $tmpResult .= '<li class="digiActionMode digiActionNoBg ' . $digi . '" digi-action="'.$mode['name'].'" digi-cmdId="'.$cmdId.'" digi-timer="'.$mode['timer'].'" title="mode '.$mode['name'].'">' ; 
+               $tmpResult .= str_replace("img-responsive", "", $mode['icon']); 
             }
             else{
-               $tmpResult .= '<span class="digiactionAction digiItem digiFunction ' . $digi . '" digi-action="'.$mode['name'].'" digi-cmdId="'.$cmdId.'" digi-timer="'.$mode['timer'].'" >' ;
+               $tmpResult .= '<li class="digiActionMode digiActionText ' . $digi . '" digi-action="'.$mode['name'].'" digi-cmdId="'.$cmdId.'" digi-timer="'.$mode['timer'].'" >' ;
                $tmpResult .= $mode['name'] ; 
             }
-            $tmpResult .= '</span><br/>' ; 
+            $tmpResult .= '</li></div>' ; 
             log::add('digiaction', 'debug', '│ mode added : '.$tmpResult) ;
             $result .= $tmpResult;
          }
-         $result .= '</div>' ; 
-
+         
          log::add('digiaction', 'debug', '│ all HTML modes résult : '.$result) ;
          self::addLogTemplate() ;
          
