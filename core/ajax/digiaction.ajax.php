@@ -45,7 +45,20 @@ try {
           $data = "ko";
         }
         else{
-          $data = "ok";
+          $digiCmd = digiactionCmd::byId(init('cmdId'));
+          digiaction::addLogTemplate('PRE-CHECK CONTROLS');
+          $verifPreCheck = $eqLogic->doPreCheck($digiCmd->getLogicalId()); 
+          
+          if ( ! $verifPreCheck ){
+            $eqLogic->checkAndUpdateCmd('digimessage', 'Contrôle(s) en échec');
+            digiaction::addLogTemplate('PRE-CHECK FAILED - PROCEED WITH ERROR ACTION', true);
+            $eqLogic->doAction($digiCmd->getLogicalId(), 'preCheckActionError'); 
+            $data = "ko" ;
+          }
+          else{
+            $data = "ok" ;
+          }
+          digiaction::addLogTemplate();
         }
         ajax::success($data);
         break;
