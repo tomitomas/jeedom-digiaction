@@ -146,24 +146,52 @@ function verifUserAndDoAction(_eqId, _userCode, _cmdId) {
     });
   }
 
+
 // manage the timer (if any) : display a countdown 
 // which allows the user to cancel his action
 function digiTimer(_timer, _eqId, _userCode, _cmdId){
   
   if(_timer > 0){
-    var timeleft = (parseInt(_timer) +1 ) * 1000 ;
-
-    showOnly( $('.digiaction[data-eqlogic_id='+_eqId+']') , '.digiactionPanelTimer' );
-
-    countDown(
-      timeleft, // milliseconds
-      function(restant) { // called every step to update the visible countdown
-        $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiActionCountDownTimer').html(restant);
+    $.ajax({
+      type: "POST",
+      url: "plugins/digiaction/core/ajax/digiaction.ajax.php",
+      data: {
+        action: "verifUser",
+        eqId : _eqId,
+        userCode : _userCode,
+        cmdId : _cmdId,
       },
-      function() { // what to do after
-        verifUserAndDoAction(_eqId, _userCode, _cmdId);
+      dataType: 'json',
+      error: function (request, status, error) {
+        handleAjaxError(request, status, error);
+        return false;
+      },
+      success: function (data) {
+        if (data.state != 'ok') {
+          $('#div_alert').showAlert({
+            message: data.result,
+            level: 'danger'
+          });
+        }
+        else{
+          if (data.result == 'ok') {
+            var timeleft = (parseInt(_timer) +1 ) * 1000 ;
+
+            showOnly( $('.digiaction[data-eqlogic_id='+_eqId+']') , '.digiactionPanelTimer' );
+
+            countDown(
+              timeleft, // milliseconds
+              function(restant) { // called every step to update the visible countdown
+                $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiActionCountDownTimer').html(restant);
+              },
+              function() { // what to do after
+                verifUserAndDoAction(_eqId, _userCode, _cmdId);
+              }
+            );
+          }
+        }
       }
-    );
+    });
   }
   else{
     verifUserAndDoAction(_eqId, _userCode, _cmdId);

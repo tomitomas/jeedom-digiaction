@@ -36,6 +36,20 @@ try {
           ajax::success(json_encode($modes));
           break;
 
+      case 'verifUser':
+        $eqLogic = digiaction::byId(init('eqId'));
+        $eqLogic->checkAndUpdateCmd('digimessage', '');
+        $verif = $eqLogic->verifCodeUser(init('userCode'), init('cmdId'));
+        if (!$verif){
+          $eqLogic->checkAndUpdateCmd('digimessage', 'Code inconnu');
+          $data = "ko";
+        }
+        else{
+          $data = "ok";
+        }
+        ajax::success($data);
+        break;
+      
       case 'verifUserAndDoAction':
         $eqLogic = digiaction::byId(init('eqId'));
         $eqLogic->checkAndUpdateCmd('digimessage', '');
