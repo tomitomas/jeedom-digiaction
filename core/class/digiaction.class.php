@@ -409,7 +409,7 @@ class digiaction extends eqLogic {
       public function hasPasswordRequired($nextCmdId){
             $cmd = digiactionCmd::byId($nextCmdId);
             if (! is_object($cmd)){
-               throw new Exception("Unexisting command ID");
+               throw new Exception('Unexisting command ID for ' . $nextCmdId);
             }
 
             $cmdName = $cmd->getLogicalId() ; 
