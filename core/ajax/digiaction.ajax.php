@@ -30,6 +30,41 @@ try {
   */  
     //ajax::init();
     switch (init('action')) {
+      case 'updateCmdConfig':
+      /*
+      when renaming a mode it will delete the previous command and create a new one
+      this function is used to update the name & logicalId of the existing cmd instead of deleting it
+      */
+        digiaction::addLogTemplate('RENAME CMD NAME');
+        log::add('digiaction', 'debug', '│ Check for eqId "' . init('eqId') . '"');  
+        $eqLogic = digiaction::byId(init('eqId'));
+        if (!is_object($eqLogic)) {
+          log::add('digiaction', 'debug', '│ No equipement found with id "' . init('eqId') . '"');  
+          ajax::success("ko");
+          digiaction::addLogTemplate();
+          break;
+        }
+ 
+        foreach (init('arrayRename') as $item) {
+          $old = $item['old'];
+          $new = $item['new']; 
+
+          $cmd = $eqLogic->getCmd(null, $old);
+          if (!is_object($cmd)) {
+            log::add('digiaction', 'debug', '│ No Cmd found with name "' . $old . '"');  
+            ajax::success("ko");
+            digiaction::addLogTemplate();
+            break;
+          }
+          $cmd->setName($new);
+          $cmd->setLogicalId($new);
+          log::add('digiaction', 'debug', '│ Cmd renamed done from "' . $old . '" to "' . $new . '"');  
+          $cmd->save();
+        } 
+        digiaction::addLogTemplate();
+        ajax::success();
+        break;
+
       case 'getAvailableMode':
           $eqLogic = digiaction::byId(init('eqId'));
           $modes = $eqLogic->getAvailableModeHTML();

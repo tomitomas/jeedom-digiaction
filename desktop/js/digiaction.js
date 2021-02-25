@@ -16,6 +16,7 @@
 */
 
 MODE_LIST = null;
+RENAME_LIST = [];
 
 $(window).on('load', function() {
   var style = $('<style>.img-responsive { display: inline!important; } /*input[type=checkbox]{ outline: 1px solid #b42828 !important;}*/</style>');
@@ -50,6 +51,12 @@ $('body').off('click','.rename').on('click','.rename',  function () {
       el.text(newName);
       el.closest('.panel.panel-default').find('span.name').text(newName);
       renameCheckboxMode(previousName ,  newName );
+      
+      var rename = {};
+      rename['old'] = previousName;
+      rename['new'] = newName;
+      RENAME_LIST.push(rename);
+      
     }
   });
 });
@@ -201,6 +208,11 @@ function saveEqLogic(_eqLogic) {
     var user = $(this).getValues('.userAttr');
     _eqLogic.configuration.users.push(user[0]);
   });
+
+  if ( RENAME_LIST.length > 0){
+    renameCmdConfig(_eqLogic.id, RENAME_LIST ); 
+  }
+
   return _eqLogic;
 }
 
@@ -483,6 +495,36 @@ function renameCheckboxMode(_previousName , _newName ){
     
   });
 
+}
+
+/*
+ when renaming a mode it will delete the previous command and create a new one
+ this function is used to update the name & logicalId of the existing cmd instead of deleting it
+*/
+function renameCmdConfig(_eqId, _arrayRename ){
+  $.ajax({
+    type: "POST",
+    url: "plugins/digiaction/core/ajax/digiaction.ajax.php",
+    data: {
+      action: "updateCmdConfig",
+      eqId: _eqId,
+      arrayRename: _arrayRename
+    },
+    dataType: 'json',
+    error: function (request, status, error) {
+      handleAjaxError(request, status, error);
+    },
+    success: function (data) {
+      if (data.state != 'ok') {
+        $('#div_alert').showAlert({
+          message: data.result,
+          level: 'danger'
+        });
+        return;
+      }
+      return;
+    }
+  });
 }
 
 /*

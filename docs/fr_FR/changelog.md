@@ -19,6 +19,7 @@ Fixes :
   - Alignement des boutons (mode) « texte » et des boutons « images »
   - Alignement du compte à rebours et bouton « Annuler »
 - En cas d’erreur de code successif, le message d'erreur « Code inconnu » est réaffiché  
+- Gère le renommage des commandes plutôt que les suppressions  
 
 
 # 19/02/2021
