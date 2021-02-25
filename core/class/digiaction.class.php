@@ -102,9 +102,21 @@ class digiaction extends eqLogic {
 		$currentMode->setSubType('string');
 		$currentMode->save();
 
+      $updateMsg = $this->getCmd(null, 'updatemessage');
+      if (!is_object($updateMsg)) {
+			$updateMsg = new digiactionCmd();
+		}
+		$updateMsg->setName(__('MaJ Message', __FILE__));
+		$updateMsg->setEqLogic_id($this->id);
+		$updateMsg->setLogicalId('updatemessage');
+		$updateMsg->setType('action');
+		$updateMsg->setOrder(3);
+		$updateMsg->setSubType('message');
+		$updateMsg->save();
+
       $existing_mode = array();
 		if (is_array($this->getConfiguration('modes'))) {
-			$i=2;
+			$i=3;
 			foreach ($this->getConfiguration('modes') as $key => $value) {		
 				$cmd = $this->getCmd(null, $value['name']);
             $existing_mode[] = $value['name'];
@@ -126,7 +138,7 @@ class digiaction extends eqLogic {
 		}
 
       foreach ($this->getCmd() as $cmd) {
-			if ($cmd->getType() == 'action' && !in_array($cmd->getLogicalId(), $existing_mode) ) {
+			if ($cmd->getType() == 'action' && !in_array($cmd->getLogicalId(), $existing_mode) && $cmd->getLogicalId() != 'updatemessage' ) {
 				$cmd->remove();
 			}
 		}
@@ -190,7 +202,7 @@ class digiaction extends eqLogic {
    }
 
 
-   public function doAction($_mode) {
+   public function doAction($_mode, $_type) {
 		if (!is_array($this->getConfiguration('modes'))) {
 			return;
 		}
@@ -200,8 +212,8 @@ class digiaction extends eqLogic {
 			if ($value['name'] != $_mode) {
 				continue;
 			}
-         log::add('digiaction', 'debug', '│ *** action(s) will be executed ***') ;
-			foreach ($value['doAction'] as $action) {
+         log::add('digiaction', 'debug', '│ *** action(s) '.$_type.' will be executed ***') ;
+			foreach ($value[$_type] as $action) {
             try {
 					$options = array();
 					if (isset($action['options'])) {
@@ -223,7 +235,7 @@ class digiaction extends eqLogic {
 		}
 
       if (is_null($checkAction)){
-         log::add('digiaction', 'debug', '│ no action setup');
+         log::add('digiaction', 'debug', '│ no action setup for ' . $_type);
          $checkAction = true;
       }
 
@@ -329,27 +341,26 @@ class digiaction extends eqLogic {
          $modes = $this->getModeDetails() ;
          $eqId = $this->getId();
          
-         $result = '<div>' ; 
+         $result = '' ; 
          foreach ($modes as $mode) {
-            $tmpResult = '' ; 
+            $tmpResult = '<div>' ; 
             $cmd = $this->getCmd('action',  $mode['name']);
             $cmdId = $cmd->getId() ;
 
             $digi = ($mode['confirmDigicode'] == 1) ? 'digiactionEnterPin' : '';
             if ( ! empty($mode['icon'])){
-               $tmpResult .= '<span class="digiactionAction digiItem ' . $digi . '" digi-action="'.$mode['name'].'" digi-cmdId="'.$cmdId.'" digi-timer="'.$mode['timer'].'" title="mode '.$mode['name'].'">' ; 
-               $tmpResult .= $mode['icon']; 
+               $tmpResult .= '<li class="digiActionMode digiActionNoBg ' . $digi . '" digi-action="'.$mode['name'].'" digi-cmdId="'.$cmdId.'" digi-timer="'.$mode['timer'].'" title="mode '.$mode['name'].'">' ; 
+               $tmpResult .= str_replace("img-responsive", "", $mode['icon']); 
             }
             else{
-               $tmpResult .= '<span class="digiactionAction digiItem digiFunction ' . $digi . '" digi-action="'.$mode['name'].'" digi-cmdId="'.$cmdId.'" digi-timer="'.$mode['timer'].'" >' ;
+               $tmpResult .= '<li class="digiActionMode digiActionText ' . $digi . '" digi-action="'.$mode['name'].'" digi-cmdId="'.$cmdId.'" digi-timer="'.$mode['timer'].'" >' ;
                $tmpResult .= $mode['name'] ; 
             }
-            $tmpResult .= '</span><br/>' ; 
+            $tmpResult .= '</li></div>' ; 
             log::add('digiaction', 'debug', '│ mode added : '.$tmpResult) ;
             $result .= $tmpResult;
          }
-         $result .= '</div>' ; 
-
+         
          log::add('digiaction', 'debug', '│ all HTML modes résult : '.$result) ;
          self::addLogTemplate() ;
          
@@ -423,10 +434,11 @@ class digiaction extends eqLogic {
             return false;
       }
 
-      public static function addLogTemplate($msg = null){
+      public static function addLogTemplate($msg = null, $inter = false){
 
          if ( ! is_null($msg) ){
-            log::add('digiaction', 'debug', '┌────────────────────────────────────' ) ;
+            $first = $inter ? '├' : '┌' ;
+            log::add('digiaction', 'debug', $first . '────────────────────────────────────' ) ;
             log::add('digiaction', 'debug', '│    ' . $msg  ) ;
             log::add('digiaction', 'debug', '├────────────────────────────────────' ) ;
          }
@@ -472,33 +484,46 @@ class digiactionCmd extends cmd {
 
   // Exécution d'une commande  
      public function execute($_options = array()) {
-         digiaction::addLogTemplate('CMD EXEC');
-         $eqLogic = $this->getEqLogic();
-         
-         $currentMode = $eqLogic->getCmd(null, 'currentMode');
-         if (!is_object($currentMode)) {
-            throw new Exception(__('La commande de mode courant est introuvable', __FILE__));
-         }
-         
-         $newMode = $this->getLogicalId();
 
-         log::add('digiaction', 'debug', '│ running setup for mode : ' . $newMode ) ;
 
-         $preCheck = $eqLogic->doPreCheck($newMode);
-         if (!$preCheck){
-            log::add('digiaction', 'debug', '│ global check FALSE ') ;
-            log::add('digiaction', 'debug', '│ run action -> skipped ') ;
-            $eqLogic->checkAndUpdateCmd('digimessage', 'Contrôle(s) en échec');
-         }  
-         else{
-            log::add('digiaction', 'debug', '│ global check TRUE' ) ;
-            $eqLogic->doAction($newMode); 
-            $currentMode->event($newMode);
-            $eqLogic->checkAndUpdateCmd('digimessage', 'Commande réalisée pour ' . $newMode);
+      switch ($this->getLogicalId()) {
+         case 'updatemessage':
+            $value    = $_options['message'];
+            $eqLogic = $this->getEqLogic();
+            $eqLogic->checkAndUpdateCmd('digimessage', $value);
+            break;
+
+         default:   
+            digiaction::addLogTemplate('CMD EXEC');
+            $eqLogic = $this->getEqLogic();
+            
+            $currentMode = $eqLogic->getCmd(null, 'currentMode');
+            if (!is_object($currentMode)) {
+               throw new Exception(__('La commande de mode courant est introuvable', __FILE__));
+            }
+            
+            $newMode = $this->getLogicalId();
+
+            log::add('digiaction', 'debug', '│ running setup for mode : ' . $newMode ) ;
+
+            $preCheck = $eqLogic->doPreCheck($newMode);
+            if (!$preCheck){
+               log::add('digiaction', 'debug', '│ global check FALSE ') ;
+               log::add('digiaction', 'debug', '│ run action -> skipped ') ;
+               $eqLogic->checkAndUpdateCmd('digimessage', 'Contrôle(s) en échec');
+               $eqLogic->doAction($newMode, 'preCheckActionError'); 
+            }  
+            else{
+               log::add('digiaction', 'debug', '│ global check TRUE' ) ;
+               $eqLogic->doAction($newMode, 'doAction'); 
+               $currentMode->event($newMode);
+               $eqLogic->checkAndUpdateCmd('digimessage', 'Commande réalisée pour ' . $newMode);
+            }
+            
+            digiaction::addLogTemplate();
+            return;
+
          }
-         
-         digiaction::addLogTemplate();
-         return;
       }
 
 

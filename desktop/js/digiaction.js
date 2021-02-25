@@ -101,6 +101,10 @@ $("#div_modes").off('click','.bt_addPreCheck').on('click','.bt_addPreCheck',  fu
   addAction({}, 'preCheck', '{{Pré-check}}', $(this).closest('.mode'));
 });
 
+$("#div_modes").off('click','.bt_addPreCheckActionError').on( 'click','.bt_addPreCheckActionError',function () {
+  addAction({}, 'preCheckActionError', '{{Pré-check Erreur}}', $(this).closest('.mode'));
+});
+
 $("#div_modes").off('click','.bt_addDoAction').on( 'click','.bt_addDoAction',function () {
   addAction({}, 'doAction', '{{Action}}', $(this).closest('.mode'));
 });
@@ -187,6 +191,7 @@ function saveEqLogic(_eqLogic) {
   $('#div_modes .mode').each(function () {
     var mode = $(this).getValues('.modeAttr')[0];
     mode.preCheck = $(this).find('.preCheck').getValues('.expressionAttr');
+    mode.preCheckActionError = $(this).find('.preCheckActionError').getValues('.expressionAttr');
     mode.doAction = $(this).find('.doAction').getValues('.expressionAttr');
     mode.availableMode = $(this).find('.modeAvailable').getValues('.expressionAttr') ;
     _eqLogic.configuration.modes.push(mode);
@@ -224,6 +229,7 @@ function addMode(_mode,_updateMode) {
   div += '<span class="input-group-btn">';
   div += '<a class="btn btn-sm bt_removeMode btn-danger roundedLeft"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>';
   div += '<a class="btn btn-sm bt_addPreCheck btn-warning"><i class="fas fa-plus-circle"></i> {{Pré-check}}</a>';
+  div += '<a class="btn btn-sm bt_addPreCheckActionError btn-default" title="Réaliser une action si les pré-check échouent"><i class="fas fa-plus-circle"></i> {{Pré-check Erreur}}</a>';
   div += '<a class="btn btn-sm bt_addDoAction btn-success"><i class="fas fa-plus-circle"></i> {{Action}}</a>';
   div += '</span>';
   div += '</div>';
@@ -260,6 +266,8 @@ function addMode(_mode,_updateMode) {
   div += '<hr/>';
   div += '<div class="div_preCheck"></div>';
   div += '<hr/>';
+  div += '<div class="div_preCheckActionError"></div>';
+  div += '<hr/>';
   div += '<div class="div_doAction"></div>';
   //-------
   div += '<hr/>';
@@ -286,6 +294,16 @@ function addMode(_mode,_updateMode) {
       addAction(_mode.preCheck[i], 'preCheck', '{{Pré-check}}', $('#div_modes .mode').last());
     }
   }
+
+  if (is_array(_mode.preCheckActionError)) {
+    for (var i in _mode.preCheckActionError) {
+      addAction(_mode.preCheckActionError[i], 'preCheckActionError', '{{Pré-check Erreur}}', $('#div_modes .mode').last());
+    }
+  } else {
+    if ($.trim(_mode.preCheckActionError) != '') {
+      addAction(_mode.preCheckActionError[i], 'preCheckActionError', '{{Pré-check Erreur}}', $('#div_modes .mode').last());
+    }
+  }
   
   if (is_array(_mode.doAction)) {
     for (var i in _mode.doAction) {
@@ -298,6 +316,7 @@ function addMode(_mode,_updateMode) {
   }
   $('.collapse').collapse();
   $("#div_modes .mode:last .div_preCheck").sortable({axis: "y", cursor: "move", items: ".preCheck", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
+  $("#div_modes .mode:last .div_preCheckActionError").sortable({axis: "y", cursor: "move", items: ".preCheckActionError", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
   $("#div_modes .mode:last .div_doAction").sortable({axis: "y", cursor: "move", items: ".doAction", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
   if ( isset(_mode.availableMode) && _mode.availableMode[0] !== {} ) {
     var checkbox = addCheckboxMode(_mode.availableMode);
@@ -325,6 +344,10 @@ function addAction(_action, _type, _name, _el) {
     input = 'has-warning';
     button = 'btn-warning';
   }
+  if (_type == 'preCheckActionError') {
+    input = 'has-default';
+    button = 'btn-default';
+  }
   var div = '<div class="' + _type + '">';
   div += '<div class="form-group ">';
   div += '<label class="col-sm-1 control-label">' + _name + '</label>';
@@ -332,7 +355,10 @@ function addAction(_action, _type, _name, _el) {
   if (_type == 'doAction') {
     div += '<input type="checkbox" class="expressionAttr" data-l1key="options" data-l2key="enable" checked title="{{Décocher pour désactiver l\'action}}" />';
   }
-  else{
+  else if (_type == 'preCheckActionError') {
+    div += '<input type="checkbox" class="expressionAttr" data-l1key="options" data-l2key="enable" checked title="{{Décocher pour désactiver l\'action}}" />';
+  }
+  else {
     div += '<input type="checkbox" class="expressionAttr" data-l1key="options" data-l2key="enable" checked title="{{Décocher pour désactiver le test}}" />';
   }
   div += '</div>';
@@ -342,6 +368,12 @@ function addAction(_action, _type, _name, _el) {
   div += '<a class="btn btn-default bt_removeAction btn-sm" data-type="' + _type + '"><i class="fas fa-minus-circle"></i></a>';
   div += '</span>';
   if (_type == 'doAction') {
+    div += '<input class="expressionAttr form-control input-sm cmdAction" data-l1key="cmd" data-type="' + _type + '" />';
+    div += '<span class="input-group-btn">';
+    div += '<a class="btn ' + button + ' btn-sm listAction" data-type="' + _type + '" title="{{Sélectionner un mot-clé}}"><i class="fas fa-tasks"></i></a>';
+    div += '<a class="btn ' + button + ' btn-sm listCmdAction" data-type="' + _type + '" title="{{Sélectionner une commande action}}"><i class="fas fa-list-alt"></i></a>';
+  }
+  else if (_type == 'preCheckActionError') {
     div += '<input class="expressionAttr form-control input-sm cmdAction" data-l1key="cmd" data-type="' + _type + '" />';
     div += '<span class="input-group-btn">';
     div += '<a class="btn ' + button + ' btn-sm listAction" data-type="' + _type + '" title="{{Sélectionner un mot-clé}}"><i class="fas fa-tasks"></i></a>';
@@ -372,6 +404,7 @@ function addAction(_action, _type, _name, _el) {
       options : _action.options,
       id : actionOption_id
     });
+    // $('.actionOptions .input-group .input-group-addon').addClass('digiActionBgGreen') ; 
   }
 }
 

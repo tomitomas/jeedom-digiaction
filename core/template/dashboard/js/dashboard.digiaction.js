@@ -1,4 +1,4 @@
-$('.digiaction').off('click', '.digiactionAction').on('click', '.digiactionAction',function(event){ 
+$('.digiaction').off('click', '.digiActionMode').on('click', '.digiActionMode',function(event){ 
   
   eqId =  $(this).closest('.eqLogic.digiaction').attr('data-eqlogic_id')  ;
   
@@ -40,7 +40,7 @@ $('.digiaction').off('click', '.digiFunctionValidate').on('click', '.digiFunctio
       return $(this).attr("data-l1key");
     }).get().join('');
 
-    $(this).closest('.digiactionPanelKeyboard').find('.digiEvent').empty()
+    $(this).closest('.digiactionPanelKeyboard').find('.digiActionKeyPressed').empty()
     digiTimer(timer, eqId, passwordCode , cmdId)  ;
 })
 
@@ -48,7 +48,7 @@ $('.digiaction').off('click', '.digiFunctionValidate').on('click', '.digiFunctio
 // click on Cancel button
 $('.digiaction').off('click', '.digiFunctionCancel').on('click', '.digiFunctionCancel',function(){
   showOnly( $(this), '.digiactionPanelMode' );
-  $(this).closest('.digiactionPanelKeyboard').find('.digiEvent').empty()
+  $(this).closest('.digiactionPanelKeyboard').find('.digiActionKeyPressed').empty()
 })
 
 // click on digit : create the password code
@@ -56,18 +56,18 @@ $('.digiaction').off('click', '.digiKeyboard').on('click', '.digiKeyboard',funct
   
   keyPress = $(this).text();
   li = '<li class="digiFilled userCodeAttr" data-l1key="'+keyPress+'"></li>';
-  $(this).closest('.digiactionPanelKeyboard').find('.digiEvent').append(li);
+  $(this).closest('.digiactionPanelKeyboard').find('.digiActionKeyPressed').append(li);
 })
 
 // remove input if RAZ is pressed
 $('.digiaction').off('click', '.digiReset ').on('click', '.digiReset ',function(){
-  $(this).closest('.digiactionPanelKeyboard').find('.digiEvent').empty()
+  $(this).closest('.digiactionPanelKeyboard').find('.digiActionKeyPressed').empty()
 })
 
 // stop timer and cancel action
 $('.digiaction').off('click', '.digiFunctionTimerCancel').on('click', '.digiFunctionTimerCancel',function(){
   clearInterval(window.interval);
-  $(this).closest('.digiactionPanelTimer').find('.countdowntimer').empty()
+  $(this).closest('.digiactionPanelTimer').find('.digiActionCountDownTimer').empty()
   showOnly( $(this), '.digiactionPanelMode' );
 })
 
@@ -135,32 +135,63 @@ function verifUserAndDoAction(_eqId, _userCode, _cmdId) {
           });
         }
         else{
-          getAvailableMode(_eqId);
+          if (data.result == '') {
+            getAvailableMode(_eqId);
+            $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiactionPanelTimer').hide();
+            $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiactionPanelKeyboard').hide();
+            $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiactionPanelMode').show();
+          }
         }
       }
     });
   }
+
 
 // manage the timer (if any) : display a countdown 
 // which allows the user to cancel his action
 function digiTimer(_timer, _eqId, _userCode, _cmdId){
   
   if(_timer > 0){
-    var timeleft = (parseInt(_timer) +1 ) * 1000 ;
-
-    showOnly( $('.digiaction[data-eqlogic_id='+_eqId+']') , '.digiactionPanelTimer' );
-
-    countDown(
-      timeleft, // milliseconds
-      function(restant) { // called every step to update the visible countdown
-        $('.digiaction[data-eqlogic_id='+_eqId+']').find('.countdowntimer').html(restant);
+    $.ajax({
+      type: "POST",
+      url: "plugins/digiaction/core/ajax/digiaction.ajax.php",
+      data: {
+        action: "verifUser",
+        eqId : _eqId,
+        userCode : _userCode,
+        cmdId : _cmdId,
       },
-      function() { // what to do after
-        verifUserAndDoAction(_eqId, _userCode, _cmdId);
-        $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiactionPanelTimer').hide();
-        $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiactionPanelMode').show();
+      dataType: 'json',
+      error: function (request, status, error) {
+        handleAjaxError(request, status, error);
+        return false;
+      },
+      success: function (data) {
+        if (data.state != 'ok') {
+          $('#div_alert').showAlert({
+            message: data.result,
+            level: 'danger'
+          });
+        }
+        else{
+          if (data.result == 'ok') {
+            var timeleft = (parseInt(_timer) +1 ) * 1000 ;
+
+            showOnly( $('.digiaction[data-eqlogic_id='+_eqId+']') , '.digiactionPanelTimer' );
+
+            countDown(
+              timeleft, // milliseconds
+              function(restant) { // called every step to update the visible countdown
+                $('.digiaction[data-eqlogic_id='+_eqId+']').find('.digiActionCountDownTimer').html(restant);
+              },
+              function() { // what to do after
+                verifUserAndDoAction(_eqId, _userCode, _cmdId);
+              }
+            );
+          }
+        }
       }
-    );
+    });
   }
   else{
     verifUserAndDoAction(_eqId, _userCode, _cmdId);

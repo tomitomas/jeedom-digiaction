@@ -1,7 +1,7 @@
 <div class="eqLogic eqLogic-widget digiaction allowResize allowReorderCmd #custom_layout# #eqLogic_class#" data-eqType="#eqType#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#" style="width: #width#;height: #height#;#style#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#">
     <center class="widget-name"><a href="#" style="font-size : 1.1em;#hideEqLogicName#">#name_display# <span class="object_name">#object_name# ici</span></a></center>
     
-    <div class="cmd cmd-widget #history#" data-type="info" data-subtype="string" data-template="default" data-cmd_id="#digimessage_id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#">
+    <div class="cmd cmd-widget #history#" data-type="info" data-subtype="string" data-template="default" data-cmd_id="#digimessage_id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#" style="padding-bottom: 20px;">
         <div class="digiMessage">
         </div>
         <script>
@@ -9,27 +9,35 @@
                 var cmd = $('.cmd[data-cmd_id=#digimessage_id#]');
                 cmd.find('.digiMessage').empty().append(_options.display_value);
                 setTimeout(function(){
-                    cmd.find('.digiMessage').empty(); 
-                  }, 10000);
+                     cmd.find('.digiMessage').empty(); 
+                }, 10000);
             }
-            jeedom.cmd.update['#digimessage_id#']({display_value:'#digimessage#'})
+            jeedom.cmd.update['#digimessage_id#']({display_value:"#digimessage#"})
         </script>
     </div>
     
     <div class="digiactionMainPanel digiactionPanelMode">
-        <div class="digiactionDisplay">
-          #modeAvailable#
+        <div >
+          <ul class="digiactionDisplay">
+            #modeAvailable#
+        </ul>
         </div>
     </div>
 
 
-    <div class="digiactionMainPanel digiactionPanelTimer">
-        <span class="countdowntimer"></span>
-        <span class="digiFunction digiFunctionTimerCancel">Annuler</span>
+    <div class="digiActionHideDefault digiactionMainPanel digiactionPanelTimer">
+        <ul >
+            <div>
+                <li class="digiActionCountDownTimer digiActionNoBg"></li>
+            </div>
+            <div>
+                <li class="digiActionMode digiFunctionTimerCancel digiActionBgRed">Annuler</li>
+            </div>
+        </ul>
     </div>
-    <div class="digiactionMainPanel digiactionPanelKeyboard">
-        <ul class="digiEvent"></ul>
-        <ul class="digiactionPanel" style="text-align:center;">
+    <div class="digiActionHideDefault digiactionMainPanel digiactionPanelKeyboard ">
+        <ul class="digiActionKeyPressed"></ul>
+        <ul class="digiactionPanel digiActionCircle" >
             <div>
                 <li class="digiKeyboard">1</li>
                 <li class="digiKeyboard">2</li>
@@ -51,9 +59,9 @@
                 <li class="digiKeyboard">B</li>
             </div>
             <div>
-                <li class="digiFunction digiFunctionValidate">V</li>
-                <li class="digiReset">RAZ</li>
-                <li class="digiFunction digiFunctionCancel">A</li>
+                <li class="digiFunction digiFunctionValidate digiActionBgGreen">V</li>
+                <li class="digiReset digiActionBgYellow">RAZ</li>
+                <li class="digiFunction digiFunctionCancel digiActionBgRed">A</li>
             </div>
         </ul>
     </div>

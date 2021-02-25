@@ -60,12 +60,17 @@ C'est ici que vous définissez :
 6. ajoute un/des contrôle(s) à réaliser avant (l'ensemble des `Pré-check` utilisent l'opérateur 'ET')   
   6a. active/désactive le contrôle  
   6b. ouvre un pop-up pour sélectionner une commande de type `info`  
-7. ajoute une/des action(s) à réaliser pour passer dans le mode 
+7. ajoute une/des action(s) à réaliser si jamais le(s) pré-check (défins en 6) échoue(nt)   
   7a. active/désactive l'action  
   7b. permet de choisir une commande
   7c. ouvre un pop-up pour sélectionner une commande de type `action`   
   7d. défini les options de la commande   
-8. défini le(s) mode(s) accessible(s) depuis le mode en cours 
+8. ajoute une/des action(s) à réaliser pour passer dans le mode 
+  8a. active/désactive l'action  
+  8b. permet de choisir une commande
+  8c. ouvre un pop-up pour sélectionner une commande de type `action`   
+  8d. défini les options de la commande   
+9. défini le(s) mode(s) accessible(s) depuis le mode en cours 
   <br/>(pour une alarme par exemple : depuis le mode 'Désactiver' on peut activer les modes 'Partiel' ou 'Total' ; par contre depuis le mode 'Total' on ne peut aller que vers 'Désactiver')
 
 <br/>

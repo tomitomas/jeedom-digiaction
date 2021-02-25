@@ -36,17 +36,47 @@ try {
           ajax::success(json_encode($modes));
           break;
 
-      case 'verifUserAndDoAction':
+      case 'verifUser':
         $eqLogic = digiaction::byId(init('eqId'));
+        $eqLogic->checkAndUpdateCmd('digimessage', '');
         $verif = $eqLogic->verifCodeUser(init('userCode'), init('cmdId'));
         if (!$verif){
           $eqLogic->checkAndUpdateCmd('digimessage', 'Code inconnu');
+          $data = "ko";
+        }
+        else{
+          $digiCmd = digiactionCmd::byId(init('cmdId'));
+          digiaction::addLogTemplate('PRE-CHECK CONTROLS');
+          $verifPreCheck = $eqLogic->doPreCheck($digiCmd->getLogicalId()); 
+          
+          if ( ! $verifPreCheck ){
+            $eqLogic->checkAndUpdateCmd('digimessage', 'Contrôle(s) en échec');
+            digiaction::addLogTemplate('PRE-CHECK FAILED - PROCEED WITH ERROR ACTION', true);
+            $eqLogic->doAction($digiCmd->getLogicalId(), 'preCheckActionError'); 
+            $data = "ko" ;
+          }
+          else{
+            $data = "ok" ;
+          }
+          digiaction::addLogTemplate();
+        }
+        ajax::success($data);
+        break;
+      
+      case 'verifUserAndDoAction':
+        $eqLogic = digiaction::byId(init('eqId'));
+        $eqLogic->checkAndUpdateCmd('digimessage', '');
+        $verif = $eqLogic->verifCodeUser(init('userCode'), init('cmdId'));
+        if (!$verif){
+          $eqLogic->checkAndUpdateCmd('digimessage', 'Code inconnu');
+          $data = "code inconnu";
         }
         else{
           $digiCmd = digiactionCmd::byId(init('cmdId'));
           $digiCmd->execute();
+          $data = "";
         }
-        ajax::success();
+        ajax::success($data);
         
         break;
     }
