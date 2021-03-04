@@ -93,7 +93,8 @@
     border: 1px solid rgba(255, 255, 255, 0.60);
   }
 
-  .digiaction .digiActionMode
+  .digiaction .digiActionMode,
+  .digiaction .digiActionCancel
   {
     text-align: center;
     vertical-align: middle;
