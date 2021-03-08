@@ -20,9 +20,9 @@ try {
     require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
     include_file('core', 'authentification', 'php');
 
-    if (!isConnect('admin')) {
-        throw new Exception(__('401 - Accès non autorisé', __FILE__));
-    }
+    // if (!isConnect('admin')) {
+    //     throw new Exception(__('401 - Accès non autorisé', __FILE__));
+    // }
     
   /* Fonction permettant l'envoi de l'entête 'Content-Type: application/json'
     En V3 : indiquer l'argument 'true' pour contrôler le token d'accès Jeedom
