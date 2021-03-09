@@ -4,6 +4,12 @@
 >
 >Pour rappel s'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
+# 09/03/2021  
+Fixes:  
+- autoriser les autres utilisateurs que 'admin'
+- rafraichissement du widget si mode activé par un scénario
+
+
 # 25/02/2021
 
 Nouveautés :

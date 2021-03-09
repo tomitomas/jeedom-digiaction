@@ -521,6 +521,7 @@ class digiactionCmd extends cmd {
             }
             
             digiaction::addLogTemplate();
+            $eqLogic->refreshWidget();
             return;
 
          }
