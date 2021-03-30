@@ -12,7 +12,7 @@
 	"changelog" : "https://tomitomas.github.io/DigiAction/#language#/changelog",
 	"documentation" : "https://tomitomas.github.io/DigiAction/#language#/",
 	"link" : {
-		"forum":"Lien vers le forum",
+		"forum":"https://community.jeedom.com/tag/plugin-digiaction",
 		"todo" : "https://tomitomas.github.io/DigiAction/#language#/todo"
 	},
 	"language" : ["fr_FR"],
