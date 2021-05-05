@@ -9,11 +9,10 @@
 	"hasDependency" : false,
 	"hasOwnDeamon" : false,
 	"maxDependancyInstallTime" : 0,
-	"changelog" : "https://tomitomas.github.io/DigiAction/#language#/changelog",
-	"documentation" : "https://tomitomas.github.io/DigiAction/#language#/",
+	"changelog" : "https://tomitomas.github.io/DigiActionDoc/#language#/changelog_beta",
+	"documentation" : "https://tomitomas.github.io/DigiActionDoc/#language#/",
 	"link" : {
-		"forum":"https://community.jeedom.com/tag/plugin-digiaction",
-		"todo" : "https://tomitomas.github.io/DigiAction/#language#/todo"
+		"forum":"https://community.jeedom.com/tag/plugin-digiaction"
 	},
 	"language" : ["fr_FR"],
 	"compatibility" : ["miniplus","smart","rpi","docker","diy","v4"]
