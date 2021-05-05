@@ -76,49 +76,63 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<form class="form-horizontal">
 					<fieldset>
 						<div class="col-lg-7">
-							<legend><i class="fas fa-wrench"></i> {{Général}}</legend>
-							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Nom de l'équipement}}</label>
-								<div class="col-sm-7">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;"/>
-									<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement}}"/>
+							<div class="col-lg-12">
+								<legend><i class="fas fa-wrench"></i> {{Général}}</legend>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{Nom de l'équipement}}</label>
+									<div class="col-sm-7">
+										<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;"/>
+										<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement}}"/>
+									</div>
 								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-3 control-label" >{{Objet parent}}</label>
-								<div class="col-sm-7">
-									<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
-										<option value="">{{Aucun}}</option>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" >{{Objet parent}}</label>
+									<div class="col-sm-7">
+										<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
+											<option value="">{{Aucun}}</option>
+											<?php
+											$options = '';
+											foreach ((jeeObject::buildTree(null, false)) as $object) {
+												$options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $object->getConfiguration('parentNumber')) . $object->getName() . '</option>';
+											}
+											echo $options;
+											?>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{Catégorie}}</label>
+									<div class="col-sm-9">
 										<?php
-										$options = '';
-										foreach ((jeeObject::buildTree(null, false)) as $object) {
-											$options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $object->getConfiguration('parentNumber')) . $object->getName() . '</option>';
+										foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
+											echo '<label class="checkbox-inline">';
+											echo '<input type="checkbox" class="eqLogicAttr" data-l1key="category" data-l2key="' . $key . '" />' . $value['name'];
+											echo '</label>';
 										}
-										echo $options;
 										?>
-									</select>
+									</div>
 								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Catégorie}}</label>
-								<div class="col-sm-9">
-									<?php
-									foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
-										echo '<label class="checkbox-inline">';
-										echo '<input type="checkbox" class="eqLogicAttr" data-l1key="category" data-l2key="' . $key . '" />' . $value['name'];
-										echo '</label>';
-									}
-									?>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{Options}}</label>
+									<div class="col-sm-7">
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked/>{{Activer}}</label>
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>{{Visible}}</label>
+									</div>
 								</div>
+								<br/>
 							</div>
-							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Options}}</label>
-								<div class="col-sm-7">
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked/>{{Activer}}</label>
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>{{Visible}}</label>
+							
+							<div class="col-lg-12">
+								<legend><i class="fa fa-cogs"></i> {{Paramètres}}</legend>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{Chaque mode s'auto-appelle}}</label>
+									<div class="col-sm-7">
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="autocall"/>Autoriser</label>
+									</div>
 								</div>
+								
+							
 							</div>
-							<br>
 
 						</div>
 
