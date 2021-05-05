@@ -16,5 +16,5 @@
 		"todo" : "https://tomitomas.github.io/DigiAction/#language#/todo"
 	},
 	"language" : ["fr_FR"],
-	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"]
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","v4"]
 }
