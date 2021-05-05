@@ -142,6 +142,8 @@ class digiaction extends eqLogic {
 				$cmd->remove();
 			}
 		}
+
+      $this->refreshWidget();
         
     }
 
@@ -268,6 +270,9 @@ class digiaction extends eqLogic {
          $replace['#eqLogic_id#'] = $this->getId();
          
          $replace['#title#'] = $this->getName();
+         
+         $countdown = $this->getConfiguration('countdown', 10)  ;
+         $replace['#countdown#'] = empty($countdown) ? 10000 : ($countdown == -1 ? -1 : intval($countdown) * 1000) ;
 
          $replace['#modeAvailable#'] = $this->getAvailableModeHTML();
          $replace['#currentMode#'] = $this->getCmd(null, 'currentMode')->execCmd();
