@@ -8,9 +8,11 @@
             jeedom.cmd.update['#digimessage_id#'] = function(_options) {
                 var cmd = $('.cmd[data-cmd_id=#digimessage_id#]');
                 cmd.find('.digiMessage').empty().append(_options.display_value);
-                setTimeout(function(){
-                     cmd.find('.digiMessage').empty(); 
-                }, 10000);
+                if ( parseInt('#countdown#') != -1){
+                    setTimeout(function(){
+                        cmd.find('.digiMessage').empty(); 
+                    }, parseInt('#countdown#'));
+                }
             }
             jeedom.cmd.update['#digimessage_id#']({display_value:"#digimessage#"})
         </script>

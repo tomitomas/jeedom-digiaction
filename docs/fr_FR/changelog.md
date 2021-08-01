@@ -4,6 +4,12 @@
 >
 >Pour rappel s'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
+# 05/05/2021  
+Nouveautés :
+- Autoriser un mode à s'auto-appeler (sur l'ensemble de l'équipement)
+- Définir le temps d'affichage du message d'information (passage au mode xxx) ou d'erreur (par défaut si non renseigné à 10 secondes ; pour un affichage sans limite valoriser à -1 )
+
+
 # 09/03/2021  
 Fixes:  
 - autoriser les autres utilisateurs que 'admin'

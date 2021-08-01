@@ -420,9 +420,15 @@ function addAction(_action, _type, _name, _el) {
   }
 }
 
+$('input[data-l1key=configuration][data-l2key=autocall]').change( function () {
+  updateCheckboxMode();
+});
+
 
 function updateCheckboxMode(){
 
+    var autocall= $('input[data-l1key=configuration][data-l2key=autocall]').is(':checked');
+    
     $('.modeAvailable').each(function () {
 
       var currentName = $(this).parents('.mode').find("a span.name").html();
@@ -440,7 +446,7 @@ function updateCheckboxMode(){
       
       if(MODE_LIST != null){
         for(var i in MODE_LIST){
-          if ( currentName != MODE_LIST[i] ) {
+          if ( autocall || currentName != MODE_LIST[i] ) {
             var check = '';
             if (actualChecked.indexOf(MODE_LIST[i]) > -1){ 
               var check = 'checked';
@@ -453,7 +459,7 @@ function updateCheckboxMode(){
       }else{
         $('#div_modes .mode').each(function () {
           tmpName = $(this).getValues('.modeAttr')[0].name ;
-          if ( currentName != tmpName ) {
+          if ( autocall || currentName != tmpName ) {
             var check = '';
             if (actualChecked.indexOf(tmpName) > -1){
               var check = 'checked';
