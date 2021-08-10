@@ -75,7 +75,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<!-- Paramètres généraux de l'équipement -->
 				<form class="form-horizontal">
 					<fieldset>
-						<div class="col-lg-7">
+						<div class="col-lg-9">
 							<div class="col-lg-12">
 								<legend><i class="fas fa-wrench"></i> {{Général}}</legend>
 								<div class="form-group">
@@ -136,6 +136,29 @@ $eqLogics = eqLogic::byType($plugin->getId());
 										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="countdown" placeholder="{{(en secondes) -1 illimité / 10sec par défaut}}"/>
 									</div>
 								</div>
+							<!-- 
+								<div class="form-group actionPwd">
+									<label class="col-sm-3 control-label">{{Action si mauvais mot de passe saisi}}</label>
+									<div class="col-sm-3">
+										<div class="input-group">
+											<input class="eqLogicAttr expressionAttr form-control input-sm cmdAction" data-l1key="cmd" data-type="actionPwd"/>
+											<span class="input-group-btn">
+												<a class="btn btn-sm listAction" data-type="actionPwd" title="{{Sélectionner un mot-clé}}">
+													<i class="fas fa-tasks"></i>
+												</a>
+												<a class="btn btn-sm listCmdAction" data-type="actionPwd" title="{{Sélectionner une commande action}}">
+													<i class="fas fa-list-alt"></i>
+												</a>
+											</span>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="actionOptions" id="45678">
+										</div>
+									</div>
+								</div>
+									-->
+
 							
 							</div>
 
@@ -143,7 +166,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 
 						<!-- Partie droite de l'onglet "Équipement" -->
 						<!-- Affiche l'icône du plugin par défaut mais vous pouvez y afficher les informations de votre choix -->
-						<div class="col-lg-5">
+						<div class="col-lg-3">
 							<legend><i class="fas fa-info"></i> {{Informations}}</legend>
 							<div class="form-group">
 								<div class="text-center">
@@ -172,6 +195,16 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<tr>
 								<th>{{Nom}}</th>
 								<th>{{Code}}</th>
+								<th>{{Début de validité}}
+									<sup>
+										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Si non renseigné, actif immédiatement"></i>
+									</sup>
+								</th>
+								<th>{{Fin de validité}}
+									<sup>
+										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Si non renseigné, pas de date max"></i>
+									</sup>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -203,6 +236,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
 </div><!-- /.row row-overflow -->
 
 <!-- Inclusion du fichier javascript du plugin (dossier, nom_du_fichier, extension_du_fichier, id_du_plugin) -->
-<?php include_file('desktop', 'digiaction', 'js', 'digiaction');?>
+<?php include_file('desktop', 'digiaction', 'js', 'digiaction');
+include_file('3rdparty', 'datetimepicker/jquery.datetimepicker', 'css', 'digiaction'); 
+include_file('3rdparty', 'datetimepicker/jquery.datetimepicker', 'js', 'digiaction'); ?>
 <!-- Inclusion du fichier javascript du core - NE PAS MODIFIER NI SUPPRIMER -->
 <?php include_file('core', 'plugin.template', 'js');?>

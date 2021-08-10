@@ -386,19 +386,64 @@ class digiaction extends eqLogic {
             }
 
             // if password is required, then check the password send to see if it matches on saved password.
-            $check = false;
+            $check = 0;
             log::add('digiaction', 'debug', '│ checking password : >'.$userCode.'<' ) ;
             foreach ($this->getConfiguration('users') as $user){
                //if ( """$user['userCode']""" != "$userCode" ){
+               // log::add('digiaction', 'debug', '│ info user : '. json_encode($user) ) ;
+
                if (strcmp($user['userCode'], $userCode) !== 0) {
                   continue; 
                }
+               
+               $now = time() ;
+               
+               // $beginOfDay = strtotime("today", $now);
+               // $endOfDay   = strtotime("tomorrow", $beginOfDay) - 1;
+
+               log::add('digiaction', 'debug', '│ time = ' . $now ) ;
+               log::add('digiaction', 'debug', '│ startFrom = ' . strtotime($user['startFrom']) ) ;
+               log::add('digiaction', 'debug', '│ endTo = ' . strtotime($user['endTo']) ) ;
+               self::addLogTemplate('check start date', true) ;
+               $isset = empty($user['startFrom']) ? 'true' : 'false';
+               log::add('digiaction', 'debug', '│ empty : ' . $isset );
+               if ( $isset == 'false'){
+                  $checkDate = self::checkIsAValidDate($user['startFrom']) ? 'true' : 'false';
+                  log::add('digiaction', 'debug', '│ checkIsAValidDate : ' . $checkDate );
+                  $comp = (strtotime($user['startFrom']) < $now) ? 'true' : 'false';
+                  log::add('digiaction', 'debug', '│ before now : ' . $comp ) ;
+               }
+
+               self::addLogTemplate('check end date', true) ;
+               $isset = empty($user['endTo']) ? 'true' : 'false';
+               log::add('digiaction', 'debug', '│ empty : ' . $isset );
+               if ( $isset == 'false'){
+                  $checkDate = self::checkIsAValidDate($user['endTo']) ? 'true' : 'false';
+                  log::add('digiaction', 'debug', '│ checkIsAValidDate : ' . $checkDate );
+                  $comp = (strtotime($user['endTo']) > $now) ? 'true' : 'false';
+                  log::add('digiaction', 'debug', '│ after now : ' . $comp ) ;
+               }
+               self::addLogTemplate(null, true) ;
+               
+
+               if ( !empty($user['startFrom']) && self::checkIsAValidDate($user['startFrom']) && strtotime($user['startFrom']) > $now ){
+                  log::add('digiaction', 'debug', '│ date restriction -- password OK for user ['.$user['name'] . '] but start date in the futur' ) ;
+                  $check = 2; 
+                  break;
+               }
+               
+               if ( !empty($user['endTo']) && self::checkIsAValidDate($user['endTo']) && strtotime($user['endTo']) < $now ){
+                  log::add('digiaction', 'debug', '│ date restriction -- password OK for user ['.$user['name'] . '] but end date in the past' ) ;
+                  $check = 2; 
+                  break;
+               }
+
                log::add('digiaction', 'debug', '│ password OK for user : '.$user['name'] ) ;
-               $check = true; 
+               $check = 1; 
                break;
             }
             
-            if (! $check) log::add('digiaction', 'debug', '│ no user found with password "' . $userCode . '"' ) ;
+            if ( $check == 0) log::add('digiaction', 'debug', '│ no user found with password "' . $userCode . '"' ) ;
             
          } catch (Exception $e) {
             log::add('digiaction', 'error', '│ Could not get cmd details => '. $e->getMessage() ) ;
@@ -406,9 +451,13 @@ class digiaction extends eqLogic {
          }
          
          self::addLogTemplate() ;
-         return $check;
+         return ( $check == 1) ? true : false;
 
          
+      }
+
+      public function checkIsAValidDate($myDateString){
+         return (bool)strtotime($myDateString);
       }
 
       public function hasPasswordRequired($nextCmdId){
@@ -445,6 +494,9 @@ class digiaction extends eqLogic {
             $first = $inter ? '├' : '┌' ;
             log::add('digiaction', 'debug', $first . '────────────────────────────────────' ) ;
             log::add('digiaction', 'debug', '│    ' . $msg  ) ;
+            log::add('digiaction', 'debug', '├────────────────────────────────────' ) ;
+         }
+         elseif ($inter ){
             log::add('digiaction', 'debug', '├────────────────────────────────────' ) ;
          }
          else{
@@ -535,5 +587,3 @@ class digiactionCmd extends cmd {
 
     /*     * **********************Getteur Setteur*************************** */
 }
-
-

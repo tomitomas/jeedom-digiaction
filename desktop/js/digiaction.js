@@ -259,20 +259,17 @@ function addMode(_mode,_updateMode) {
   div += ' <span class="modeAttr label cursor" data-l1key="icon" style="display:inline"></span>';
   div += '</div>';
   
-  div += '<div class="col-lg-2 col-sm-6">';
-  div += '<label class="col-sm-6 control-label" style="margin-right:7px" title="{{avant activation du mode}}">{{Délais (en sec)}}</label>';
+  div += '<div class="col-lg-2 col-sm-8">';
+  div += `<label class="col-sm-7 control-label" style="margin-right:7px" >{{Délais (en sec)}}
+            <sup>
+              <i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Délai avant l\'activation du mode"></i>
+            </sup>
+          </label>`;
   div += '<div class="col-sm-4">';
-  div += '<input type="number" class="modeAttr" min="0" data-l1key="timer" placeholder="{{délais}}" title="{{avant activation du mode}}" style="width:70px;" value="0" />';
+  div += '<input type="number" class="modeAttr" min="0" data-l1key="timer" placeholder="{{délais}}" style="width:70px;" value="0" />';
   div += '</div>';
   div += '</div>';
 
-  div += '<div class="col-lg-2 col-sm-6">';
-  div += '<label class="checkbox-inline">';
-  div += '<label class="checkbox-inline">';
-  div += '<input type="checkbox" class="modeAttr" data-l1key="confirmDigicode">{{Confirmation par mot de passe}}';
-  div += '</label>';
-  div += '</div>';
-  
   div += '</div>';
 
   div += '<hr/>';
@@ -286,6 +283,14 @@ function addMode(_mode,_updateMode) {
   div += '<div class="div">';
   div += '<label class="control-label" style="margin-right:7px">{{Mode Dispo}}</label>';
   div += '<div class="modeAvailable">';
+  div += '</div>';
+  div += '</div>';
+  //------
+  div += '<hr/>';
+  div += '<div class="div">';
+  div += '<label class="control-label" style="margin-right:7px">{{Sécurité}}</label>';
+  div += '<div >';
+  div += '<input type="checkbox" class="modeAttr" data-l1key="confirmDigicode">{{Confirmer l\'activation de ce mode par mot de passe}}';
   div += '</div>';
   div += '</div>';
   //------
@@ -562,6 +567,12 @@ function addUserToTable(_user) {
    tr += '<td style="min-width:300px;width:350px;">';
    tr += '<input class="userAttr form-control input-sm" data-l1key="userCode" placeholder="{{Code de l\'utilisateur}}">';
    tr += '</td>';
+   tr += '<td style="min-width:200px;width:250px;" class="inline">';
+   tr += '<input type="text" class="userAttr form-control input-sm datetimepicker" data-l1key="startFrom" placeholder="{{début}}" style="min-width:150px;width:200px;" readonly><i class="fas fa-calendar-alt showPicker" style="padding-left:5px"></i><i class="fas fa-trash-alt clearPicker" style="padding-left:10px"></i>';
+   tr += '</td>';
+   tr += '<td style="min-width:200px;width:250px;">';
+   tr += '<input type="text" class="userAttr form-control input-sm datetimepicker" data-l1key="endTo" placeholder="{{fin}}" style="min-width:150px;width:200px;" readonly><i class="fas fa-calendar-alt showPicker" style="padding-left:5px"></i><i class="fas fa-trash-alt clearPicker" style="padding-left:10px"></i>';
+   tr += '</td>';
    tr += '<td>';
    tr += '<i class="fas fa-minus-circle pull-right cursor bt_removeAction" data-type="user" data-action="remove"></i>';
    tr += '</td>';
@@ -569,4 +580,44 @@ function addUserToTable(_user) {
    $('#table_user tbody').append(tr);
    var tr = $('#table_user tbody tr').last();
    tr.setValues(_user, '.userAttr');
+ }
+
+$('body').off('click','.showPicker').on( 'click','.showPicker', function (){
+  var elt = $(this).prev('.datetimepicker') ; 
+  displayDateTimePicker(elt);
+});
+
+$('body').off('click','.clearPicker').on( 'click','.clearPicker', function (){
+  var elt = $(this).prevAll('input.datetimepicker');
+  console.log("prev : ", elt);
+  elt.val(''); //datetimepicker('reset'); 
+});
+
+$('body').off('click','.datetimepicker').on( 'click','.datetimepicker', function (){
+  displayDateTimePicker($(this));
+});
+
+function displayDateTimePicker(elt){
+  $(elt).datetimepicker({
+    lang: 'fr',
+    dayOfWeekStart : 1,
+    i18n: {
+        fr: {
+            months: [
+                'Janvier', 'Février', 'Mars', 'Avril',
+                'Mai', 'Juin', 'Juillet', 'Aout',
+                'Septembre', 'Octobre', 'Novembre', 'Décembre',
+            ],
+            dayOfWeek: [
+                "Di", "Lu", "Ma", "Me",
+                "Je", "Ve", "Sa",
+            ]
+        }
+    },
+    format: 'Y-m-d H:i:00',
+    step: 15
+  });
+
+  $(elt).datetimepicker('show');
+
  }
