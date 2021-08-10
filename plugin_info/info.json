@@ -1,19 +1,28 @@
 {
-	"id" : "digiaction",
-	"name" : "DigiAction",
-	"description" : "Ce plugin permet d'appliquer un mode réalisant une/des action(s) sous condition(s), et d'ajouter un contrôle par saisie de mot de passe (facultatif) via un digicode.",
-	"licence" : "AGPL",
-	"author" : "ToMtOm",
-	"require" : "4.1.19",
-	"category" : "security",
-	"hasDependency" : false,
-	"hasOwnDeamon" : false,
-	"maxDependancyInstallTime" : 0,
-	"changelog" : "https://tomitomas.github.io/DigiActionDoc/#language#/changelog_beta",
-	"documentation" : "https://tomitomas.github.io/DigiActionDoc/#language#/",
-	"link" : {
-		"forum":"https://community.jeedom.com/tag/plugin-digiaction"
+	"id": "digiaction",
+	"name": "DigiAction",
+	"description": "Ce plugin permet d'appliquer un mode réalisant une/des action(s) sous condition(s), et d'ajouter un contrôle par saisie de mot de passe (facultatif) via un digicode.",
+	"licence": "AGPL",
+	"author": "ToMtOm",
+	"require": "4.1.19",
+	"category": "security",
+	"hasDependency": false,
+	"hasOwnDeamon": false,
+	"maxDependancyInstallTime": 0,
+	"changelog": "https://tomitomas.github.io/DigiActionDoc/#language#/changelog_beta",
+	"documentation": "https://tomitomas.github.io/DigiActionDoc/#language#/",
+	"link": {
+		"forum": "https://community.jeedom.com/tag/plugin-digiaction"
 	},
-	"language" : ["fr_FR"],
-	"compatibility" : ["miniplus","smart","rpi","docker","diy","v4"]
+	"language": [
+		"fr_FR"
+	],
+	"compatibility": [
+		"miniplus",
+		"smart",
+		"rpi",
+		"docker",
+		"diy",
+		"v4"
+	]
 }
