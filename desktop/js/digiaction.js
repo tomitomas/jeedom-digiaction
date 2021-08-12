@@ -216,6 +216,14 @@ function saveEqLogic(_eqLogic) {
   return _eqLogic;
 }
 
+function checkDate(startDt, endDt) {
+  console.log('checking : >' + startDt + '< and >' + endDt + '<');
+  if (startDt == "" || endDt == "") return true;
+
+  return (new Date(startDt).getTime() < new Date(endDt).getTime())
+
+}
+
 function addMode(_mode, _updateMode) {
   if (init(_mode.name) == '') {
     return;
@@ -589,8 +597,17 @@ $('body').off('click', '.showPicker').on('click', '.showPicker', function () {
 
 $('body').off('click', '.clearPicker').on('click', '.clearPicker', function () {
   var elt = $(this).prevAll('input.datetimepicker');
-  console.log("prev : ", elt);
   elt.val(''); //datetimepicker('reset'); 
+});
+
+$(document).on('change', '.datetimepicker', function () {
+  startDt = $(this).parents('.cmdUser').find('input[data-l1key=startFrom]');
+  endDt = $(this).parents('.cmdUser').find('input[data-l1key=endTo]');
+  if (!checkDate(startDt.val(), endDt.val())) {
+    $('#div_alert').showAlert({ message: 'Erreur dans les dates saisies', level: 'danger' });
+    $(startDt).attr('style', function (i, s) { return (s || '') + 'background-color: red!important' });
+    $(endDt).attr('style', function (i, s) { return (s || '') + 'background-color: red!important' });
+  }
 });
 
 $('body').off('click', '.datetimepicker').on('click', '.datetimepicker', function () {
@@ -598,6 +615,8 @@ $('body').off('click', '.datetimepicker').on('click', '.datetimepicker', functio
 });
 
 function displayDateTimePicker(elt) {
+  // var myData = $(elt).data("l1key");
+  // var ctrl = (myData == 'startFrom') ? 'endTo' : 'startFrom';
   $(elt).datetimepicker({
     lang: 'fr',
     dayOfWeekStart: 1,
@@ -614,8 +633,29 @@ function displayDateTimePicker(elt) {
         ]
       }
     },
-    format: 'Y-m-d H:i:00',
-    step: 15
+    format: 'Y-m-d H:i',
+    formatDate: 'Y-m-d',
+    step: 15,
+    /*
+    onShow: function (ct) {
+      parent = $(elt).parents('.cmdUser').find('input[data-l1key=' + ctrl + ']');
+
+      myDate = $(parent).val() ? ($(parent).val()).split(' ')[0] : false;
+      myHour = $(parent).val() ? ($(parent).val()).split(' ')[1] : false;
+
+      if (ctrl == 'endTo') {
+        this.setOptions({
+          maxDate: myDate,
+          maxTime: myHour,
+        })
+      }
+      else {
+        this.setOptions({
+          minDate: myDate,
+          minTime: myHour,
+        })
+      }
+    },*/
   });
 
   $(elt).datetimepicker('show');
