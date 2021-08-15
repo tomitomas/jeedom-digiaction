@@ -179,7 +179,7 @@ class digiaction extends eqLogic {
                   }
                   $checkResult = $checkResult && $tmpCheck;
                } else {
-                  log::add('digiaction', 'debug', '│ DISABLE - expression "' . $checkHuman . '"');
+                  log::add('digiaction', 'debug', '│ DISABLE - option is not enable');
                }
             } catch (Exception $e) {
                log::add('digiaction', 'error', __('Erreur lors de l\'éxecution de ', __FILE__) . $action['cmdInfo'] . __('. Détails : ', __FILE__) . $e->getMessage());
@@ -439,7 +439,7 @@ class digiaction extends eqLogic {
       return ($check == 1) ? true : false;
    }
 
-   public function checkIsAValidDate($myDateString) {
+   public static function checkIsAValidDate($myDateString) {
       return (bool)strtotime($myDateString);
    }
 

@@ -575,11 +575,11 @@ function addUserToTable(_user) {
   tr += '<td style="min-width:300px;width:350px;">';
   tr += '<input class="userAttr form-control input-sm" data-l1key="userCode" placeholder="{{Code de l\'utilisateur}}">';
   tr += '</td>';
-  tr += '<td style="min-width:200px;width:250px;" class="inline">';
-  tr += '<input type="text" class="userAttr form-control input-sm datetimepicker" data-l1key="startFrom" placeholder="{{début}}" style="min-width:150px;width:200px;" readonly><i class="fas fa-calendar-alt showPicker" style="padding-left:5px"></i><i class="fas fa-trash-alt clearPicker" style="padding-left:10px"></i>';
+  tr += '<td style="min-width:180px;width:180px;" class="inline">';
+  tr += '<input type="text" class="userAttr form-control input-sm datetimepicker" data-l1key="startFrom" placeholder="{{début}}" style="min-width:120px;width:120px;" readonly><i class="fas fa-calendar-alt showPicker" style="padding-left:5px"></i><i class="fas fa-trash-alt clearPicker" style="padding-left:10px"></i>';
   tr += '</td>';
-  tr += '<td style="min-width:200px;width:250px;">';
-  tr += '<input type="text" class="userAttr form-control input-sm datetimepicker" data-l1key="endTo" placeholder="{{fin}}" style="min-width:150px;width:200px;" readonly><i class="fas fa-calendar-alt showPicker" style="padding-left:5px"></i><i class="fas fa-trash-alt clearPicker" style="padding-left:10px"></i>';
+  tr += '<td style="min-width:180px;width:180px;">';
+  tr += '<input type="text" class="userAttr form-control input-sm datetimepicker" data-l1key="endTo" placeholder="{{fin}}" style="min-width:120px;width:120px;" readonly><i class="fas fa-calendar-alt showPicker" style="padding-left:5px"></i><i class="fas fa-trash-alt clearPicker" style="padding-left:10px"></i>';
   tr += '</td>';
   tr += '<td>';
   tr += '<i class="fas fa-minus-circle pull-right cursor bt_removeAction" data-type="user" data-action="remove"></i>';
@@ -607,6 +607,9 @@ $(document).on('change', '.datetimepicker', function () {
     $('#div_alert').showAlert({ message: 'Erreur dans les dates saisies', level: 'danger' });
     $(startDt).attr('style', function (i, s) { return (s || '') + 'background-color: red!important' });
     $(endDt).attr('style', function (i, s) { return (s || '') + 'background-color: red!important' });
+  }
+  else {
+    $('#div_alert').hideAlert();
   }
 });
 
