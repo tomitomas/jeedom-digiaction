@@ -19,6 +19,7 @@
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class digiaction extends eqLogic {
+
    /*     * *************************Attributs****************************** */
 
    /*
@@ -37,9 +38,12 @@ class digiaction extends eqLogic {
 
    /*
      * Fonction exécutée automatiquement toutes les 5 minutes par Jeedom
-      public static function cron5() {
-      }
      */
+   public static function cron5() {
+      foreach (eqLogic::byType(__CLASS__) as $eqLogic) {
+         $eqLogic->save();
+      }
+   }
 
    /*
      * Fonction exécutée automatiquement toutes les 10 minutes par Jeedom
@@ -76,6 +80,15 @@ class digiaction extends eqLogic {
    /*     * *********************Méthodes d'instance************************* */
 
    // Fonction exécutée automatiquement après la sauvegarde (création ou mise à jour) de l'équipement 
+   public function preSave() {
+      // throw new Exception("pouet pouet");
+      // check date
+
+
+      $configUsers = $this->checkOrInitUserValidityDate($this->getConfiguration('users'), $this->getHumanName(), true);
+      $this->setConfiguration('users', $configUsers);
+   }
+
    public function postSave() {
 
       $currentMode = $this->getCmd(null, 'currentMode');
@@ -147,7 +160,123 @@ class digiaction extends eqLogic {
    }
 
 
+   public static function checkOrInitUserValidityDate($configUsers, $eqHumanName, $_force = false) {
+      $log_trace = self::getTrace();
 
+      foreach ($configUsers as $key => $value) {
+         if (!empty($value['startCron'])) {
+            $now = date("Y-m-d H:i:s");
+
+            // if no duration (anymore) but end date set, then remove end date
+            if (empty($value['duration']) && !empty($value['endTo'])) {
+               unset($value['endTo']);
+            }
+
+            // check if next start date is set or if end date is passed
+            if ($_force || empty($value['startFrom']) || (!empty($value['endTo']) && strtotime($value['endTo']) < strtotime($now))) {
+               $cron = new cron();
+               $cron->setSchedule($value['startCron']);
+               $nextRunCron = self::getNextRunDate($cron, $now);
+               // log::add(__CLASS__, 'info', '| nextRunCron : ' . $nextRunCron->format("Y-m-d H:i:s"));
+
+               // if real cron && next date exist 
+               if ($nextRunCron != false) {
+                  if ($log_trace) self::addLogTemplate('UPDATING VALIDITY DATE FOR ' . $eqHumanName . ' - USER : ' . $value['name']);
+                  $startCronArray = explode(' ', $value['startCron']);
+                  // if fixed date is set 
+                  if (count($startCronArray) == 6) {
+                     // if date asked and next one calculated have the same year, then it's a real next date
+                     if ($nextRunCron->format("Y") == $startCronArray[5]) {
+                        if ($log_trace) log::add(__CLASS__, 'debug', '| start date : ' . $nextRunCron->format("Y-m-d H:i:s"));
+                        $value['startFrom'] = $nextRunCron->format("Y-m-d H:i:s");
+                        if (!empty($value['duration'])) {
+                           $value['endTo'] = date("Y-m-d H:i:s", strtotime($value['startFrom']) + ($value['duration'] * 60));
+                           if ($log_trace)  log::add(__CLASS__, 'debug', '| end date : ' .  $value['endTo']);
+                        }
+                     }
+                     // if not the same, then it's in the futur and we can t apply it
+                     else {
+                        // calculate the previous date
+                        $prevRunCron = self::getPreviousRunDate($cron, $now);
+                        if ($log_trace) log::add(__CLASS__, 'debug', '| fixed date in the past : ' . $prevRunCron->format("Y-m-d H:i:s"));
+
+                        if ($prevRunCron != false) {
+                           $value['startFrom'] = $prevRunCron->format("Y-m-d H:i:s");
+
+                           if (!empty($value['duration'])) {
+                              $value['endTo'] = date("Y-m-d H:i:s", strtotime($value['startFrom']) + ($value['duration'] * 60));
+                           }
+                        } else {
+                           if (!empty($value['startFrom']))  unset($value['startFrom']);
+                           if (!empty($value['endTo'])) unset($value['endTo']);
+                        }
+                     }
+                  }
+                  // a real cron date
+                  else {
+                     if ($log_trace)  log::add(__CLASS__, 'debug', '| start date : ' . $nextRunCron->format("Y-m-d H:i:s"));
+                     $value['startFrom'] = $nextRunCron->format("Y-m-d H:i:s");
+                     if (!empty($value['duration'])) {
+
+                        // check the next next date, to see if there is no conflict with the duration
+                        $nextDateTmp = date("Y-m-d H:i:s", strtotime($value['startFrom']) + 60);
+                        $nextRunCron_2 = self::getNextRunDate($cron, $nextDateTmp);
+                        if ($log_trace) log::add(__CLASS__, 'debug', '| next next date : ' . $nextRunCron_2->format("Y-m-d H:i:s"));
+
+                        $datediff = strtotime($nextRunCron_2->format("Y-m-d H:i:s")) - strtotime($nextRunCron->format("Y-m-d H:i:s"));
+                        $datediffInMin = round($datediff / 60);
+                        if ($datediff < ($value['duration'] * 60)) {
+                           if ($log_trace) log::add(__CLASS__, 'debug', '| duration [' . $value['duration'] . '] is lower than 2 occurences  ' . $datediffInMin);
+                           if (!empty($value['endTo']))  unset($value['endTo']);
+                        } else {
+                           $value['endTo'] = date("Y-m-d H:i:s", strtotime($value['startFrom']) + ($value['duration'] * 60));
+                           if ($log_trace) log::add(__CLASS__, 'debug', '| end date : ' .  $value['endTo']);
+                        }
+                     }
+                  }
+
+                  if ($log_trace) self::addLogTemplate();
+               }
+            }
+         } else {
+            if (!empty($value['startFrom']))  unset($value['startFrom']);
+            if (!empty($value['endTo']))  unset($value['endTo']);
+         }
+
+         $configUsers[$key] = $value;
+      }
+
+      return $configUsers;
+   }
+
+
+   public static function getNextRunDate($cron, $start) {
+      try {
+         $c = new Cron\CronExpression(checkAndFixCron($cron->getSchedule()), new Cron\FieldFactory);
+         return $c->getNextRunDate($start, 0, true);
+      } catch (Exception $e) {
+         log::add(__CLASS__, 'warning', '| issue with cron expreesion : ' . $e->getMessage());
+      } catch (Error $e) {
+         log::add(__CLASS__, 'warning', '| issue with cron expreesion : ' . $e->getMessage());
+      }
+      return false;
+   }
+
+   public static function getPreviousRunDate($cron, $start) {
+      try {
+         $c = new Cron\CronExpression(checkAndFixCron($cron->getSchedule()), new Cron\FieldFactory);
+         return $c->getPreviousRunDate($start, 0, true);
+      } catch (Exception $e) {
+         log::add(__CLASS__, 'warning', '| issue with cron expreesion : ' . $e->getMessage());
+      } catch (Error $e) {
+         log::add(__CLASS__, 'warning', '| issue with cron expreesion : ' . $e->getMessage());
+      }
+      return false;
+   }
+
+   public static function getTrace() {
+      return (bool) config::byKey('trace', __CLASS__, false);
+   }
 
    public function doPreCheck($_mode) {
       if (!is_array($this->getConfiguration('modes'))) {
@@ -376,20 +505,21 @@ class digiaction extends eqLogic {
          log::add('digiaction', 'debug', '│ checking password : >' . $userCode . '<');
          foreach ($this->getConfiguration('users') as $user) {
             //if ( """$user['userCode']""" != "$userCode" ){
-            // log::add('digiaction', 'debug', '│ info user : '. json_encode($user) ) ;
+            // log::add('digiaction', 'debug', '│ info user : ' . json_encode($user));
+            // log::add('digiaction', 'debug', '│ checking user : ' . $user['name']);
+
+            if (isset($user['active']) && !$user['active']) {
+               log::add('digiaction', 'debug', '│ user "' . $user['name'] . '" disabled');
+               continue;
+            }
 
             if (strcmp($user['userCode'], $userCode) !== 0) {
+               // log::add('digiaction', 'debug', '│ wrong code ');
                continue;
             }
 
             $now = time();
 
-            // $beginOfDay = strtotime("today", $now);
-            // $endOfDay   = strtotime("tomorrow", $beginOfDay) - 1;
-
-            log::add('digiaction', 'debug', '│ time = ' . $now);
-            log::add('digiaction', 'debug', '│ startFrom = ' . strtotime($user['startFrom']));
-            log::add('digiaction', 'debug', '│ endTo = ' . strtotime($user['endTo']));
             self::addLogTemplate('check start date', true);
             $isset = empty($user['startFrom']) ? 'true' : 'false';
             log::add('digiaction', 'debug', '│ empty : ' . $isset);
@@ -415,13 +545,13 @@ class digiaction extends eqLogic {
             if (!empty($user['startFrom']) && self::checkIsAValidDate($user['startFrom']) && strtotime($user['startFrom']) > $now) {
                log::add('digiaction', 'debug', '│ date restriction -- password OK for user [' . $user['name'] . '] but start date in the futur');
                $check = 2;
-               break;
+               continue;
             }
 
             if (!empty($user['endTo']) && self::checkIsAValidDate($user['endTo']) && strtotime($user['endTo']) < $now) {
                log::add('digiaction', 'debug', '│ date restriction -- password OK for user [' . $user['name'] . '] but end date in the past');
                $check = 2;
-               break;
+               continue;
             }
 
             log::add('digiaction', 'debug', '│ password OK for user : ' . $user['name']);

@@ -569,17 +569,36 @@ function addUserToTable(_user) {
   }
   var random = Math.floor((Math.random() * 1000000) + 1);
   var tr = '<tr class="user cmdUser">';
+  tr += '<td style="min-width:20px;width:20px;">';
+  tr += '<input type="checkbox" class="userAttr form-control" data-l1key="active" checked>';
+  tr += '</td>';
   tr += '<td style="min-width:300px;width:350px;">';
   tr += '<input class="userAttr form-control input-sm" data-l1key="name" placeholder="{{Nom de l\'utilisateur}}">';
   tr += '</td>';
   tr += '<td style="min-width:300px;width:350px;">';
   tr += '<input class="userAttr form-control input-sm" data-l1key="userCode" placeholder="{{Code de l\'utilisateur}}">';
   tr += '</td>';
-  tr += '<td style="min-width:180px;width:180px;" class="inline">';
-  tr += '<input type="text" class="userAttr form-control input-sm datetimepicker" data-l1key="startFrom" placeholder="{{début}}" style="min-width:120px;width:120px;" readonly><i class="fas fa-calendar-alt showPicker" style="padding-left:5px"></i><i class="fas fa-trash-alt clearPicker" style="padding-left:10px"></i>';
+  tr += '<td style="min-width:250px;width:250px;" class="divCron">';
+  tr += `<div class="form-group selectRecurrent">
+            <div class="input-group">
+              <span class="input-group-btn">
+                    <a class="btn btn-default cursor digiDateRemove"><i class="fas fa-minus-circle"></i></a>
+              </span>
+              <input type="text" class="userAttr form-control" data-type="specific_cron" data-l1key="startCron" />
+                <span class="input-group-btn">
+                    <a class="btn btn-default cursor jeeHelper" data-helper="cron"><i class="fas fa-question-circle"></i></a>
+                </span>
+            </div>
+        </div>`;
   tr += '</td>';
   tr += '<td style="min-width:180px;width:180px;">';
-  tr += '<input type="text" class="userAttr form-control input-sm datetimepicker" data-l1key="endTo" placeholder="{{fin}}" style="min-width:120px;width:120px;" readonly><i class="fas fa-calendar-alt showPicker" style="padding-left:5px"></i><i class="fas fa-trash-alt clearPicker" style="padding-left:10px"></i>';
+  tr += '<input type="text" class="userAttr form-control input-sm" data-l1key="duration" placeholder="{{durée (en min)}}" style="min-width:120px;width:120px;" >';
+  tr += '</td>';
+  tr += '<td>';
+  tr += '<span class="userAttr" data-l1key="startFrom"></span>';
+  tr += '</td>';
+  tr += '<td>';
+  tr += '<span class="userAttr" data-l1key="endTo"></span>';
   tr += '</td>';
   tr += '<td>';
   tr += '<i class="fas fa-minus-circle pull-right cursor bt_removeAction" data-type="user" data-action="remove"></i>';
@@ -590,6 +609,19 @@ function addUserToTable(_user) {
   tr.setValues(_user, '.userAttr');
 }
 
+$('#table_user').off('click', '.digiDateRemove').on('click', '.digiDateRemove', function () {
+  $(this).parents('td.divCron').parent().find('.userAttr[data-l1key=startCron]').value('');
+  $(this).parents('td.divCron').parent().find('.userAttr[data-l1key=duration]').value('');
+  $(this).parents('td.divCron').parent().find('.userAttr[data-l1key=startFrom]').value('');
+  $(this).parents('td.divCron').parent().find('.userAttr[data-l1key=endTo]').value('');
+});
+
+
+/**
+ *  OUT OF DATE
+ */
+
+/*
 $('body').off('click', '.showPicker').on('click', '.showPicker', function () {
   var elt = $(this).prev('.datetimepicker');
   displayDateTimePicker(elt);
@@ -597,7 +629,7 @@ $('body').off('click', '.showPicker').on('click', '.showPicker', function () {
 
 $('body').off('click', '.clearPicker').on('click', '.clearPicker', function () {
   var elt = $(this).prevAll('input.datetimepicker');
-  elt.val(''); //datetimepicker('reset'); 
+  elt.val(''); //datetimepicker('reset');
 });
 
 $(document).on('change', '.datetimepicker', function () {
@@ -658,9 +690,9 @@ function displayDateTimePicker(elt) {
           minTime: myHour,
         })
       }
-    },*/
+    },  ** / <= end
   });
 
   $(elt).datetimepicker('show');
 
-}
+}*/

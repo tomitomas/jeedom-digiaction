@@ -193,18 +193,19 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					<table id="table_user" class="table table-bordered table-condensed">
 						<thead>
 							<tr>
+								<th>{{Actif}}</th>
 								<th>{{Nom}}</th>
 								<th>{{Code}}</th>
-								<th>{{Début de validité}}
+								<th>{{Début}}
 									<sup>
 										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Si non renseigné, actif immédiatement"></i>
 									</sup>
 								</th>
-								<th>{{Fin de validité}}
-									<sup>
-										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Si non renseigné, pas de date max"></i>
-									</sup>
-								</th>
+								<th>{{Durée}}<sup>
+										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="(en minutes)<br/>si vide, alors indéfini"></i>
+									</sup></th>
+								<th>{{Début de validité}}</th>
+								<th>{{Fin de validité}}</th>
 							</tr>
 						</thead>
 						<tbody>
