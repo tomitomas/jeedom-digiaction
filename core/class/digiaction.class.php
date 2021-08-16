@@ -186,8 +186,11 @@ class digiaction extends eqLogic {
 
       foreach ($configUsers as $key => $value) {
          if ($value['userCode'] === "") {
-            $userName = empty($value['name']) ? '' : 'pour l\'utilisateur [' . $value['name'] . ']';
-            throw new Exception("Pas de code saisi " . $userName);
+            $userName = empty($value['name']) ? '' : ' pour l\'utilisateur [' . $value['name'] . ']';
+            throw new Exception("Pas de code saisi" . $userName);
+         } elseif (!preg_match("/(A|B|(\d))+/", $value['userCode'], $match)) {
+            $userName = empty($value['name']) ? '' : ' pour l\'utilisateur [' . $value['name'] . ']';
+            throw new Exception("Code [" . $value['userCode'] . "] non valide" . $userName);
          }
 
          if (!empty($value['startCron'])) {

@@ -195,7 +195,11 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<tr>
 								<th>{{Actif}}</th>
 								<th>{{Nom}}</th>
-								<th>{{Code}}</th>
+								<th>{{Code}}
+									<sup>
+										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Uniquement A ou B ou chiffres de 0 à 9"></i>
+									</sup>
+								</th>
 								<th>{{Début}}
 									<sup>
 										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Si non renseigné, actif immédiatement"></i>
