@@ -188,7 +188,7 @@ class digiaction extends eqLogic {
          if ($value['userCode'] === "") {
             $userName = empty($value['name']) ? '' : ' pour l\'utilisateur [' . $value['name'] . ']';
             throw new Exception("Pas de code saisi" . $userName);
-         } elseif (!preg_match("/(A|B|(\d))+/", $value['userCode'], $match)) {
+         } elseif (!preg_match("/^(A|B|(\d))+$/", $value['userCode'], $match)) {
             $userName = empty($value['name']) ? '' : ' pour l\'utilisateur [' . $value['name'] . ']';
             throw new Exception("Code [" . $value['userCode'] . "] non valide" . $userName);
          }
