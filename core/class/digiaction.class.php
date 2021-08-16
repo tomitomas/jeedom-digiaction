@@ -185,7 +185,7 @@ class digiaction extends eqLogic {
       $log_trace = self::getTrace();
 
       foreach ($configUsers as $key => $value) {
-         if (empty($value['userCode'])) {
+         if ($value['userCode'] === "") {
             $userName = empty($value['name']) ? '' : 'pour l\'utilisateur [' . $value['name'] . ']';
             throw new Exception("Pas de code saisi " . $userName);
          }
