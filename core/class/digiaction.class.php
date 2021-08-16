@@ -78,14 +78,35 @@ class digiaction extends eqLogic {
 
 
    /*     * *********************Méthodes d'instance************************* */
+   // Fonction exécutée automatiquement avant la création de l'équipement 
+   public function preInsert() {
+   }
+
+   // Fonction exécutée automatiquement après la création de l'équipement 
+   public function postInsert() {
+   }
+
+   // Fonction exécutée automatiquement avant la mise à jour de l'équipement 
+   public function preUpdate() {
+   }
+
+   // Fonction exécutée automatiquement après la mise à jour de l'équipement 
+   public function postUpdate() {
+   }
+
+   // Fonction exécutée automatiquement avant la suppression de l'équipement 
+   public function preRemove() {
+   }
+
+   // Fonction exécutée automatiquement après la suppression de l'équipement 
+   public function postRemove() {
+   }
 
    // Fonction exécutée automatiquement après la sauvegarde (création ou mise à jour) de l'équipement 
    public function preSave() {
-      // throw new Exception("pouet pouet");
-      // check date
 
-
-      $configUsers = $this->checkOrInitUserValidityDate($this->getConfiguration('users'), $this->getHumanName(), true);
+      $configInit = $this->getConfiguration('users');
+      $configUsers = $this->checkOrInitUserValidityDate($configInit, $this->getHumanName(), true);
       $this->setConfiguration('users', $configUsers);
    }
 
@@ -164,6 +185,11 @@ class digiaction extends eqLogic {
       $log_trace = self::getTrace();
 
       foreach ($configUsers as $key => $value) {
+         if (empty($value['userCode'])) {
+            $userName = empty($value['name']) ? '' : 'pour l\'utilisateur [' . $value['name'] . ']';
+            throw new Exception("Pas de code saisi " . $userName);
+         }
+
          if (!empty($value['startCron'])) {
             $now = date("Y-m-d H:i:s");
 
@@ -228,6 +254,7 @@ class digiaction extends eqLogic {
                         if ($datediff < ($value['duration'] * 60)) {
                            if ($log_trace) log::add(__CLASS__, 'debug', '| duration [' . $value['duration'] . '] is lower than 2 occurences  ' . $datediffInMin);
                            if (!empty($value['endTo']))  unset($value['endTo']);
+                           throw new Exception('Erreur sur l\'utilisateur [' . $value['name'] . '], la durée de validité ' . $value['duration'] . ' doit être inférieur à ' . $datediffInMin . ' min');
                         } else {
                            $value['endTo'] = date("Y-m-d H:i:s", strtotime($value['startFrom']) + ($value['duration'] * 60));
                            if ($log_trace) log::add(__CLASS__, 'debug', '| end date : ' .  $value['endTo']);
