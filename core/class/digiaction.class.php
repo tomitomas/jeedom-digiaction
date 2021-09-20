@@ -115,40 +115,54 @@ class digiaction extends eqLogic {
       $currentMode = $this->getCmd(null, 'currentMode');
       if (!is_object($currentMode)) {
          $currentMode = new digiactionCmd();
+         $currentMode->setOrder(1);
       }
       $currentMode->setName(__('Mode', __FILE__));
       $currentMode->setEqLogic_id($this->id);
       $currentMode->setLogicalId('currentMode');
       $currentMode->setType('info');
-      $currentMode->setOrder(1);
       $currentMode->setSubType('string');
       $currentMode->save();
 
       $currentMode = $this->getCmd(null, 'digimessage');
       if (!is_object($currentMode)) {
          $currentMode = new digiactionCmd();
+         $currentMode->setOrder(2);
       }
       $currentMode->setName(__('Message', __FILE__));
       $currentMode->setEqLogic_id($this->id);
       $currentMode->setLogicalId('digimessage');
       $currentMode->setType('info');
-      $currentMode->setOrder(2);
       $currentMode->setSubType('string');
       $currentMode->save();
 
       $updateMsg = $this->getCmd(null, 'updatemessage');
       if (!is_object($updateMsg)) {
          $updateMsg = new digiactionCmd();
+         $updateMsg->setOrder(3);
       }
       $updateMsg->setName(__('MaJ Message', __FILE__));
       $updateMsg->setEqLogic_id($this->id);
       $updateMsg->setLogicalId('updatemessage');
       $updateMsg->setType('action');
-      $updateMsg->setOrder(3);
       $updateMsg->setSubType('message');
       $updateMsg->save();
 
+      $changeUserPwd = $this->getCmd(null, 'changeUserPwd');
+      if (!is_object($changeUserPwd)) {
+         $changeUserPwd = new digiactionCmd();
+         $changeUserPwd->setOrder(4);
+      }
+      $changeUserPwd->setName(__('Changer code utilisateur', __FILE__));
+      $changeUserPwd->setEqLogic_id($this->id);
+      $changeUserPwd->setLogicalId('changeUserPwd');
+      $changeUserPwd->setType('action');
+      $changeUserPwd->setSubType('message');
+      $changeUserPwd->save();
+
       $existing_mode = array();
+      $existing_mode[] = 'changeUserPwd';
+      $existing_mode[] = 'updatemessage';
       if (is_array($this->getConfiguration('modes'))) {
          $i = 3;
          foreach ($this->getConfiguration('modes') as $key => $value) {
@@ -172,7 +186,7 @@ class digiaction extends eqLogic {
       }
 
       foreach ($this->getCmd() as $cmd) {
-         if ($cmd->getType() == 'action' && !in_array($cmd->getLogicalId(), $existing_mode) && $cmd->getLogicalId() != 'updatemessage') {
+         if ($cmd->getType() == 'action' && !in_array($cmd->getLogicalId(), $existing_mode)) {
             $cmd->remove();
          }
       }
@@ -688,6 +702,38 @@ class digiactionCmd extends cmd {
             $value    = $_options['message'];
             $eqLogic = $this->getEqLogic();
             $eqLogic->checkAndUpdateCmd('digimessage', $value);
+            break;
+
+         case 'changeUserPwd':
+            if (!isset($_options['title'])) {
+               throw new Exception(__('Aucun utilisateur indiqué (champs "titre")', __FILE__));
+            }
+            if (!isset($_options['message'])) {
+               throw new Exception(__('Aucun nouveau mot de passe indiqué (champ "message")', __FILE__));
+            }
+            if (!preg_match("/^(A|B|(\d))+$/", $_options['message'], $match)) {
+               throw new Exception(__('Code non valide', __FILE__));
+            }
+
+            $eqLogic = $this->getEqLogic();
+            $users =   $eqLogic->getConfiguration('users');
+
+            $userSearched = trim($_options['title']);
+            log::add('digiaction', 'debug', '│ we are looking for user : ' . $userSearched);
+            foreach ($users as $key => $user) {
+               if ($user['name'] != $userSearched) {
+                  continue;
+               }
+
+               $user['userCode'] = trim($_options['message']);
+               $users[$key] = $user;
+
+               $eqLogic->setConfiguration('users', $users);
+               $eqLogic->save();
+               return;
+            }
+            log::add('digiaction', 'debug', '│ user ' . $userSearched . ' not found :(');
+
             break;
 
          default:
