@@ -146,6 +146,7 @@ class digiaction extends eqLogic {
       $updateMsg->setLogicalId('updatemessage');
       $updateMsg->setType('action');
       $updateMsg->setSubType('message');
+      $updateMsg->setDisplay('title_disable', 1);
       $updateMsg->save();
 
       $changeUserPwd = $this->getCmd(null, 'changeUserPwd');
@@ -158,6 +159,8 @@ class digiaction extends eqLogic {
       $changeUserPwd->setLogicalId('changeUserPwd');
       $changeUserPwd->setType('action');
       $changeUserPwd->setSubType('message');
+      $changeUserPwd->setDisplay('title_placeholder', __('Utilisateur', __FILE__));
+      $changeUserPwd->setDisplay('message_placeholder', __('Nouveau code', __FILE__));
       $changeUserPwd->save();
 
       $existing_mode = array();
