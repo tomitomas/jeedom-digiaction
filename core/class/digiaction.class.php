@@ -163,8 +163,23 @@ class digiaction extends eqLogic {
       $changeUserPwd->setDisplay('message_placeholder', __('Nouveau code', __FILE__));
       $changeUserPwd->save();
 
+       $checkPwd = $this->getCmd(null, 'checkPwd');
+      if (!is_object($checkPwd)) {
+          $checkPwd = new digiactionCmd();
+          $checkPwd->setOrder(5);
+      }
+      $checkPwd->setName(__('Vérifier un code', __FILE__));
+      $checkPwd->setEqLogic_id($this->id);
+      $checkPwd->setLogicalId('checkPwd');
+      $checkPwd->setType('action');
+      $checkPwd->setSubType('message');
+      $checkPwd->setDisplay('title_placeholder', __('Code', __FILE__));
+      $checkPwd->setDisplay('message_disable', true);
+      $checkPwd->save();
+
       $existing_mode = array();
       $existing_mode[] = 'changeUserPwd';
+      $existing_mode[] = 'checkPwd';
       $existing_mode[] = 'updatemessage';
       if (is_array($this->getConfiguration('modes'))) {
          $i = 3;
@@ -539,8 +554,11 @@ class digiaction extends eqLogic {
       self::addLogTemplate('CHECK USER CODE');
 
       try {
+         $checkPwd = true;
          // check if the new mode requires a password
-         $checkPwd = $this->hasPasswordRequired($nextCmdId);
+         if ($nextCmdId !== null) {
+             $checkPwd = $this->hasPasswordRequired($nextCmdId);
+         }
 
          if (!$checkPwd) {
             self::addLogTemplate();
@@ -738,6 +756,16 @@ class digiactionCmd extends cmd {
             log::add('digiaction', 'debug', '│ user ' . $userSearched . ' not found :(');
 
             break;
+
+         case 'checkPwd':
+            if (!isset($_options['title'])) {
+               throw new Exception(__('Aucun code indiqué (champs "titre")', __FILE__));
+            }
+            if (!preg_match("/^(A|B|(\d))+$/", $_options['title'], $match)) {
+               throw new Exception(__('Code non valide', __FILE__));
+            }
+
+            return $this->getEqLogic()->verifCodeUser($_options['title'], null) ? "valid" : "invalid";
 
          default:
             digiaction::addLogTemplate('CMD EXEC');
