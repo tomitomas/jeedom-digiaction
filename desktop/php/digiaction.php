@@ -242,6 +242,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 
 <!-- Inclusion du fichier javascript du plugin (dossier, nom_du_fichier, extension_du_fichier, id_du_plugin) -->
 <?php include_file('desktop', 'digiaction', 'js', 'digiaction');
+include_file('desktop', 'digiaction', 'css', 'digiaction');
 include_file('3rdparty', 'datetimepicker/jquery.datetimepicker', 'css', 'digiaction');
 include_file('3rdparty', 'datetimepicker/jquery.datetimepicker', 'js', 'digiaction'); ?>
 <!-- Inclusion du fichier javascript du core - NE PAS MODIFIER NI SUPPRIMER -->
