@@ -10,9 +10,9 @@
 	"hasOwnDeamon": false,
 	"maxDependancyInstallTime": 0,
 	"changelog": "https://tomitomas.github.io/DigiActionDoc/#language#/changelog",
-  "changelog_beta": "https://tomitomas.github.io/DigiActionDoc/#language#/changelog_beta",
+	"changelog_beta": "https://tomitomas.github.io/DigiActionDoc/#language#/changelog_beta",
 	"documentation": "https://tomitomas.github.io/DigiActionDoc/#language#/",
-  "documentation_beta": "https://tomitomas.github.io/DigiActionDoc/#language#/index_beta",
+	"documentation_beta": "https://tomitomas.github.io/DigiActionDoc/#language#/index_beta",
 	"link": {
 		"forum": "https://community.jeedom.com/tag/plugin-digiaction"
 	},
