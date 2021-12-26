@@ -575,8 +575,9 @@ function addUserToTable(_user) {
   tr += '<td style="min-width:300px;width:350px;">';
   tr += '<input class="userAttr form-control input-sm" data-l1key="name" placeholder="{{Nom de l\'utilisateur}}">';
   tr += '</td>';
-  tr += '<td style="min-width:300px;width:350px;">';
-  tr += '<input class="userAttr form-control input-sm" data-l1key="userCode" placeholder="{{Code de l\'utilisateur}}">';
+  tr += '<td style="min-width:300px;width:350px;" class="pass_show">';
+  tr += '<input type="password" class="userAttr form-control input-sm userPassword" data-l1key="userCode" placeholder="{{Code de l\'utilisateur}}">';
+  tr += '<span toggle="#password-field" class="eye fa fa-fw fa-eye field_icon toggle-password"></span>';
   tr += '</td>';
   tr += '<td style="min-width:250px;width:250px;" class="divCron">';
   tr += `<div class="form-group selectRecurrent">
@@ -608,6 +609,17 @@ function addUserToTable(_user) {
   var tr = $('#table_user tbody tr').last();
   tr.setValues(_user, '.userAttr');
 }
+
+$('body').off('click', '.toggle-password').on('click', '.toggle-password', function () {
+  $(this).toggleClass("fa-eye fa-eye-slash");
+  var input = $(this).siblings('.userPassword');
+  if (input.attr("type") === "password") {
+    input.attr("type", "text");
+  } else {
+    input.attr("type", "password");
+  }
+
+});
 
 $('#table_user').off('click', '.digiDateRemove').on('click', '.digiDateRemove', function () {
   $(this).parents('td.divCron').parent().find('.userAttr[data-l1key=startCron]').value('');
