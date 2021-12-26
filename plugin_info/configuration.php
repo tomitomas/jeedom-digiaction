@@ -18,17 +18,32 @@
 
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
-// Fonction exécutée automatiquement après l'installation du plugin
-  function digiaction_install() {
+include_file('core', 'authentification', 'php');
 
-  }
+if (!isConnect()) {
+  include_file('desktop', '404', 'php');
+  die();
+}
 
-// Fonction exécutée automatiquement après la mise à jour du plugin
-  function digiaction_update() {
 
-  }
+?>
+<form class="form-horizontal DigiAction">
 
-// Fonction exécutée automatiquement après la suppression du plugin
-  function digiaction_remove() {
+  <!-- CUSTOM ZONE -->
 
-  }
+  <div class="form-group">
+    <label class="col-lg-6 control-label">{{Activer plus de log}}
+      <sup>
+        <i class="fas fa-question-circle floatright" title="Permet de mettre plus de log sur certaines fonctions"></i>
+      </sup>
+    </label>
+    <div class="col-lg-3">
+      <input type="checkbox" class="configKey" data-l1key="trace" />
+    </div>
+  </div>
+
+
+
+
+  </fieldset>
+</form>

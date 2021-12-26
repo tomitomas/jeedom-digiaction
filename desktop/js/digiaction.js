@@ -18,67 +18,54 @@
 MODE_LIST = null;
 RENAME_LIST = [];
 
-$(window).on('load', function() {
+$(window).on('load', function () {
   var style = $('<style>.img-responsive { display: inline!important; } /*input[type=checkbox]{ outline: 1px solid #b42828 !important;}*/</style>');
   $('html > head').append(style);
- });
+});
 
 
 $('#bt_addMode').off('click').on('click', function () {
-  
+
   bootbox.prompt("{{Nom du mode ?}}", function (result) {
     if (result !== null && result != '') {
-      newName = $.trim(result) ; 
-      if (MODE_LIST != null && $.inArray( newName, MODE_LIST) > -1 ){ 
-        $('#div_alert').showAlert({message: 'Désolé ce nom existe déjà', level: 'danger'});
-        return; 
+      newName = $.trim(result);
+      if (MODE_LIST != null && $.inArray(newName, MODE_LIST) > -1) {
+        $('#div_alert').showAlert({ message: 'Désolé ce nom existe déjà', level: 'danger' });
+        return;
       }
-      addMode({name: newName});
+      addMode({ name: newName });
     }
   });
 });
 
-$('body').off('click','.rename').on('click','.rename',  function () {
+$('body').off('click', '.rename').on('click', '.rename', function () {
   var el = $(this);
   bootbox.prompt("{{Nouveau nom ?}}", function (result) {
     if (result !== null && result != '') {
-      newName = $.trim(result) ; 
-      if (MODE_LIST != null && $.inArray( newName, MODE_LIST) > -1 ){ 
-        $('#div_alert').showAlert({message: 'Désolé ce nom existe déjà', level: 'danger'});
-        return; 
+      newName = $.trim(result);
+      if (MODE_LIST != null && $.inArray(newName, MODE_LIST) > -1) {
+        $('#div_alert').showAlert({ message: 'Désolé ce nom existe déjà', level: 'danger' });
+        return;
       }
       var previousName = el.text();
       el.text(newName);
       el.closest('.panel.panel-default').find('span.name').text(newName);
-      renameCheckboxMode(previousName ,  newName );
-      
+      renameCheckboxMode(previousName, newName);
+
       var rename = {};
       rename['old'] = previousName;
       rename['new'] = newName;
       RENAME_LIST.push(rename);
-      
+
     }
   });
 });
 
 
-$("body").off('click','.listCmdInfo').on( 'click','.listCmdInfo', function () {
-    var type = $(this).attr('data-type');
-    var el = $(this).closest('.' + type).find('.expressionAttr[data-l1key=cmdInfo]');
-    jeedom.cmd.getSelectModal({cmd: {type: 'info'}}, function (result) {
-      el.value(result.human);
-      jeedom.cmd.displayActionOption(el.value(), '', function (html) {
-        el.closest('.' + type).find('.actionOptions').html(html);
-        taAutosize();
-      });
-    });
-});
-
-
-$("body").off('click','.listCmdAction').on( 'click','.listCmdAction', function () {
+$("body").off('click', '.listCmdInfo').on('click', '.listCmdInfo', function () {
   var type = $(this).attr('data-type');
-  var el = $(this).closest('.' + type).find('.expressionAttr[data-l1key=cmd]');
-  jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function (result) {
+  var el = $(this).closest('.' + type).find('.expressionAttr[data-l1key=cmdInfo]');
+  jeedom.cmd.getSelectModal({ cmd: { type: 'info' } }, function (result) {
     el.value(result.human);
     jeedom.cmd.displayActionOption(el.value(), '', function (html) {
       el.closest('.' + type).find('.actionOptions').html(html);
@@ -87,7 +74,20 @@ $("body").off('click','.listCmdAction').on( 'click','.listCmdAction', function (
   });
 });
 
-$("body").off('click','.listAction').on( 'click','.listAction',function () {
+
+$("body").off('click', '.listCmdAction').on('click', '.listCmdAction', function () {
+  var type = $(this).attr('data-type');
+  var el = $(this).closest('.' + type).find('.expressionAttr[data-l1key=cmd]');
+  jeedom.cmd.getSelectModal({ cmd: { type: 'action' } }, function (result) {
+    el.value(result.human);
+    jeedom.cmd.displayActionOption(el.value(), '', function (html) {
+      el.closest('.' + type).find('.actionOptions').html(html);
+      taAutosize();
+    });
+  });
+});
+
+$("body").off('click', '.listAction').on('click', '.listAction', function () {
   var type = $(this).attr('data-type');
   var el = $(this).closest('.' + type).find('.expressionAttr[data-l1key=cmd]');
   jeedom.getSelectActionModal({}, function (result) {
@@ -99,24 +99,24 @@ $("body").off('click','.listAction').on( 'click','.listAction',function () {
   });
 });
 
-$("body").off('click', '.bt_removeAction').on( 'click', '.bt_removeAction',function () {
+$("body").off('click', '.bt_removeAction').on('click', '.bt_removeAction', function () {
   var type = $(this).attr('data-type');
   $(this).closest('.' + type).remove();
 });
 
-$("#div_modes").off('click','.bt_addPreCheck').on('click','.bt_addPreCheck',  function () {
+$("#div_modes").off('click', '.bt_addPreCheck').on('click', '.bt_addPreCheck', function () {
   addAction({}, 'preCheck', '{{Pré-check}}', $(this).closest('.mode'));
 });
 
-$("#div_modes").off('click','.bt_addPreCheckActionError').on( 'click','.bt_addPreCheckActionError',function () {
+$("#div_modes").off('click', '.bt_addPreCheckActionError').on('click', '.bt_addPreCheckActionError', function () {
   addAction({}, 'preCheckActionError', '{{Pré-check Erreur}}', $(this).closest('.mode'));
 });
 
-$("#div_modes").off('click','.bt_addDoAction').on( 'click','.bt_addDoAction',function () {
+$("#div_modes").off('click', '.bt_addDoAction').on('click', '.bt_addDoAction', function () {
   addAction({}, 'doAction', '{{Action}}', $(this).closest('.mode'));
 });
 
-$('body').off('focusout','.cmdAction.expressionAttr[data-l1key=cmd]').on( 'focusout', '.cmdAction.expressionAttr[data-l1key=cmd]',function (event) {
+$('body').off('focusout', '.cmdAction.expressionAttr[data-l1key=cmd]').on('focusout', '.cmdAction.expressionAttr[data-l1key=cmd]', function (event) {
   var type = $(this).attr('data-type')
   var expression = $(this).closest('.' + type).getValues('.expressionAttr');
   var el = $(this);
@@ -126,35 +126,35 @@ $('body').off('focusout','.cmdAction.expressionAttr[data-l1key=cmd]').on( 'focus
   })
 });
 
-$("#div_modes").off('click','.bt_removeMode').on('click', '.bt_removeMode',function () {
+$("#div_modes").off('click', '.bt_removeMode').on('click', '.bt_removeMode', function () {
   $(this).closest('.mode').remove();
   updateCheckboxMode();
 });
 
-$('body').off('click','.mode .modeAction[data-l1key=chooseIcon]').on('click','.mode .modeAction[data-l1key=chooseIcon]',  function () {
+$('body').off('click', '.mode .modeAction[data-l1key=chooseIcon]').on('click', '.mode .modeAction[data-l1key=chooseIcon]', function () {
   var mode = $(this).closest('.mode');
   chooseIcon(function (_icon) {
     mode.find('.modeAttr[data-l1key=icon]').empty().append(_icon);
-  }, {img : true});
+  }, { img: true });
 });
 
-$('body').off('click','.mode .modeAttr[data-l1key=icon]').on( 'click','.mode .modeAttr[data-l1key=icon]', function () {
+$('body').off('click', '.mode .modeAttr[data-l1key=icon]').on('click', '.mode .modeAttr[data-l1key=icon]', function () {
   $(this).empty();
 });
 
-$('.nav-tabs li a').off('click').on('click',function(){
-  setTimeout(function(){
+$('.nav-tabs li a').off('click').on('click', function () {
+  setTimeout(function () {
     taAutosize();
   }, 50);
 })
 
-$('#div_modes').off('click','.panel-heading').on('click','.panel-heading',function(){
-  setTimeout(function(){
+$('#div_modes').off('click', '.panel-heading').on('click', '.panel-heading', function () {
+  setTimeout(function () {
     taAutosize();
   }, 50);
 })
 
-$("#div_modes").sortable({axis: "y", cursor: "move", items: ".mode", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
+$("#div_modes").sortable({ axis: "y", cursor: "move", items: ".mode", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
 
 function printEqLogic(_eqLogic) {
   $('#div_modes').empty();
@@ -165,18 +165,18 @@ function printEqLogic(_eqLogic) {
       MODE_LIST.push(_eqLogic.configuration.modes[i].name)
     }
     for (var i in _eqLogic.configuration.modes) {
-      addMode(_eqLogic.configuration.modes[i],false);
+      addMode(_eqLogic.configuration.modes[i], false);
     }
     MODE_LIST = null
     jeedom.cmd.displayActionsOption({
-      params : actionOptions,
-      async : false,
+      params: actionOptions,
+      async: false,
       error: function (error) {
-        $('#div_alert').showAlert({message: error.message, level: 'danger'});
+        $('#div_alert').showAlert({ message: error.message, level: 'danger' });
       },
-      success : function(data){
-        for(var i in data){
-          $('#'+data[i].id).append(data[i].html.html);
+      success: function (data) {
+        for (var i in data) {
+          $('#' + data[i].id).append(data[i].html.html);
         }
         taAutosize();
       }
@@ -200,7 +200,7 @@ function saveEqLogic(_eqLogic) {
     mode.preCheck = $(this).find('.preCheck').getValues('.expressionAttr');
     mode.preCheckActionError = $(this).find('.preCheckActionError').getValues('.expressionAttr');
     mode.doAction = $(this).find('.doAction').getValues('.expressionAttr');
-    mode.availableMode = $(this).find('.modeAvailable').getValues('.expressionAttr') ;
+    mode.availableMode = $(this).find('.modeAvailable').getValues('.expressionAttr');
     _eqLogic.configuration.modes.push(mode);
   });
   _eqLogic.configuration.users = [];
@@ -209,14 +209,22 @@ function saveEqLogic(_eqLogic) {
     _eqLogic.configuration.users.push(user[0]);
   });
 
-  if ( RENAME_LIST.length > 0){
-    renameCmdConfig(_eqLogic.id, RENAME_LIST ); 
+  if (RENAME_LIST.length > 0) {
+    renameCmdConfig(_eqLogic.id, RENAME_LIST);
   }
 
   return _eqLogic;
 }
 
-function addMode(_mode,_updateMode) {
+function checkDate(startDt, endDt) {
+  console.log('checking : >' + startDt + '< and >' + endDt + '<');
+  if (startDt == "" || endDt == "") return true;
+
+  return (new Date(startDt).getTime() < new Date(endDt).getTime())
+
+}
+
+function addMode(_mode, _updateMode) {
   if (init(_mode.name) == '') {
     return;
   }
@@ -229,13 +237,13 @@ function addMode(_mode,_updateMode) {
   div += '</a>';
   div += '</h3>';
   div += '</div>';
-  
+
   div += '<div id="collapse' + random + '" class="panel-collapse collapse in">';
   div += '<div class="panel-body">';
   div += '<div class="well">';
-  
+
   div += '<form class="form-horizontal" role="form">';
-  
+
   div += '<div class="col-lg-3 col-sm-12 pull-right">';
   div += '<div class="input-group pull-right" style="display:inline-flex">';
   div += '<span class="input-group-btn">';
@@ -246,33 +254,30 @@ function addMode(_mode,_updateMode) {
   div += '</span>';
   div += '</div>';
   div += '</div>';
-  
+
   div += '<div class="form-group">';
   div += '<div class="col-lg-2 col-sm-6">';
   div += '<label class="control-label" style="margin-right:7px">{{Nom}}</label>';
   div += '<span class="modeAttr label rename cursor" style="display:inline" data-l1key="name"></span>';
   div += '</div>';
-  
+
   div += '<div class="col-lg-3 col-sm-6 digiSetupIcone">';
   div += '<label class="control-label" style="margin-right:7px">{{Icône}}</label>';
   div += '<a class="modeAction btn btn-default btn-sm" data-l1key="chooseIcon"><i class="fas fa-flag"></i> {{Icône}}</a>';
   div += ' <span class="modeAttr label cursor" data-l1key="icon" style="display:inline"></span>';
   div += '</div>';
-  
-  div += '<div class="col-lg-2 col-sm-6">';
-  div += '<label class="col-sm-6 control-label" style="margin-right:7px" title="{{avant activation du mode}}">{{Délais (en sec)}}</label>';
+
+  div += '<div class="col-lg-2 col-sm-8">';
+  div += `<label class="col-sm-7 control-label" style="margin-right:7px" >{{Délais (en sec)}}
+            <sup>
+              <i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Délai avant l\'activation du mode"></i>
+            </sup>
+          </label>`;
   div += '<div class="col-sm-4">';
-  div += '<input type="number" class="modeAttr" min="0" data-l1key="timer" placeholder="{{délais}}" title="{{avant activation du mode}}" style="width:70px;" value="0" />';
+  div += '<input type="number" class="modeAttr" min="0" data-l1key="timer" placeholder="{{délais}}" style="width:70px;" value="0" />';
   div += '</div>';
   div += '</div>';
 
-  div += '<div class="col-lg-2 col-sm-6">';
-  div += '<label class="checkbox-inline">';
-  div += '<label class="checkbox-inline">';
-  div += '<input type="checkbox" class="modeAttr" data-l1key="confirmDigicode">{{Confirmation par mot de passe}}';
-  div += '</label>';
-  div += '</div>';
-  
   div += '</div>';
 
   div += '<hr/>';
@@ -289,12 +294,20 @@ function addMode(_mode,_updateMode) {
   div += '</div>';
   div += '</div>';
   //------
+  div += '<hr/>';
+  div += '<div class="div">';
+  div += '<label class="control-label" style="margin-right:7px">{{Sécurité}}</label>';
+  div += '<div >';
+  div += '<input type="checkbox" class="modeAttr" data-l1key="confirmDigicode">{{Confirmer l\'activation de ce mode par mot de passe}}';
+  div += '</div>';
+  div += '</div>';
+  //------
   div += '</form>';
   div += '</div>';
   div += '</div>';
   div += '</div>';
   div += '</div>';
-  
+
   $('#div_modes').append(div);
   $('#div_modes .mode').last().setValues(_mode, '.modeAttr');
   if (is_array(_mode.preCheck)) {
@@ -316,7 +329,7 @@ function addMode(_mode,_updateMode) {
       addAction(_mode.preCheckActionError[i], 'preCheckActionError', '{{Pré-check Erreur}}', $('#div_modes .mode').last());
     }
   }
-  
+
   if (is_array(_mode.doAction)) {
     for (var i in _mode.doAction) {
       addAction(_mode.doAction[i], 'doAction', '{{Action}}', $('#div_modes .mode').last());
@@ -327,10 +340,10 @@ function addMode(_mode,_updateMode) {
     }
   }
   $('.collapse').collapse();
-  $("#div_modes .mode:last .div_preCheck").sortable({axis: "y", cursor: "move", items: ".preCheck", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
-  $("#div_modes .mode:last .div_preCheckActionError").sortable({axis: "y", cursor: "move", items: ".preCheckActionError", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
-  $("#div_modes .mode:last .div_doAction").sortable({axis: "y", cursor: "move", items: ".doAction", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
-  if ( isset(_mode.availableMode) && _mode.availableMode[0] !== {} ) {
+  $("#div_modes .mode:last .div_preCheck").sortable({ axis: "y", cursor: "move", items: ".preCheck", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
+  $("#div_modes .mode:last .div_preCheckActionError").sortable({ axis: "y", cursor: "move", items: ".preCheckActionError", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
+  $("#div_modes .mode:last .div_doAction").sortable({ axis: "y", cursor: "move", items: ".doAction", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
+  if (isset(_mode.availableMode) && _mode.availableMode[0] !== {}) {
     var checkbox = addCheckboxMode(_mode.availableMode);
     $('#div_modes .mode:last .modeAvailable').append(checkbox);
   } else {
@@ -391,7 +404,7 @@ function addAction(_action, _type, _name, _el) {
     div += '<a class="btn ' + button + ' btn-sm listAction" data-type="' + _type + '" title="{{Sélectionner un mot-clé}}"><i class="fas fa-tasks"></i></a>';
     div += '<a class="btn ' + button + ' btn-sm listCmdAction" data-type="' + _type + '" title="{{Sélectionner une commande action}}"><i class="fas fa-list-alt"></i></a>';
   }
-  else{
+  else {
     div += '<input class="expressionAttr form-control input-sm cmdInfo" data-l1key="cmdInfo" data-type="' + _type + '" />';
     div += '<span class="input-group-btn">';
     div += '<a class="btn ' + button + ' btn-sm listCmdInfo" data-type="' + _type + '" title="{{Sélectionner une commande info}}"><i class="fas fa-list-alt"></i></a>';
@@ -400,7 +413,7 @@ function addAction(_action, _type, _name, _el) {
   div += '</div>';
   div += '</div>';
   var actionOption_id = uniqId();
-  div += '<div class="col-sm-5 actionOptions" id="'+actionOption_id+'">';
+  div += '<div class="col-sm-5 actionOptions" id="' + actionOption_id + '">';
   div += '</div>';
   div += '</div>';
   if (isset(_el)) {
@@ -410,89 +423,95 @@ function addAction(_action, _type, _name, _el) {
     $('#div_' + _type).append(div);
     $('#div_' + _type + ' .' + _type + '').last().setValues(_action, '.expressionAttr');
   }
-  if(actionOptions){
+  if (actionOptions) {
     actionOptions.push({
-      expression : init(_action.cmd, ''),
-      options : _action.options,
-      id : actionOption_id
+      expression: init(_action.cmd, ''),
+      options: _action.options,
+      id: actionOption_id
     });
     // $('.actionOptions .input-group .input-group-addon').addClass('digiActionBgGreen') ; 
   }
 }
 
+$('input[data-l1key=configuration][data-l2key=autocall]').change(function () {
+  updateCheckboxMode();
+});
 
-function updateCheckboxMode(){
 
-    $('.modeAvailable').each(function () {
+function updateCheckboxMode() {
 
-      var currentName = $(this).parents('.mode').find("a span.name").html();
-      
-      var actualChecked = [];
+  var autocall = $('input[data-l1key=configuration][data-l2key=autocall]').is(':checked');
 
-      $(this).find("input[type=checkbox]").each(function() {
-        if ($(this).is(":checked")) {
-          actualChecked.push($(this).attr('data-l1key'));
+  $('.modeAvailable').each(function () {
+
+    var currentName = $(this).parents('.mode').find("a span.name").html();
+
+    var actualChecked = [];
+
+    $(this).find("input[type=checkbox]").each(function () {
+      if ($(this).is(":checked")) {
+        actualChecked.push($(this).attr('data-l1key'));
+      }
+    });
+
+    $(this).empty();
+    var options = '';
+
+    if (MODE_LIST != null) {
+      for (var i in MODE_LIST) {
+        if (autocall || currentName != MODE_LIST[i]) {
+          var check = '';
+          if (actualChecked.indexOf(MODE_LIST[i]) > -1) {
+            var check = 'checked';
+          }
+          options += '<label class="checkbox-inline">';
+          options += '<input type="checkbox" class="expressionAttr" data-l1key="' + MODE_LIST[i] + '" ' + check + ' /><span>' + MODE_LIST[i] + '</span>';
+          options += '</label>';
+        }
+      }
+    } else {
+      $('#div_modes .mode').each(function () {
+        tmpName = $(this).getValues('.modeAttr')[0].name;
+        if (autocall || currentName != tmpName) {
+          var check = '';
+          if (actualChecked.indexOf(tmpName) > -1) {
+            var check = 'checked';
+          }
+          options += '<label class="checkbox-inline">';
+          options += '<input type="checkbox" class="expressionAttr" data-l1key="' + tmpName + '" ' + check + ' /><span>' + tmpName + '</span>';
+          options += '</label>';
         }
       });
-
-      $(this).empty();
-      var options = '';
-      
-      if(MODE_LIST != null){
-        for(var i in MODE_LIST){
-          if ( currentName != MODE_LIST[i] ) {
-            var check = '';
-            if (actualChecked.indexOf(MODE_LIST[i]) > -1){ 
-              var check = 'checked';
-            }
-            options += '<label class="checkbox-inline">';
-            options += '<input type="checkbox" class="expressionAttr" data-l1key="'+MODE_LIST[i]+'" ' + check +' /><span>'+MODE_LIST[i]+'</span>' ;
-            options += '</label>';
-          }
-        }
-      }else{
-        $('#div_modes .mode').each(function () {
-          tmpName = $(this).getValues('.modeAttr')[0].name ;
-          if ( currentName != tmpName ) {
-            var check = '';
-            if (actualChecked.indexOf(tmpName) > -1){
-              var check = 'checked';
-            }
-            options += '<label class="checkbox-inline">';
-            options += '<input type="checkbox" class="expressionAttr" data-l1key="'+tmpName+'" ' + check +' /><span>'+tmpName+'</span>' ;
-            options += '</label>';
-          }
-        });
-      }
-      $(this).append(options);
+    }
+    $(this).append(options);
   });
 }
 
 
-function addCheckboxMode(_availableMode){
-    var options = '';
+function addCheckboxMode(_availableMode) {
+  var options = '';
 
-    for (const [key, value] of Object.entries(_availableMode[0])) {
-      check= '';
-      if ( value == 1){
-        check='checked' ;
-      }
-      options += '<label class="checkbox-inline">';
-      options += '<input type="checkbox" class="expressionAttr" data-l1key="'+key+'" ' + check +' /><span>'+key+'</span>' ;
-      options += '</label>';
+  for (const [key, value] of Object.entries(_availableMode[0])) {
+    check = '';
+    if (value == 1) {
+      check = 'checked';
     }
+    options += '<label class="checkbox-inline">';
+    options += '<input type="checkbox" class="expressionAttr" data-l1key="' + key + '" ' + check + ' /><span>' + key + '</span>';
+    options += '</label>';
+  }
 
-    return options;
+  return options;
 }
 
-function renameCheckboxMode(_previousName , _newName ){
+function renameCheckboxMode(_previousName, _newName) {
 
-  $('#div_modes .modeAvailable input[type=checkbox]').each(function(i){
-    if ( $(this).attr('data-l1key') == _previousName){
+  $('#div_modes .modeAvailable input[type=checkbox]').each(function (i) {
+    if ($(this).attr('data-l1key') == _previousName) {
       $(this).attr('data-l1key', _newName);
       $(this).siblings('span').text(_newName);
     }
-    
+
   });
 
 }
@@ -501,7 +520,7 @@ function renameCheckboxMode(_previousName , _newName ){
  when renaming a mode it will delete the previous command and create a new one
  this function is used to update the name & logicalId of the existing cmd instead of deleting it
 */
-function renameCmdConfig(_eqId, _arrayRename ){
+function renameCmdConfig(_eqId, _arrayRename) {
   $.ajax({
     type: "POST",
     url: "plugins/digiaction/core/ajax/digiaction.ajax.php",
@@ -530,37 +549,150 @@ function renameCmdConfig(_eqId, _arrayRename ){
 /*
 * Permet la réorganisation des commandes dans l'équipement
 */
-$("#table_user").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
+$("#table_user").sortable({ axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
 
 /*
 * Fonction permettant l'affichage des commandes dans l'équipement
 */
 
 $('#bt_addUser').off('click').on('click', function () {
-  
-      addUserToTable();
-    
-  
+
+  addUserToTable();
+
+
 });
 
 
 function addUserToTable(_user) {
-  if (! isset(_user)){
+  if (!isset(_user)) {
     _user = {};
   }
-   var random = Math.floor((Math.random() * 1000000) + 1);
-   var tr = '<tr class="user cmdUser">';
-   tr += '<td style="min-width:300px;width:350px;">';
-   tr += '<input class="userAttr form-control input-sm" data-l1key="name" placeholder="{{Nom de l\'utilisateur}}">';
-   tr += '</td>';
-   tr += '<td style="min-width:300px;width:350px;">';
-   tr += '<input class="userAttr form-control input-sm" data-l1key="userCode" placeholder="{{Code de l\'utilisateur}}">';
-   tr += '</td>';
-   tr += '<td>';
-   tr += '<i class="fas fa-minus-circle pull-right cursor bt_removeAction" data-type="user" data-action="remove"></i>';
-   tr += '</td>';
-   tr += '</tr>';
-   $('#table_user tbody').append(tr);
-   var tr = $('#table_user tbody tr').last();
-   tr.setValues(_user, '.userAttr');
- }
+  var random = Math.floor((Math.random() * 1000000) + 1);
+  var tr = '<tr class="user cmdUser">';
+  tr += '<td style="min-width:20px;width:20px;">';
+  tr += '<input type="checkbox" class="userAttr form-control" data-l1key="active" checked>';
+  tr += '</td>';
+  tr += '<td style="min-width:300px;width:350px;">';
+  tr += '<input class="userAttr form-control input-sm" data-l1key="name" placeholder="{{Nom de l\'utilisateur}}">';
+  tr += '</td>';
+  tr += '<td style="min-width:300px;width:350px;">';
+  tr += '<input class="userAttr form-control input-sm" data-l1key="userCode" placeholder="{{Code de l\'utilisateur}}">';
+  tr += '</td>';
+  tr += '<td style="min-width:250px;width:250px;" class="divCron">';
+  tr += `<div class="form-group selectRecurrent">
+            <div class="input-group">
+              <span class="input-group-btn">
+                    <a class="btn btn-default cursor digiDateRemove"><i class="fas fa-minus-circle"></i></a>
+              </span>
+              <input type="text" class="userAttr form-control" data-type="specific_cron" data-l1key="startCron" />
+                <span class="input-group-btn">
+                    <a class="btn btn-default cursor jeeHelper" data-helper="cron"><i class="fas fa-question-circle"></i></a>
+                </span>
+            </div>
+        </div>`;
+  tr += '</td>';
+  tr += '<td style="min-width:180px;width:180px;">';
+  tr += '<input type="text" class="userAttr form-control input-sm" data-l1key="duration" placeholder="{{durée (en min)}}" style="min-width:120px;width:120px;" >';
+  tr += '</td>';
+  tr += '<td>';
+  tr += '<span class="userAttr" data-l1key="startFrom"></span>';
+  tr += '</td>';
+  tr += '<td>';
+  tr += '<span class="userAttr" data-l1key="endTo"></span>';
+  tr += '</td>';
+  tr += '<td>';
+  tr += '<i class="fas fa-minus-circle pull-right cursor bt_removeAction" data-type="user" data-action="remove"></i>';
+  tr += '</td>';
+  tr += '</tr>';
+  $('#table_user tbody').append(tr);
+  var tr = $('#table_user tbody tr').last();
+  tr.setValues(_user, '.userAttr');
+}
+
+$('#table_user').off('click', '.digiDateRemove').on('click', '.digiDateRemove', function () {
+  $(this).parents('td.divCron').parent().find('.userAttr[data-l1key=startCron]').value('');
+  $(this).parents('td.divCron').parent().find('.userAttr[data-l1key=duration]').value('');
+  $(this).parents('td.divCron').parent().find('.userAttr[data-l1key=startFrom]').value('');
+  $(this).parents('td.divCron').parent().find('.userAttr[data-l1key=endTo]').value('');
+});
+
+
+/**
+ *  OUT OF DATE
+ */
+
+/*
+$('body').off('click', '.showPicker').on('click', '.showPicker', function () {
+  var elt = $(this).prev('.datetimepicker');
+  displayDateTimePicker(elt);
+});
+
+$('body').off('click', '.clearPicker').on('click', '.clearPicker', function () {
+  var elt = $(this).prevAll('input.datetimepicker');
+  elt.val(''); //datetimepicker('reset');
+});
+
+$(document).on('change', '.datetimepicker', function () {
+  startDt = $(this).parents('.cmdUser').find('input[data-l1key=startFrom]');
+  endDt = $(this).parents('.cmdUser').find('input[data-l1key=endTo]');
+  if (!checkDate(startDt.val(), endDt.val())) {
+    $('#div_alert').showAlert({ message: 'Erreur dans les dates saisies', level: 'danger' });
+    $(startDt).attr('style', function (i, s) { return (s || '') + 'background-color: red!important' });
+    $(endDt).attr('style', function (i, s) { return (s || '') + 'background-color: red!important' });
+  }
+  else {
+    $('#div_alert').hideAlert();
+  }
+});
+
+$('body').off('click', '.datetimepicker').on('click', '.datetimepicker', function () {
+  displayDateTimePicker($(this));
+});
+
+function displayDateTimePicker(elt) {
+  // var myData = $(elt).data("l1key");
+  // var ctrl = (myData == 'startFrom') ? 'endTo' : 'startFrom';
+  $(elt).datetimepicker({
+    lang: 'fr',
+    dayOfWeekStart: 1,
+    i18n: {
+      fr: {
+        months: [
+          'Janvier', 'Février', 'Mars', 'Avril',
+          'Mai', 'Juin', 'Juillet', 'Aout',
+          'Septembre', 'Octobre', 'Novembre', 'Décembre',
+        ],
+        dayOfWeek: [
+          "Di", "Lu", "Ma", "Me",
+          "Je", "Ve", "Sa",
+        ]
+      }
+    },
+    format: 'Y-m-d H:i',
+    formatDate: 'Y-m-d',
+    step: 15,
+    /*
+    onShow: function (ct) {
+      parent = $(elt).parents('.cmdUser').find('input[data-l1key=' + ctrl + ']');
+
+      myDate = $(parent).val() ? ($(parent).val()).split(' ')[0] : false;
+      myHour = $(parent).val() ? ($(parent).val()).split(' ')[1] : false;
+
+      if (ctrl == 'endTo') {
+        this.setOptions({
+          maxDate: myDate,
+          maxTime: myHour,
+        })
+      }
+      else {
+        this.setOptions({
+          minDate: myDate,
+          minTime: myHour,
+        })
+      }
+    },  ** / <= end
+  });
+
+  $(elt).datetimepicker('show');
+
+}*/

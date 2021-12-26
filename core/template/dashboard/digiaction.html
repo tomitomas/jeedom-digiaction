@@ -1,32 +1,40 @@
-<div class="eqLogic eqLogic-widget digiaction allowResize allowReorderCmd #custom_layout# #eqLogic_class#" data-eqType="#eqType#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#" style="width: #width#;height: #height#;#style#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#">
-    <center class="widget-name"><a href="#" style="font-size : 1.1em;#hideEqLogicName#">#name_display# <span class="object_name">#object_name# ici</span></a></center>
-    
-    <div class="cmd cmd-widget #history#" data-type="info" data-subtype="string" data-template="default" data-cmd_id="#digimessage_id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#" style="padding-bottom: 20px;">
+<div class="eqLogic eqLogic-widget digiaction allowResize allowReorderCmd #custom_layout# #eqLogic_class#"
+    data-eqType="#eqType#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#"
+    style="width: #width#;height: #height#;#style#" data-translate-category="#translate_category#"
+    data-category="#category#" data-tags="#tags#">
+    <center class="widget-name"><a href="#" style="font-size : 1.1em;#hideEqLogicName#">#name_display# <span
+                class="object_name">#object_name# ici</span></a></center>
+
+    <div class="cmd cmd-widget #history#" data-type="info" data-subtype="string" data-template="default"
+        data-cmd_id="#digimessage_id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#"
+        style="padding-bottom: 20px;">
         <div class="digiMessage">
         </div>
         <script>
-            jeedom.cmd.update['#digimessage_id#'] = function(_options) {
+            jeedom.cmd.update['#digimessage_id#'] = function (_options) {
                 var cmd = $('.cmd[data-cmd_id=#digimessage_id#]');
                 cmd.find('.digiMessage').empty().append(_options.display_value);
-                setTimeout(function(){
-                     cmd.find('.digiMessage').empty(); 
-                }, 10000);
+                if (parseInt('#countdown#') != -1) {
+                    setTimeout(function () {
+                        cmd.find('.digiMessage').empty();
+                    }, parseInt('#countdown#'));
+                }
             }
-            jeedom.cmd.update['#digimessage_id#']({display_value:"#digimessage#"})
+            jeedom.cmd.update['#digimessage_id#']({ display_value: "#digimessage#" })
         </script>
     </div>
-    
+
     <div class="digiactionMainPanel digiactionPanelMode">
-        <div >
-          <ul class="digiactionDisplay">
-            #modeAvailable#
-        </ul>
+        <div>
+            <ul class="digiactionDisplay">
+                #modeAvailable#
+            </ul>
         </div>
     </div>
 
 
     <div class="digiActionHideDefault digiactionMainPanel digiactionPanelTimer">
-        <ul >
+        <ul>
             <div>
                 <li class="digiActionCountDownTimer digiActionNoBg"></li>
             </div>
@@ -37,7 +45,7 @@
     </div>
     <div class="digiActionHideDefault digiactionMainPanel digiactionPanelKeyboard ">
         <ul class="digiActionKeyPressed"></ul>
-        <ul class="digiactionPanel digiActionCircle" >
+        <ul class="digiactionPanel digiActionCircle">
             <div>
                 <li class="digiKeyboard">1</li>
                 <li class="digiKeyboard">2</li>
