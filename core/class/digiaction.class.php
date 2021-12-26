@@ -544,7 +544,7 @@ class digiaction extends eqLogic {
 
          if (!$checkPwd) {
             self::addLogTemplate();
-            return true;
+            return array(true, null);
          }
 
          // if password is required, then check the password send to see if it matches on saved password.
@@ -613,7 +613,8 @@ class digiaction extends eqLogic {
       }
 
       self::addLogTemplate();
-      return ($check == 1) ? true : false;
+      $checkFinal = ($check == 1) ? true : false;
+      return array($checkFinal, $user['name'] ?? null);
    }
 
    public static function checkIsAValidDate($myDateString) {
@@ -647,17 +648,17 @@ class digiaction extends eqLogic {
       return false;
    }
 
-   public static function addLogTemplate($msg = null, $inter = false) {
+   public static function addLogTemplate($msg = null, $inter = false, $level = 'debug') {
 
       if (!is_null($msg)) {
          $first = $inter ? '├' : '┌';
-         log::add('digiaction', 'debug', $first . '────────────────────────────────────');
-         log::add('digiaction', 'debug', '│    ' . $msg);
-         log::add('digiaction', 'debug', '├────────────────────────────────────');
+         log::add('digiaction', $level, $first . '────────────────────────────────────');
+         log::add('digiaction', $level, '│    ' . $msg);
+         log::add('digiaction', $level, '├────────────────────────────────────');
       } elseif ($inter) {
-         log::add('digiaction', 'debug', '├────────────────────────────────────');
+         log::add('digiaction', $level, '├────────────────────────────────────');
       } else {
-         log::add('digiaction', 'debug', '└────────────────────────────────────');
+         log::add('digiaction', $level, '└────────────────────────────────────');
       }
    }
 
@@ -698,7 +699,6 @@ class digiactionCmd extends cmd {
 
    // Exécution d'une commande  
    public function execute($_options = array()) {
-
 
       switch ($this->getLogicalId()) {
          case 'updatemessage':
@@ -763,6 +763,12 @@ class digiactionCmd extends cmd {
                $eqLogic->doAction($newMode, 'doAction');
                $currentMode->event($newMode);
                $eqLogic->checkAndUpdateCmd('digimessage', 'Commande réalisée pour ' . $newMode);
+               $userName = $_options['userName'] ?? null;
+               if (!empty($_options['userName'])) {
+                  log::add('digiaction', 'info', '│ Commande "' . $this->getName() . '" a été réalisée par : ' . $userName);
+               } else {
+                  log::add('digiaction', 'info', '│ Commande "' . $this->getName() . '" a été réalisée (sans contrôle)');
+               }
             }
 
             digiaction::addLogTemplate();
