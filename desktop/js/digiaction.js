@@ -330,7 +330,7 @@ function addMode(_mode, _updateMode) {
   div += '</div>';
 
   div += '<div class="col-sm-2">';
-  div += '<a class="btn btn-sm bt_addWrongPwd btn-warning" title="Réaliser des actions si trop de mauvais essaie de mot de passe"><i class="fas fa-plus-circle"></i> {{Action si mauvais mdp}}</a>';
+  div += '<a class="btn btn-sm bt_addWrongPwd btn-danger" title="Réaliser des actions si trop de mauvais essaie de mot de passe"><i class="fas fa-plus-circle"></i> {{Action si mauvais mdp}}</a>';
   div += '</div>';
 
   div += '</div>';
@@ -423,13 +423,17 @@ function addAction(_action, _type, _name, _el) {
     input = 'has-success';
     button = 'btn-success';
   }
-  if (_type == 'preCheck' || _type == 'doWrongPwd') {
+  if (_type == 'preCheck') {
     input = 'has-warning';
     button = 'btn-warning';
   }
   if (_type == 'preCheckActionError') {
     input = 'has-default';
     button = 'btn-default';
+  }
+  if (_type == 'doWrongPwd') {
+    input = 'has-danger';
+    button = 'btn-danger';
   }
   var div = '<div class="' + _type + '">';
   div += '<div class="form-group ">';
