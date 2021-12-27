@@ -75,7 +75,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<!-- Paramètres généraux de l'équipement -->
 				<form class="form-horizontal">
 					<fieldset>
-						<div class="col-lg-9">
+						<div class="col-lg-10">
 							<div class="col-lg-12">
 								<legend><i class="fas fa-wrench"></i> {{Général}}</legend>
 								<div class="form-group">
@@ -136,28 +136,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="countdown" placeholder="{{(en secondes) -1 illimité / 10sec par défaut}}" />
 									</div>
 								</div>
-								<!-- 
-								<div class="form-group actionPwd">
-									<label class="col-sm-3 control-label">{{Action si mauvais mot de passe saisi}}</label>
-									<div class="col-sm-3">
-										<div class="input-group">
-											<input class="eqLogicAttr expressionAttr form-control input-sm cmdAction" data-l1key="cmd" data-type="actionPwd"/>
-											<span class="input-group-btn">
-												<a class="btn btn-sm listAction" data-type="actionPwd" title="{{Sélectionner un mot-clé}}">
-													<i class="fas fa-tasks"></i>
-												</a>
-												<a class="btn btn-sm listCmdAction" data-type="actionPwd" title="{{Sélectionner une commande action}}">
-													<i class="fas fa-list-alt"></i>
-												</a>
-											</span>
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="actionOptions" id="45678">
-										</div>
-									</div>
-								</div>
-									-->
 
 
 							</div>
@@ -166,7 +144,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 
 						<!-- Partie droite de l'onglet "Équipement" -->
 						<!-- Affiche l'icône du plugin par défaut mais vous pouvez y afficher les informations de votre choix -->
-						<div class="col-lg-3">
+						<div class="col-lg-2">
 							<legend><i class="fas fa-info"></i> {{Informations}}</legend>
 							<div class="form-group">
 								<div class="text-center">

@@ -116,6 +116,10 @@ $("#div_modes").off('click', '.bt_addDoAction').on('click', '.bt_addDoAction', f
   addAction({}, 'doAction', '{{Action}}', $(this).closest('.mode'));
 });
 
+$("#div_modes").off('click', '.bt_addWrongPwd').on('click', '.bt_addWrongPwd', function () {
+  addAction({}, 'doWrongPwd', '{{Action Alerte}}', $(this).closest('.mode'));
+});
+
 $('body').off('focusout', '.cmdAction.expressionAttr[data-l1key=cmd]').on('focusout', '.cmdAction.expressionAttr[data-l1key=cmd]', function (event) {
   var type = $(this).attr('data-type')
   var expression = $(this).closest('.' + type).getValues('.expressionAttr');
@@ -201,6 +205,14 @@ function saveEqLogic(_eqLogic) {
     mode.preCheckActionError = $(this).find('.preCheckActionError').getValues('.expressionAttr');
     mode.doAction = $(this).find('.doAction').getValues('.expressionAttr');
     mode.availableMode = $(this).find('.modeAvailable').getValues('.expressionAttr');
+    mode.doWrongPwd = $(this).find('.doWrongPwd').getValues('.expressionAttr');
+    if (mode.nbWrongPwd < "1") {
+      mode.nbWrongPwd = "-1";
+    }
+    if (mode.confirmDigicode == 0) {
+      mode.nbWrongPwd = "-1";
+      mode.doWrongPwd = [];
+    }
     _eqLogic.configuration.modes.push(mode);
   });
   _eqLogic.configuration.users = [];
@@ -208,6 +220,7 @@ function saveEqLogic(_eqLogic) {
     var user = $(this).getValues('.userAttr');
     _eqLogic.configuration.users.push(user[0]);
   });
+  _eqLogic.configuration.currentWrongPwd = 0;
 
   if (RENAME_LIST.length > 0) {
     renameCmdConfig(_eqLogic.id, RENAME_LIST);
@@ -250,7 +263,7 @@ function addMode(_mode, _updateMode) {
   div += '<a class="btn btn-sm bt_removeMode btn-danger roundedLeft"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>';
   div += '<a class="btn btn-sm bt_addPreCheck btn-warning"><i class="fas fa-plus-circle"></i> {{Pré-check}}</a>';
   div += '<a class="btn btn-sm bt_addPreCheckActionError btn-default" title="Réaliser une action si les pré-check échouent"><i class="fas fa-plus-circle"></i> {{Pré-check Erreur}}</a>';
-  div += '<a class="btn btn-sm bt_addDoAction btn-success"><i class="fas fa-plus-circle"></i> {{Action}}</a>';
+  div += '<a class="btn btn-sm bt_addDoAction btn-success roundedRight"><i class="fas fa-plus-circle"></i> {{Action}}</a>';
   div += '</span>';
   div += '</div>';
   div += '</div>';
@@ -295,12 +308,39 @@ function addMode(_mode, _updateMode) {
   div += '</div>';
   //------
   div += '<hr/>';
-  div += '<div class="div">';
+  div += '<div class="div securityOptions">';
   div += '<label class="control-label" style="margin-right:7px">{{Sécurité}}</label>';
-  div += '<div >';
-  div += '<input type="checkbox" class="modeAttr" data-l1key="confirmDigicode">{{Confirmer l\'activation de ce mode par mot de passe}}';
+
+  div += '<div class="div addActionWrongPwd">';
+
+  div += '<div class="col-sm-5">';
+  div += '<input type="checkbox" class="modeAttr checkPwdRequired" data-l1key="confirmDigicode">{{Confirmer l\'activation de ce mode par mot de passe}}';
   div += '</div>';
+
+
+  div += '<div class="pwdOption" style="display:none">';
+
+  div += '<div class="col-sm-5">';
+  div += `<label class="control-label" style="margin-right:7px" >{{Action si nb mauvais code saisi >=}}
+          <sup>
+          <i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Nombre de mauvais code à atteindre pour déclencher les actions<br/>-1 : pas de control"></i>
+          </sup>
+          </label>`;
+  div += '<input type="number" class="modeAttr" step="1" data-l1key="nbWrongPwd" placeholder="{{nb}}" style="width:70px;" value="1" />';
   div += '</div>';
+
+  div += '<div class="col-sm-2">';
+  div += '<a class="btn btn-sm bt_addWrongPwd btn-warning" title="Réaliser des actions si trop de mauvais essaie de mot de passe"><i class="fas fa-plus-circle"></i> {{Action si mauvais mdp}}</a>';
+  div += '</div>';
+
+  div += '</div>';
+
+  div += '</div>';
+  div += '<hr/>';
+
+  div += '<div class="div_doWrongPwd" style="display:none"></div>';
+  div += '</div>';
+
   //------
   div += '</form>';
   div += '</div>';
@@ -339,15 +379,33 @@ function addMode(_mode, _updateMode) {
       addAction(_mode.doAction, 'doAction', '{{Action}}', $('#div_modes .mode').last());
     }
   }
+
+  if (is_array(_mode.doWrongPwd)) {
+    for (var i in _mode.doWrongPwd) {
+      addAction(_mode.doWrongPwd[i], 'doWrongPwd', '{{Action Alerte}}', $('#div_modes .mode').last());
+    }
+  } else {
+    if ($.trim(_mode.doWrongPwd) != '') {
+      addAction(_mode.doWrongPwd, 'doWrongPwd', '{{Action Alerte}}', $('#div_modes .mode').last());
+    }
+  }
+
   $('.collapse').collapse();
   $("#div_modes .mode:last .div_preCheck").sortable({ axis: "y", cursor: "move", items: ".preCheck", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
   $("#div_modes .mode:last .div_preCheckActionError").sortable({ axis: "y", cursor: "move", items: ".preCheckActionError", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
   $("#div_modes .mode:last .div_doAction").sortable({ axis: "y", cursor: "move", items: ".doAction", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
+  $("#div_modes .mode:last .div_doWrongPwd").sortable({ axis: "y", cursor: "move", items: ".doWrongPwd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
+
   if (isset(_mode.availableMode) && _mode.availableMode[0] !== {}) {
     var checkbox = addCheckboxMode(_mode.availableMode);
     $('#div_modes .mode:last .modeAvailable').append(checkbox);
   } else {
     updateCheckboxMode();
+  }
+
+  if (_mode.confirmDigicode == "1") {
+    var elt = $('#collapse' + random).find('.checkPwdRequired')
+    displaySecurityOptions(elt, 'block');
   }
 
 }
@@ -365,7 +423,7 @@ function addAction(_action, _type, _name, _el) {
     input = 'has-success';
     button = 'btn-success';
   }
-  if (_type == 'preCheck') {
+  if (_type == 'preCheck' || _type == 'doWrongPwd') {
     input = 'has-warning';
     button = 'btn-warning';
   }
@@ -377,7 +435,7 @@ function addAction(_action, _type, _name, _el) {
   div += '<div class="form-group ">';
   div += '<label class="col-sm-1 control-label">' + _name + '</label>';
   div += '<div class="col-sm-1  ' + input + '">';
-  if (_type == 'doAction') {
+  if (_type == 'doAction' || _type == 'doWrongPwd') {
     div += '<input type="checkbox" class="expressionAttr" data-l1key="options" data-l2key="enable" checked title="{{Décocher pour désactiver l\'action}}" />';
   }
   else if (_type == 'preCheckActionError') {
@@ -392,7 +450,7 @@ function addAction(_action, _type, _name, _el) {
   div += '<span class="input-group-btn">';
   div += '<a class="btn btn-default bt_removeAction btn-sm" data-type="' + _type + '"><i class="fas fa-minus-circle"></i></a>';
   div += '</span>';
-  if (_type == 'doAction') {
+  if (_type == 'doAction' || _type == 'doWrongPwd') {
     div += '<input class="expressionAttr form-control input-sm cmdAction" data-l1key="cmd" data-type="' + _type + '" />';
     div += '<span class="input-group-btn">';
     div += '<a class="btn ' + button + ' btn-sm listAction" data-type="' + _type + '" title="{{Sélectionner un mot-clé}}"><i class="fas fa-tasks"></i></a>';
@@ -628,83 +686,20 @@ $('#table_user').off('click', '.digiDateRemove').on('click', '.digiDateRemove', 
   $(this).parents('td.divCron').parent().find('.userAttr[data-l1key=endTo]').value('');
 });
 
-
-/**
- *  OUT OF DATE
- */
-
-/*
-$('body').off('click', '.showPicker').on('click', '.showPicker', function () {
-  var elt = $(this).prev('.datetimepicker');
-  displayDateTimePicker(elt);
-});
-
-$('body').off('click', '.clearPicker').on('click', '.clearPicker', function () {
-  var elt = $(this).prevAll('input.datetimepicker');
-  elt.val(''); //datetimepicker('reset');
-});
-
-$(document).on('change', '.datetimepicker', function () {
-  startDt = $(this).parents('.cmdUser').find('input[data-l1key=startFrom]');
-  endDt = $(this).parents('.cmdUser').find('input[data-l1key=endTo]');
-  if (!checkDate(startDt.val(), endDt.val())) {
-    $('#div_alert').showAlert({ message: 'Erreur dans les dates saisies', level: 'danger' });
-    $(startDt).attr('style', function (i, s) { return (s || '') + 'background-color: red!important' });
-    $(endDt).attr('style', function (i, s) { return (s || '') + 'background-color: red!important' });
+$('body').off('click', '.checkPwdRequired').on('click', '.checkPwdRequired', function () {
+  var display = this.checked ? 'block' : 'none';
+  var elt = $(this).closest('.addActionWrongPwd').find('.modeAttr[data-l1key=nbWrongPwd]')
+  if (this.checked) {
+    elt.val(1);
   }
   else {
-    $('#div_alert').hideAlert();
+    elt.val("-1");
   }
+  displaySecurityOptions(this, display);
 });
 
-$('body').off('click', '.datetimepicker').on('click', '.datetimepicker', function () {
-  displayDateTimePicker($(this));
-});
+function displaySecurityOptions(elt, display) {
+  $(elt).parent().siblings('.pwdOption').css("display", display);
+  $(elt).closest('.securityOptions').find('.div_doWrongPwd').css("display", display);
 
-function displayDateTimePicker(elt) {
-  // var myData = $(elt).data("l1key");
-  // var ctrl = (myData == 'startFrom') ? 'endTo' : 'startFrom';
-  $(elt).datetimepicker({
-    lang: 'fr',
-    dayOfWeekStart: 1,
-    i18n: {
-      fr: {
-        months: [
-          'Janvier', 'Février', 'Mars', 'Avril',
-          'Mai', 'Juin', 'Juillet', 'Aout',
-          'Septembre', 'Octobre', 'Novembre', 'Décembre',
-        ],
-        dayOfWeek: [
-          "Di", "Lu", "Ma", "Me",
-          "Je", "Ve", "Sa",
-        ]
-      }
-    },
-    format: 'Y-m-d H:i',
-    formatDate: 'Y-m-d',
-    step: 15,
-    /*
-    onShow: function (ct) {
-      parent = $(elt).parents('.cmdUser').find('input[data-l1key=' + ctrl + ']');
-
-      myDate = $(parent).val() ? ($(parent).val()).split(' ')[0] : false;
-      myHour = $(parent).val() ? ($(parent).val()).split(' ')[1] : false;
-
-      if (ctrl == 'endTo') {
-        this.setOptions({
-          maxDate: myDate,
-          maxTime: myHour,
-        })
-      }
-      else {
-        this.setOptions({
-          minDate: myDate,
-          minTime: myHour,
-        })
-      }
-    },  ** / <= end
-  });
-
-  $(elt).datetimepicker('show');
-
-}*/
+}
