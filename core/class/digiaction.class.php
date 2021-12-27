@@ -335,6 +335,10 @@ class digiaction extends eqLogic {
          if ($value['name'] != $_mode) {
             continue;
          }
+         if (!key_exists('preCheck', $value)) {
+            log::add('digiaction', 'warning', '│ the key "preCheck" does not exist for mode ' . $_mode);
+            continue;
+         }
          foreach ($value['preCheck'] as $action) {
             try {
                if (isset($action['options']) && $action['options']['enable'] == 1) {
@@ -383,6 +387,10 @@ class digiaction extends eqLogic {
       $checkAction = null;
       foreach ($this->getConfiguration('modes') as $key => $value) {
          if ($value['name'] != $_mode) {
+            continue;
+         }
+         if (!key_exists($_type, $value)) {
+            log::add('digiaction', 'warning', '│ the key "' . $_type . '" does not exist for mode ' . $_mode);
             continue;
          }
          log::add('digiaction', 'debug', '│ *** action(s) ' . $_type . ' will be executed ***');
@@ -696,7 +704,7 @@ class digiaction extends eqLogic {
          if ($mode['name'] != $cmdName) {
             continue;
          }
-         return array($mode['nbWrongPwd'],  $this->getConfiguration('currentWrongPwd', 0));
+         return array($mode['nbWrongPwd'] ?? -1,  $this->getConfiguration('currentWrongPwd', 0));
       }
 
       return array(-1,  $this->getConfiguration('currentWrongPwd', 0));
@@ -753,7 +761,9 @@ class digiactionCmd extends cmd {
 
    // Exécution d'une commande  
    public function execute($_options = array()) {
-
+      /**
+       * @var digiaction $eqLogic
+       */
       switch ($this->getLogicalId()) {
          case 'updatemessage':
             $value    = $_options['message'];
