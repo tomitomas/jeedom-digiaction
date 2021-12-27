@@ -386,11 +386,21 @@ class digiaction extends eqLogic {
             continue;
          }
          log::add('digiaction', 'debug', '│ *** action(s) ' . $_type . ' will be executed ***');
+
+         $arrResearch = array('#eqId#', '#eqName#', '#modeName#');
+         $arrReplace = array($this->getId(), $this->getName(), $_mode);
+
          foreach ($value[$_type] as $action) {
             try {
                $options = array();
                if (isset($action['options'])) {
                   $options = $action['options'];
+               }
+               if (isset($options['tags'])) {
+                  $options['tags'] = str_replace($arrResearch, $arrReplace, $options['tags']);
+               }
+               if (isset($options['message'])) {
+                  $options['message'] = str_replace($arrResearch, $arrReplace, $options['message']);
                }
                $tmpAction = scenarioExpression::createAndExec('action', $action['cmd'], $options);
 
@@ -541,9 +551,14 @@ class digiaction extends eqLogic {
       try {
          // check if the new mode requires a password
          $checkPwd = $this->hasPasswordRequired($nextCmdId);
+         list($setupWrongPwd, $currentWrongPwd) = $this->getSecurityOptions($nextCmdId);
 
          if (!$checkPwd) {
             self::addLogTemplate();
+            if ($setupWrongPwd > 0) {
+               $this->setConfiguration('currentWrongPwd', 0);
+               $this->save(true);
+            }
             return array(true, null);
          }
 
@@ -606,7 +621,25 @@ class digiaction extends eqLogic {
             break;
          }
 
-         if ($check == 0) log::add('digiaction', 'debug', '│ no user found with password "' . $userCode . '"');
+         if ($check == 0) {
+            log::add('digiaction', 'warning', '│ no user found with password "' . $userCode . '"');
+
+            //increment wrong pwd
+            $newWrongPwd = $currentWrongPwd + 1;
+            if ($setupWrongPwd > 0 && $setupWrongPwd <= $newWrongPwd) {
+               log::add('digiaction', 'debug', '│ increment wrong pwd to ' . $newWrongPwd . ' => setup limit ' . $setupWrongPwd);
+               $this->setConfiguration('currentWrongPwd', $newWrongPwd);
+               $this->save(true);
+
+               log::add('digiaction', 'debug', '│ will perform actions for wrong password ! ');
+               $cmd = cmd::byId($nextCmdId);
+               $newMode = $cmd->getLogicalId();
+               $this->doAction($newMode, 'doWrongPwd');
+            }
+         } else {
+            $this->setConfiguration('currentWrongPwd', 0);
+            $this->save(true);
+         }
       } catch (Exception $e) {
          log::add('digiaction', 'error', '│ Could not get cmd details => ' . $e->getMessage());
          $check = false;
@@ -646,6 +679,27 @@ class digiaction extends eqLogic {
       }
 
       return false;
+   }
+
+   public function getSecurityOptions($nextCmdId) {
+      $cmd = digiactionCmd::byId($nextCmdId);
+      if (!is_object($cmd)) {
+         throw new Exception('Unexisting command ID for ' . $nextCmdId);
+      }
+
+      $cmdName = $cmd->getLogicalId();
+      // log::add('digiaction', 'debug', '│ found the cmd \'' . $cmdName . '\' for cmdId ' . $nextCmdId);
+
+      $modes = $this->getModeDetails($cmdName);
+
+      foreach ($modes as $mode) {
+         if ($mode['name'] != $cmdName) {
+            continue;
+         }
+         return array($mode['nbWrongPwd'],  $this->getConfiguration('currentWrongPwd', 0));
+      }
+
+      return array(-1,  $this->getConfiguration('currentWrongPwd', 0));
    }
 
    public static function addLogTemplate($msg = null, $inter = false, $level = 'debug') {
