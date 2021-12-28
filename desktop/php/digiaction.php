@@ -172,6 +172,11 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						<thead>
 							<tr>
 								<th>{{Actif}}</th>
+								<th>{{Panic}}
+									<sup>
+										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Spécifie l'utilisateur/code à utiliser pour activer les opérations correspondant aux actions 'panic'"></i>
+									</sup>
+								</th>
 								<th>{{Nom}}</th>
 								<th>{{Code}}
 									<sup>
