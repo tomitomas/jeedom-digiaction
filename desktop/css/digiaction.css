@@ -11,3 +11,7 @@
   cursor: pointer; 
   transition: .3s ease all; 
 } 
+
+.noPaddingLeft {
+  padding-left: 0px !important;
+}
