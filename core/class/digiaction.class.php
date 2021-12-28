@@ -20,6 +20,11 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class digiaction extends eqLogic {
 
+   private static $log_trace;
+
+   public function __construct() {
+      $this->log_trace  = self::getTrace();
+   }
    /*     * *************************Attributs****************************** */
 
    /*
@@ -199,7 +204,6 @@ class digiaction extends eqLogic {
 
 
    public static function checkOrInitUserValidityDate($configUsers, $eqHumanName, $_force = false) {
-      $log_trace = self::getTrace();
 
       foreach ($configUsers as $key => $value) {
          if ($value['userCode'] === "") {
@@ -227,24 +231,24 @@ class digiaction extends eqLogic {
 
                // if real cron && next date exist 
                if ($nextRunCron != false) {
-                  if ($log_trace) self::addLogTemplate('UPDATING VALIDITY DATE FOR ' . $eqHumanName . ' - USER : ' . $value['name']);
+                  if (self::$log_trace) self::addLogTemplate('UPDATING VALIDITY DATE FOR ' . $eqHumanName . ' - USER : ' . $value['name']);
                   $startCronArray = explode(' ', $value['startCron']);
                   // if fixed date is set 
                   if (count($startCronArray) == 6) {
                      // if date asked and next one calculated have the same year, then it's a real next date
                      if ($nextRunCron->format("Y") == $startCronArray[5]) {
-                        if ($log_trace) log::add(__CLASS__, 'debug', '| start date : ' . $nextRunCron->format("Y-m-d H:i:s"));
+                        if (self::$log_trace) log::add(__CLASS__, 'debug', '| start date : ' . $nextRunCron->format("Y-m-d H:i:s"));
                         $value['startFrom'] = $nextRunCron->format("Y-m-d H:i:s");
                         if (!empty($value['duration'])) {
                            $value['endTo'] = date("Y-m-d H:i:s", strtotime($value['startFrom']) + ($value['duration'] * 60));
-                           if ($log_trace)  log::add(__CLASS__, 'debug', '| end date : ' .  $value['endTo']);
+                           if (self::$log_trace)  log::add(__CLASS__, 'debug', '| end date : ' .  $value['endTo']);
                         }
                      }
                      // if not the same, then it's in the futur and we can t apply it
                      else {
                         // calculate the previous date
                         $prevRunCron = self::getPreviousRunDate($cron, $now);
-                        if ($log_trace) log::add(__CLASS__, 'debug', '| fixed date in the past : ' . $prevRunCron->format("Y-m-d H:i:s"));
+                        if (self::$log_trace) log::add(__CLASS__, 'debug', '| fixed date in the past : ' . $prevRunCron->format("Y-m-d H:i:s"));
 
                         if ($prevRunCron != false) {
                            $value['startFrom'] = $prevRunCron->format("Y-m-d H:i:s");
@@ -260,29 +264,29 @@ class digiaction extends eqLogic {
                   }
                   // a real cron date
                   else {
-                     if ($log_trace)  log::add(__CLASS__, 'debug', '| start date : ' . $nextRunCron->format("Y-m-d H:i:s"));
+                     if (self::$log_trace)  log::add(__CLASS__, 'debug', '| start date : ' . $nextRunCron->format("Y-m-d H:i:s"));
                      $value['startFrom'] = $nextRunCron->format("Y-m-d H:i:s");
                      if (!empty($value['duration'])) {
 
                         // check the next next date, to see if there is no conflict with the duration
                         $nextDateTmp = date("Y-m-d H:i:s", strtotime($value['startFrom']) + 60);
                         $nextRunCron_2 = self::getNextRunDate($cron, $nextDateTmp);
-                        if ($log_trace) log::add(__CLASS__, 'debug', '| next next date : ' . $nextRunCron_2->format("Y-m-d H:i:s"));
+                        if (self::$log_trace) log::add(__CLASS__, 'debug', '| next next date : ' . $nextRunCron_2->format("Y-m-d H:i:s"));
 
                         $datediff = strtotime($nextRunCron_2->format("Y-m-d H:i:s")) - strtotime($nextRunCron->format("Y-m-d H:i:s"));
                         $datediffInMin = round($datediff / 60);
                         if ($datediff < ($value['duration'] * 60)) {
-                           if ($log_trace) log::add(__CLASS__, 'debug', '| duration [' . $value['duration'] . '] is lower than 2 occurences  ' . $datediffInMin);
+                           if (self::$log_trace) log::add(__CLASS__, 'debug', '| duration [' . $value['duration'] . '] is lower than 2 occurences  ' . $datediffInMin);
                            if (!empty($value['endTo']))  unset($value['endTo']);
                            throw new Exception('Erreur sur l\'utilisateur [' . $value['name'] . '], la durée de validité ' . $value['duration'] . ' doit être inférieur à ' . $datediffInMin . ' min');
                         } else {
                            $value['endTo'] = date("Y-m-d H:i:s", strtotime($value['startFrom']) + ($value['duration'] * 60));
-                           if ($log_trace) log::add(__CLASS__, 'debug', '| end date : ' .  $value['endTo']);
+                           if (self::$log_trace) log::add(__CLASS__, 'debug', '| end date : ' .  $value['endTo']);
                         }
                      }
                   }
 
-                  if ($log_trace) self::addLogTemplate();
+                  if (self::$log_trace) self::addLogTemplate();
                }
             }
          } else {
@@ -379,7 +383,7 @@ class digiaction extends eqLogic {
    }
 
 
-   public function doAction($_mode, $_type) {
+   public function doAction($_mode, $_type, $is_panic = false) {
       if (!is_array($this->getConfiguration('modes'))) {
          return;
       }
@@ -404,6 +408,18 @@ class digiaction extends eqLogic {
                if (isset($action['options'])) {
                   $options = $action['options'];
                }
+
+               if (isset($options['enable']) && !$options['enable']) {
+                  log::add('digiaction', 'debug', '│ action skipped -- not enable ');
+                  continue;
+               }
+
+               log::add('digiaction', 'debug', '│ will check for panic => current cmd :' . ($options['panic'] ? 'true' : 'false') . ' // panic user : ' . ($is_panic ? 'true' : 'false'));
+               if (isset($options['panic']) && $options['panic'] && !$is_panic) {
+                  log::add('digiaction', 'debug', '│ action skipped -- not in panic mode ! ');
+                  continue;
+               }
+
                if (isset($options['tags'])) {
                   $options['tags'] = str_replace($arrResearch, $arrReplace, $options['tags']);
                }
@@ -524,9 +540,9 @@ class digiaction extends eqLogic {
    }
 
    public function getAvailableModeHTML() {
+
       self::addLogTemplate('CREATE HTML CODE FOR AVAILABLE MODES');
       $modes = $this->getModeDetails();
-      $eqId = $this->getId();
 
       $result = '';
       foreach ($modes as $mode) {
@@ -567,7 +583,7 @@ class digiaction extends eqLogic {
                $this->setConfiguration('currentWrongPwd', 0);
                $this->save(true);
             }
-            return array(true, null);
+            return array(true, null, false);
          }
 
          // if password is required, then check the password send to see if it matches on saved password.
@@ -587,6 +603,8 @@ class digiaction extends eqLogic {
                // log::add('digiaction', 'debug', '│ wrong code ');
                continue;
             }
+
+            $userPanic = $user['isPanic'] ?: false;
 
             $now = time();
 
@@ -625,6 +643,7 @@ class digiaction extends eqLogic {
             }
 
             log::add('digiaction', 'debug', '│ password OK for user : ' . $user['name']);
+            if ($userPanic) log::add('digiaction', 'warning', '│ **** PANIC USER ! *****');
             $check = 1;
             break;
          }
@@ -655,7 +674,7 @@ class digiaction extends eqLogic {
 
       self::addLogTemplate();
       $checkFinal = ($check == 1) ? true : false;
-      return array($checkFinal, $user['name'] ?? null);
+      return array($checkFinal, $user['name'] ?? null, $userPanic);
    }
 
    public static function checkIsAValidDate($myDateString) {
@@ -815,21 +834,26 @@ class digiactionCmd extends cmd {
             $newMode = $this->getLogicalId();
 
             log::add('digiaction', 'debug', '│ running setup for mode : ' . $newMode);
-
-            $preCheck = $eqLogic->doPreCheck($newMode);
+            $isPanic = isset($_options['panic']) && $_options['panic'];
+            if ($isPanic) {
+               //if mode panic, then bypass pre-check option
+               log::add('digiaction', 'debug', '│ PRE-CHECK test are skipped -- PANIC IN PROGRESS ');
+               $preCheck = true;
+            } else {
+               $preCheck = $eqLogic->doPreCheck($newMode);
+            }
             if (!$preCheck) {
                log::add('digiaction', 'debug', '│ global check FALSE ');
                log::add('digiaction', 'debug', '│ run action -> skipped ');
                $eqLogic->checkAndUpdateCmd('digimessage', 'Contrôle(s) en échec');
-               $eqLogic->doAction($newMode, 'preCheckActionError');
+               $eqLogic->doAction($newMode, 'preCheckActionError', $isPanic);
             } else {
                log::add('digiaction', 'debug', '│ global check TRUE');
-               $eqLogic->doAction($newMode, 'doAction');
+               $eqLogic->doAction($newMode, 'doAction', $isPanic);
                $currentMode->event($newMode);
                $eqLogic->checkAndUpdateCmd('digimessage', 'Commande réalisée pour ' . $newMode);
-               $userName = $_options['userName'] ?? null;
                if (!empty($_options['userName'])) {
-                  log::add('digiaction', 'info', '│ Commande "' . $this->getName() . '" a été réalisée par : ' . $userName);
+                  log::add('digiaction', 'info', '│ Commande "' . $this->getName() . '" a été réalisée par : ' . $_options['userName']);
                } else {
                   log::add('digiaction', 'info', '│ Commande "' . $this->getName() . '" a été réalisée (sans contrôle)');
                }

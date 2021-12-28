@@ -74,7 +74,7 @@ try {
     case 'verifUser':
       $eqLogic = digiaction::byId(init('eqId'));
       $eqLogic->checkAndUpdateCmd('digimessage', '');
-      list($verif, $userName) = $eqLogic->verifCodeUser(init('userCode'), init('cmdId'));
+      list($verif, $userName, $isPanic) = $eqLogic->verifCodeUser(init('userCode'), init('cmdId'));
       if (!$verif) {
         $eqLogic->checkAndUpdateCmd('digimessage', 'Code inconnu');
         $data = "ko";
@@ -99,13 +99,13 @@ try {
     case 'verifUserAndDoAction':
       $eqLogic = digiaction::byId(init('eqId'));
       $eqLogic->checkAndUpdateCmd('digimessage', '');
-      list($verif, $userName) = $eqLogic->verifCodeUser(init('userCode'), init('cmdId'));
+      list($verif, $userName, $isPanic) = $eqLogic->verifCodeUser(init('userCode'), init('cmdId'));
       if (!$verif) {
         $eqLogic->checkAndUpdateCmd('digimessage', 'Code inconnu');
         $data = "code inconnu";
       } else {
         $digiCmd = digiactionCmd::byId(init('cmdId'));
-        $digiCmd->execute(array('userName' => $userName));
+        $digiCmd->execute(array('userName' => $userName, 'panic' => $isPanic));
         $data = "";
       }
       ajax::success($data);

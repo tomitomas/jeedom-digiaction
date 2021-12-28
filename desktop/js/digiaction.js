@@ -105,19 +105,19 @@ $("body").off('click', '.bt_removeAction').on('click', '.bt_removeAction', funct
 });
 
 $("#div_modes").off('click', '.bt_addPreCheck').on('click', '.bt_addPreCheck', function () {
-  addAction({}, 'preCheck', '{{Pré-check}}', $(this).closest('.mode'));
+  addAction({}, 'preCheck', '{{Pré-check (test)}}', $(this).closest('.mode'));
 });
 
 $("#div_modes").off('click', '.bt_addPreCheckActionError').on('click', '.bt_addPreCheckActionError', function () {
-  addAction({}, 'preCheckActionError', '{{Pré-check Erreur}}', $(this).closest('.mode'));
+  addAction({}, 'preCheckActionError', '{{Pré-check Erreurs (action)}}', $(this).closest('.mode'));
 });
 
 $("#div_modes").off('click', '.bt_addDoAction').on('click', '.bt_addDoAction', function () {
-  addAction({}, 'doAction', '{{Action}}', $(this).closest('.mode'));
+  addAction({}, 'doAction', '{{Action(s)}}', $(this).closest('.mode'));
 });
 
 $("#div_modes").off('click', '.bt_addWrongPwd').on('click', '.bt_addWrongPwd', function () {
-  addAction({}, 'doWrongPwd', '{{Action Alerte}}', $(this).closest('.mode'));
+  addAction({}, 'doWrongPwd', '{{Action(s) d\'Alerte}}', $(this).closest('.mode'));
 });
 
 $('body').off('focusout', '.cmdAction.expressionAttr[data-l1key=cmd]').on('focusout', '.cmdAction.expressionAttr[data-l1key=cmd]', function (event) {
@@ -250,6 +250,7 @@ function addMode(_mode, _updateMode) {
   div += '</a>';
   div += '</h3>';
   div += '</div>';
+  div += '<div class="div_alert"></div>';
 
   div += '<div id="collapse' + random + '" class="panel-collapse collapse in">';
   div += '<div class="panel-body">';
@@ -261,9 +262,9 @@ function addMode(_mode, _updateMode) {
   div += '<div class="input-group pull-right" style="display:inline-flex">';
   div += '<span class="input-group-btn">';
   div += '<a class="btn btn-sm bt_removeMode btn-danger roundedLeft"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>';
-  div += '<a class="btn btn-sm bt_addPreCheck btn-warning"><i class="fas fa-plus-circle"></i> {{Pré-check}}</a>';
-  div += '<a class="btn btn-sm bt_addPreCheckActionError btn-default" title="Réaliser une action si les pré-check échouent"><i class="fas fa-plus-circle"></i> {{Pré-check Erreur}}</a>';
-  div += '<a class="btn btn-sm bt_addDoAction btn-success roundedRight"><i class="fas fa-plus-circle"></i> {{Action}}</a>';
+  div += '<a class="btn btn-sm bt_addPreCheck btn-warning"><i class="fas fa-plus-circle"></i> {{Pré-check (test)}}</a>';
+  div += '<a class="btn btn-sm bt_addPreCheckActionError btn-default" title="Réaliser une action si les pré-check échouent"><i class="fas fa-plus-circle"></i> {{Pré-check Erreurs (action)}}</a>';
+  div += '<a class="btn btn-sm bt_addDoAction btn-success roundedRight"><i class="fas fa-plus-circle"></i> {{Action(s)}}</a>';
   div += '</span>';
   div += '</div>';
   div += '</div>';
@@ -330,7 +331,7 @@ function addMode(_mode, _updateMode) {
   div += '</div>';
 
   div += '<div class="col-sm-2">';
-  div += '<a class="btn btn-sm bt_addWrongPwd btn-danger" title="Réaliser des actions si trop de mauvais essaie de mot de passe"><i class="fas fa-plus-circle"></i> {{Action si mauvais mdp}}</a>';
+  div += '<a class="btn btn-sm bt_addWrongPwd btn-danger" title="Réaliser des actions si trop de mauvais essaie de mot de passe"><i class="fas fa-plus-circle"></i> {{Action d\'Alerte}}</a>';
   div += '</div>';
 
   div += '</div>';
@@ -352,41 +353,41 @@ function addMode(_mode, _updateMode) {
   $('#div_modes .mode').last().setValues(_mode, '.modeAttr');
   if (is_array(_mode.preCheck)) {
     for (var i in _mode.preCheck) {
-      addAction(_mode.preCheck[i], 'preCheck', '{{Pré-check}}', $('#div_modes .mode').last());
+      addAction(_mode.preCheck[i], 'preCheck', '{{Pré-check (test)}}', $('#div_modes .mode').last());
     }
   } else {
     if ($.trim(_mode.preCheck) != '') {
-      addAction(_mode.preCheck[i], 'preCheck', '{{Pré-check}}', $('#div_modes .mode').last());
+      addAction(_mode.preCheck[i], 'preCheck', '{{Pré-check (test)}}', $('#div_modes .mode').last());
     }
   }
 
   if (is_array(_mode.preCheckActionError)) {
     for (var i in _mode.preCheckActionError) {
-      addAction(_mode.preCheckActionError[i], 'preCheckActionError', '{{Pré-check Erreur}}', $('#div_modes .mode').last());
+      addAction(_mode.preCheckActionError[i], 'preCheckActionError', '{{Pré-check Erreurs (action)}}', $('#div_modes .mode').last());
     }
   } else {
     if ($.trim(_mode.preCheckActionError) != '') {
-      addAction(_mode.preCheckActionError[i], 'preCheckActionError', '{{Pré-check Erreur}}', $('#div_modes .mode').last());
+      addAction(_mode.preCheckActionError[i], 'preCheckActionError', '{{Pré-check Erreurs (action)}}', $('#div_modes .mode').last());
     }
   }
 
   if (is_array(_mode.doAction)) {
     for (var i in _mode.doAction) {
-      addAction(_mode.doAction[i], 'doAction', '{{Action}}', $('#div_modes .mode').last());
+      addAction(_mode.doAction[i], 'doAction', '{{Action(s)}}', $('#div_modes .mode').last());
     }
   } else {
     if ($.trim(_mode.doAction) != '') {
-      addAction(_mode.doAction, 'doAction', '{{Action}}', $('#div_modes .mode').last());
+      addAction(_mode.doAction, 'doAction', '{{Action(s)}}', $('#div_modes .mode').last());
     }
   }
 
   if (is_array(_mode.doWrongPwd)) {
     for (var i in _mode.doWrongPwd) {
-      addAction(_mode.doWrongPwd[i], 'doWrongPwd', '{{Action Alerte}}', $('#div_modes .mode').last());
+      addAction(_mode.doWrongPwd[i], 'doWrongPwd', '{{Action(s) d\'Alerte}}', $('#div_modes .mode').last());
     }
   } else {
     if ($.trim(_mode.doWrongPwd) != '') {
-      addAction(_mode.doWrongPwd, 'doWrongPwd', '{{Action Alerte}}', $('#div_modes .mode').last());
+      addAction(_mode.doWrongPwd, 'doWrongPwd', '{{Action(s) d\'Alerte}}', $('#div_modes .mode').last());
     }
   }
 
@@ -437,18 +438,41 @@ function addAction(_action, _type, _name, _el) {
   }
   var div = '<div class="' + _type + '">';
   div += '<div class="form-group ">';
-  div += '<label class="col-sm-1 control-label">' + _name + '</label>';
-  div += '<div class="col-sm-1  ' + input + '">';
-  if (_type == 'doAction' || _type == 'doWrongPwd') {
+  // div += '<label class="col-sm-1 control-label">' + _name + '</label>';
+  var titleHtml = '<div>';
+  if (_type == 'doAction') {
+    div += '<div class="col-sm-1">';
     div += '<input type="checkbox" class="expressionAttr" data-l1key="options" data-l2key="enable" checked title="{{Décocher pour désactiver l\'action}}" />';
+    div += '</div>';
+    div += '<div class="col-sm-1">';
+    div += '<input type="checkbox" class="expressionAttr" data-l1key="options" data-l2key="panic" title="{{Cocher pour réaliser l\'action seulement en cas d\'utilisation d\'un code panic}}" />';
+    div += '</div>';
+
+    titleHtml += '<div class="col-sm-1 noPaddingLeft">Activer</div>';
+    titleHtml += `<div class="col-sm-1 noPaddingLeft">Panic
+          <sup>
+          <i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Si cochée, cette action sera réalisée <u>en supplément</u> que lorsqu'un code 'panic' est utilisé"></i>
+          </sup>
+          </div>`;
   }
-  else if (_type == 'preCheckActionError') {
+  else if (_type == 'preCheckActionError' || _type == 'doWrongPwd') {
+    div += '<div class="col-sm-2">';
     div += '<input type="checkbox" class="expressionAttr" data-l1key="options" data-l2key="enable" checked title="{{Décocher pour désactiver l\'action}}" />';
+    div += '</div>';
+
+    titleHtml += '<div class="col-sm-2 noPaddingLeft">Activer</div>';
   }
   else {
+    div += '<div class="col-sm-2">';
     div += '<input type="checkbox" class="expressionAttr" data-l1key="options" data-l2key="enable" checked title="{{Décocher pour désactiver le test}}" />';
+    div += '</div>';
+
+    titleHtml += '<div class="col-sm-2 noPaddingLeft">Activer</div>';
   }
-  div += '</div>';
+  titleHtml += `<div class="col-sm-5">Cmd</div>
+          <div class="col-sm-5">Options</div>
+          </div >`;
+
   div += '<div class="col-sm-5 ' + input + '">';
   div += '<div class="input-group">';
   div += '<span class="input-group-btn">';
@@ -479,6 +503,12 @@ function addAction(_action, _type, _name, _el) {
   div += '</div>';
   div += '</div>';
   if (isset(_el)) {
+    var numItems = _el.find('.div_' + _type + ' .' + _type).length;
+    if (numItems == 0) {
+      var typeDiv = '<label class="control-label" style="margin-right:7px">' + _name + '</label>';
+      _el.find('.div_' + _type).prepend(titleHtml);
+      _el.find('.div_' + _type).prepend(typeDiv);
+    }
     _el.find('.div_' + _type).append(div);
     _el.find('.' + _type + '').last().setValues(_action, '.expressionAttr');
   } else {
@@ -624,6 +654,39 @@ $('#bt_addUser').off('click').on('click', function () {
 
 });
 
+// only one user can be used as PANIC code
+// auto remove other checked 
+$(document).on('click', 'input[type="checkbox"].userPanic', function () {
+  $('input[type="checkbox"].userPanic').not(this).prop('checked', false);
+});
+
+
+// if one action is set as PANIC, then secure mode has to be set also
+$(document).on('change', 'input[type="checkbox"][data-l2key="panic"]', function () {
+  var confirm = $(this).parents('.mode').find('input[data-l1key="confirmDigicode"]');
+
+  if (this.checked && !(confirm.is(':checked'))) {
+
+    // $(this).parents('.mode').find('.div_alert').showAlert({ message: 'L\'activation du mode panic, implique d\'activer la sécurisation du mode', level: 'warning' });
+    $('#div_alert').showAlert({ message: 'L\'activation du mode panic, implique d\'activer la sécurisation du mode', level: 'warning' });
+
+    confirm.click();
+  }
+});
+
+$(document).on('change', 'input[data-l1key="confirmDigicode"]', function () {
+  var panic = $(this).parents('.mode').find('input[type="checkbox"][data-l2key="panic"]:checked')
+  if (!(this.checked) && panic.length > 0) {
+    // $(this).parents('.mode').find('.div_alert').showAlert({ message: 'Les actions "panic" ont été déselectionnées', level: 'warning' });
+    $('#div_alert').showAlert({ message: 'Les actions "panic" ont été désactivées', level: 'warning' });
+    panic.prop('checked', false);
+    panic.css('background-color', 'red');
+    // panic.each(function () {
+    //   $(this).parents('.doAction').find('input[type="checkbox"][data-l2key="enable"]').prop('checked', false);
+    // });
+
+  }
+});
 
 function addUserToTable(_user) {
   if (!isset(_user)) {
@@ -634,10 +697,13 @@ function addUserToTable(_user) {
   tr += '<td style="min-width:20px;width:20px;">';
   tr += '<input type="checkbox" class="userAttr form-control" data-l1key="active" checked>';
   tr += '</td>';
-  tr += '<td style="min-width:300px;width:350px;">';
+  tr += '<td style="min-width:70px;width:70px;">';
+  tr += '<input type="checkbox" class="userAttr form-control userPanic" data-l1key="isPanic" >';
+  tr += '</td>';
+  tr += '<td style="min-width:150px;width:250px;">';
   tr += '<input class="userAttr form-control input-sm" data-l1key="name" placeholder="{{Nom de l\'utilisateur}}">';
   tr += '</td>';
-  tr += '<td style="min-width:300px;width:350px;" class="pass_show">';
+  tr += '<td style="min-width:150px;width:250px;" class="pass_show">';
   tr += '<input type="password" class="userAttr form-control input-sm userPassword" data-l1key="userCode" placeholder="{{Code de l\'utilisateur}}">';
   tr += '<span toggle="#password-field" class="eye fa fa-fw fa-eye field_icon toggle-password"></span>';
   tr += '</td>';
@@ -690,7 +756,8 @@ $('#table_user').off('click', '.digiDateRemove').on('click', '.digiDateRemove', 
   $(this).parents('td.divCron').parent().find('.userAttr[data-l1key=endTo]').value('');
 });
 
-$('body').off('click', '.checkPwdRequired').on('click', '.checkPwdRequired', function () {
+// $('body').off('click', '.checkPwdRequired').on('click', '.checkPwdRequired', function () {
+$('body').on('change', '.checkPwdRequired', function () {
   var display = this.checked ? 'block' : 'none';
   var elt = $(this).closest('.addActionWrongPwd').find('.modeAttr[data-l1key=nbWrongPwd]')
   if (this.checked) {
