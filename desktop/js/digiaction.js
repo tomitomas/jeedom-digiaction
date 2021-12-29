@@ -448,7 +448,7 @@ function addAction(_action, _type, _name, _el) {
     div += '<input type="checkbox" class="expressionAttr" data-l1key="options" data-l2key="panic" title="{{Cocher pour réaliser l\'action seulement en cas d\'utilisation d\'un code panic}}" />';
     div += '</div>';
 
-    titleHtml += '<div class="col-sm-1 noPaddingLeft">Activer</div>';
+    titleHtml += '<div class="col-sm-1 noPaddingLeft">Active</div>';
     titleHtml += `<div class="col-sm-1 noPaddingLeft">Panic
           <sup>
           <i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Si cochée, cette action sera réalisée <u>en supplément</u> que lorsqu'un code 'panic' est utilisé"></i>
@@ -460,14 +460,14 @@ function addAction(_action, _type, _name, _el) {
     div += '<input type="checkbox" class="expressionAttr" data-l1key="options" data-l2key="enable" checked title="{{Décocher pour désactiver l\'action}}" />';
     div += '</div>';
 
-    titleHtml += '<div class="col-sm-2 noPaddingLeft">Activer</div>';
+    titleHtml += '<div class="col-sm-2 noPaddingLeft">Active</div>';
   }
   else {
     div += '<div class="col-sm-2">';
     div += '<input type="checkbox" class="expressionAttr" data-l1key="options" data-l2key="enable" checked title="{{Décocher pour désactiver le test}}" />';
     div += '</div>';
 
-    titleHtml += '<div class="col-sm-2 noPaddingLeft">Activer</div>';
+    titleHtml += '<div class="col-sm-2 noPaddingLeft">Active</div>';
   }
   titleHtml += `<div class="col-sm-5">Cmd</div>
           <div class="col-sm-5">Options</div>
