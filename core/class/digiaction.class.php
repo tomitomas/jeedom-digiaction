@@ -653,11 +653,12 @@ class digiaction extends eqLogic {
 
             //increment wrong pwd
             $newWrongPwd = $currentWrongPwd + 1;
-            if ($setupWrongPwd > 0 && $setupWrongPwd <= $newWrongPwd) {
-               log::add('digiaction', 'debug', '│ increment wrong pwd to ' . $newWrongPwd . ' => setup limit ' . $setupWrongPwd);
-               $this->setConfiguration('currentWrongPwd', $newWrongPwd);
-               $this->save(true);
 
+            log::add('digiaction', 'debug', '│ increment wrong pwd to ' . $newWrongPwd . ' => setup limit ' . $setupWrongPwd);
+            $this->setConfiguration('currentWrongPwd', $newWrongPwd);
+            $this->save(true);
+
+            if ($setupWrongPwd > 0 && $setupWrongPwd <= $newWrongPwd) {
                log::add('digiaction', 'debug', '│ will perform actions for wrong password ! ');
                $cmd = cmd::byId($nextCmdId);
                $newMode = $cmd->getLogicalId();
