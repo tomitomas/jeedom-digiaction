@@ -399,8 +399,8 @@ class digiaction extends eqLogic {
          }
          log::add('digiaction', 'debug', '│ *** action(s) ' . $_type . ' will be executed ***');
 
-         $arrResearch = array('#eqId#', '#eqName#', '#modeName#');
-         $arrReplace = array($this->getId(), $this->getName(), $_mode);
+         $arrResearch = array('#eqId#', '#eqName#', '#modeName#', '#nbWrongPwd#');
+         $arrReplace = array($this->getId(), $this->getName(), $_mode, $this->getConfiguration('currentWrongPwd', 0));
 
          foreach ($value[$_type] as $action) {
             try {
@@ -575,7 +575,7 @@ class digiaction extends eqLogic {
       try {
          // check if the new mode requires a password
          $checkPwd = $this->hasPasswordRequired($nextCmdId);
-         list($setupWrongPwd, $currentWrongPwd) = $this->getSecurityOptions($nextCmdId);
+         list($modeWrongPwd, $setupWrongPwd, $currentWrongPwd) = $this->getSecurityOptions($nextCmdId);
 
          if (!$checkPwd) {
             self::addLogTemplate();
@@ -590,9 +590,6 @@ class digiaction extends eqLogic {
          $check = 0;
          log::add('digiaction', 'debug', '│ checking password : >' . $userCode . '<');
          foreach ($this->getConfiguration('users') as $user) {
-            //if ( """$user['userCode']""" != "$userCode" ){
-            // log::add('digiaction', 'debug', '│ info user : ' . json_encode($user));
-            // log::add('digiaction', 'debug', '│ checking user : ' . $user['name']);
 
             if (isset($user['active']) && !$user['active']) {
                log::add('digiaction', 'debug', '│ user "' . $user['name'] . '" disabled');
@@ -654,12 +651,18 @@ class digiaction extends eqLogic {
             //increment wrong pwd
             $newWrongPwd = $currentWrongPwd + 1;
 
-            log::add('digiaction', 'debug', '│ increment wrong pwd to ' . $newWrongPwd . ' => setup limit ' . $setupWrongPwd);
+            log::add('digiaction', 'debug', '│ increment wrong pwd to ' . $newWrongPwd . ' => setup limit ' . $setupWrongPwd . ' with mode ' . $modeWrongPwd);
             $this->setConfiguration('currentWrongPwd', $newWrongPwd);
             $this->save(true);
 
-            if ($setupWrongPwd > 0 && $setupWrongPwd <= $newWrongPwd) {
-               log::add('digiaction', 'debug', '│ will perform actions for wrong password ! ');
+            if (
+               $modeWrongPwd != 'none' && $setupWrongPwd > 0 &&
+               (
+                  ($modeWrongPwd == 'modulo' && ($newWrongPwd % $setupWrongPwd) == 0)
+                  || ($modeWrongPwd == 'greaterThan' && $setupWrongPwd <= $newWrongPwd)
+               )
+            ) {
+               log::add('digiaction', 'debug', '│ will perform actions for wrong password ');
                $cmd = cmd::byId($nextCmdId);
                $newMode = $cmd->getLogicalId();
                $this->doAction($newMode, 'doWrongPwd');
@@ -724,10 +727,10 @@ class digiaction extends eqLogic {
          if ($mode['name'] != $cmdName) {
             continue;
          }
-         return array($mode['nbWrongPwd'] ?? -1,  $this->getConfiguration('currentWrongPwd', 0));
+         return array($mode['alertWrongPwd'] ?? "none", $mode['nbWrongPwd'] ?? -1,  $this->getConfiguration('currentWrongPwd', 0));
       }
 
-      return array(-1,  $this->getConfiguration('currentWrongPwd', 0));
+      return array('none', -1,  $this->getConfiguration('currentWrongPwd', 0));
    }
 
    public static function addLogTemplate($msg = null, $inter = false, $level = 'debug') {
