@@ -20,10 +20,10 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class digiaction extends eqLogic {
 
-   private static $log_trace;
+   private static $_log_trace;
 
    public function __construct() {
-      $this->log_trace  = self::getTrace();
+      $this->_log_trace  = self::getTrace();
    }
    /*     * *************************Attributs****************************** */
 
@@ -231,24 +231,24 @@ class digiaction extends eqLogic {
 
                // if real cron && next date exist 
                if ($nextRunCron != false) {
-                  if (self::$log_trace) self::addLogTemplate('UPDATING VALIDITY DATE FOR ' . $eqHumanName . ' - USER : ' . $value['name']);
+                  if (self::$_log_trace) self::addLogTemplate('UPDATING VALIDITY DATE FOR ' . $eqHumanName . ' - USER : ' . $value['name']);
                   $startCronArray = explode(' ', $value['startCron']);
                   // if fixed date is set 
                   if (count($startCronArray) == 6) {
                      // if date asked and next one calculated have the same year, then it's a real next date
                      if ($nextRunCron->format("Y") == $startCronArray[5]) {
-                        if (self::$log_trace) log::add(__CLASS__, 'debug', '| start date : ' . $nextRunCron->format("Y-m-d H:i:s"));
+                        if (self::$_log_trace) log::add(__CLASS__, 'debug', '| start date : ' . $nextRunCron->format("Y-m-d H:i:s"));
                         $value['startFrom'] = $nextRunCron->format("Y-m-d H:i:s");
                         if (!empty($value['duration'])) {
                            $value['endTo'] = date("Y-m-d H:i:s", strtotime($value['startFrom']) + ($value['duration'] * 60));
-                           if (self::$log_trace)  log::add(__CLASS__, 'debug', '| end date : ' .  $value['endTo']);
+                           if (self::$_log_trace)  log::add(__CLASS__, 'debug', '| end date : ' .  $value['endTo']);
                         }
                      }
                      // if not the same, then it's in the futur and we can t apply it
                      else {
                         // calculate the previous date
                         $prevRunCron = self::getPreviousRunDate($cron, $now);
-                        if (self::$log_trace) log::add(__CLASS__, 'debug', '| fixed date in the past : ' . $prevRunCron->format("Y-m-d H:i:s"));
+                        if (self::$_log_trace) log::add(__CLASS__, 'debug', '| fixed date in the past : ' . $prevRunCron->format("Y-m-d H:i:s"));
 
                         if ($prevRunCron != false) {
                            $value['startFrom'] = $prevRunCron->format("Y-m-d H:i:s");
@@ -264,29 +264,29 @@ class digiaction extends eqLogic {
                   }
                   // a real cron date
                   else {
-                     if (self::$log_trace)  log::add(__CLASS__, 'debug', '| start date : ' . $nextRunCron->format("Y-m-d H:i:s"));
+                     if (self::$_log_trace)  log::add(__CLASS__, 'debug', '| start date : ' . $nextRunCron->format("Y-m-d H:i:s"));
                      $value['startFrom'] = $nextRunCron->format("Y-m-d H:i:s");
                      if (!empty($value['duration'])) {
 
                         // check the next next date, to see if there is no conflict with the duration
                         $nextDateTmp = date("Y-m-d H:i:s", strtotime($value['startFrom']) + 60);
                         $nextRunCron_2 = self::getNextRunDate($cron, $nextDateTmp);
-                        if (self::$log_trace) log::add(__CLASS__, 'debug', '| next next date : ' . $nextRunCron_2->format("Y-m-d H:i:s"));
+                        if (self::$_log_trace) log::add(__CLASS__, 'debug', '| next next date : ' . $nextRunCron_2->format("Y-m-d H:i:s"));
 
                         $datediff = strtotime($nextRunCron_2->format("Y-m-d H:i:s")) - strtotime($nextRunCron->format("Y-m-d H:i:s"));
                         $datediffInMin = round($datediff / 60);
                         if ($datediff < ($value['duration'] * 60)) {
-                           if (self::$log_trace) log::add(__CLASS__, 'debug', '| duration [' . $value['duration'] . '] is lower than 2 occurences  ' . $datediffInMin);
+                           if (self::$_log_trace) log::add(__CLASS__, 'debug', '| duration [' . $value['duration'] . '] is lower than 2 occurences  ' . $datediffInMin);
                            if (!empty($value['endTo']))  unset($value['endTo']);
                            throw new Exception('Erreur sur l\'utilisateur [' . $value['name'] . '], la durée de validité ' . $value['duration'] . ' doit être inférieur à ' . $datediffInMin . ' min');
                         } else {
                            $value['endTo'] = date("Y-m-d H:i:s", strtotime($value['startFrom']) + ($value['duration'] * 60));
-                           if (self::$log_trace) log::add(__CLASS__, 'debug', '| end date : ' .  $value['endTo']);
+                           if (self::$_log_trace) log::add(__CLASS__, 'debug', '| end date : ' .  $value['endTo']);
                         }
                      }
                   }
 
-                  if (self::$log_trace) self::addLogTemplate();
+                  if (self::$_log_trace) self::addLogTemplate();
                }
             }
          } else {
