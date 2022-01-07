@@ -162,6 +162,7 @@ $("#div_modes").sortable({ axis: "y", cursor: "move", items: ".mode", placeholde
 
 function printEqLogic(_eqLogic) {
   $('#div_modes').empty();
+  $('#table_user .user').remove();
   MODE_LIST = [];
   if (isset(_eqLogic.configuration) && isset(_eqLogic.configuration.modes)) {
     actionOptions = []
@@ -186,8 +187,7 @@ function printEqLogic(_eqLogic) {
       }
     });
   }
-  if (isset(_eqLogic.configuration) && isset(_eqLogic.configuration.users)) {
-    $('#table_user .user').remove();
+  if (isset(_eqLogic.configuration) && isset(_eqLogic.configuration.users) && _eqLogic.configuration.users.length > 0) {
     for (var i in _eqLogic.configuration.users) {
       addUserToTable(_eqLogic.configuration.users[i]);
     }
