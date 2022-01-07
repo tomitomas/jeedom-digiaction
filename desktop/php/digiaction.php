@@ -189,7 +189,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									</sup>
 								</th>
 								<th>{{Durée}}<sup>
-										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="(en minutes)<br/>si vide, alors indéfini"></i>
+										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="(en minutes)<br/>si vide, alors infini"></i>
 									</sup></th>
 								<th>{{Début de validité}}</th>
 								<th>{{Fin de validité}}</th>
