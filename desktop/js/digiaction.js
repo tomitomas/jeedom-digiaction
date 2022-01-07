@@ -208,9 +208,11 @@ function saveEqLogic(_eqLogic) {
     mode.doWrongPwd = $(this).find('.doWrongPwd').getValues('.expressionAttr');
     if (mode.nbWrongPwd < "1") {
       mode.nbWrongPwd = "-1";
+      mode.alertWrongPwd = "none";
     }
-    if (mode.confirmDigicode == 0) {
+    if (mode.confirmDigicode == 0 || mode.alertWrongPwd == "none") {
       mode.nbWrongPwd = "-1";
+      mode.alertWrongPwd = "none";
       mode.doWrongPwd = [];
     }
     _eqLogic.configuration.modes.push(mode);
@@ -322,15 +324,28 @@ function addMode(_mode, _updateMode) {
   div += '<div class="pwdOption" style="display:none">';
 
   div += '<div class="col-sm-5">';
-  div += `<label class="control-label" style="margin-right:7px" >{{Action si nb mauvais code saisi >=}}
-          <sup>
-          <i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Nombre de mauvais code à atteindre pour déclencher les actions<br/>-1 : pas de control"></i>
-          </sup>
-          </label>`;
-  div += '<input type="number" class="modeAttr" step="1" data-l1key="nbWrongPwd" placeholder="{{nb}}" style="width:70px;" value="1" />';
+  div += `<div class="row">
+            <div class="col-sm-5 text-right">
+              {{Action(s) si mauvaises code }}
+              <sup>
+                <i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Nombre de mauvais code à atteindre pour déclencher les actions<br/>\"-1\" : pas de control"></i>
+              </sup>
+            </div>
+            <div class="col-sm-3">
+              <select class="modeAttr choiceAlertMode" data-l1key="alertWrongPwd">
+								<option value="none">{{jamais}}</option>
+								<option value="greaterThan">{{dès qu'il y a plus de }}</option>
+								<option value="modulo">{{toutes les }}</option>
+							</select>
+            </div>
+            <div class="col-sm-3 optionToHide">
+              <input type="number" class="modeAttr" step="1" data-l1key="nbWrongPwd" placeholder="{{nb}}" style="width:40px;" value="1" /> {{ erreurs }}
+            </div>
+            
+          </div>`;
   div += '</div>';
 
-  div += '<div class="col-sm-2">';
+  div += '<div class="col-sm-2 optionToHide">';
   div += '<a class="btn btn-sm bt_addWrongPwd btn-danger" title="Réaliser des actions si trop de mauvais essaie de mot de passe"><i class="fas fa-plus-circle"></i> {{Action d\'Alerte}}</a>';
   div += '</div>';
 
@@ -339,7 +354,7 @@ function addMode(_mode, _updateMode) {
   div += '</div>';
   div += '<hr/>';
 
-  div += '<div class="div_doWrongPwd" style="display:none"></div>';
+  div += '<div class="div_doWrongPwd optionToHide" style="display:none"></div>';
   div += '</div>';
 
   //------
@@ -404,10 +419,10 @@ function addMode(_mode, _updateMode) {
     updateCheckboxMode();
   }
 
-  if (_mode.confirmDigicode == "1") {
-    var elt = $('#collapse' + random).find('.checkPwdRequired')
-    displaySecurityOptions(elt, 'block');
-  }
+  // if (_mode.confirmDigicode == "1") {
+  //   var elt = $('#collapse' + random).find('.checkPwdRequired')
+  //   displaySecurityOptions(elt, 'block');
+  // }
 
 }
 
@@ -756,7 +771,7 @@ $('#table_user').off('click', '.digiDateRemove').on('click', '.digiDateRemove', 
   $(this).parents('td.divCron').parent().find('.userAttr[data-l1key=endTo]').value('');
 });
 
-// $('body').off('click', '.checkPwdRequired').on('click', '.checkPwdRequired', function () {
+
 $('body').on('change', '.checkPwdRequired', function () {
   var display = this.checked ? 'block' : 'none';
   var elt = $(this).closest('.addActionWrongPwd').find('.modeAttr[data-l1key=nbWrongPwd]')
@@ -773,4 +788,20 @@ function displaySecurityOptions(elt, display) {
   $(elt).parent().siblings('.pwdOption').css("display", display);
   $(elt).closest('.securityOptions').find('.div_doWrongPwd').css("display", display);
 
+  var sel = $(elt).closest('.securityOptions').find('.choiceAlertMode option:selected').val();
+  var display = (sel == "none") ? "none" : "block";
+  displaySecurityOptions2(elt, display);
 }
+
+function displaySecurityOptions2(elt, display) {
+  $(elt).closest('.securityOptions').find('.optionToHide').css("display", display);
+  $(elt).closest('.securityOptions').find('.div_doWrongPwd').css("display", display);
+}
+
+$('body').on('change', '.choiceAlertMode', function () {
+  var display = (this.value == "none") ? "none" : "block";
+  $(this).closest('.securityOptions').find('.optionToHide').css("display", display);
+
+  var elt = $(this).closest('.addActionWrongPwd').find('.modeAttr[data-l1key=nbWrongPwd]')
+  if (display != 'none' && elt.val() == -1) elt.val(1);
+});
