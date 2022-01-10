@@ -45,6 +45,8 @@ try {
         break;
       }
 
+      $currentMode = $eqLogic->getCmd(null, 'currentMode');
+      $currentModeValue = is_object($currentMode) ? $currentMode->execCmd() : null;
       foreach (init('arrayRename') as $item) {
         $old = $item['old'];
         $new = $item['new'];
@@ -58,6 +60,12 @@ try {
         }
         $cmd->setName($new);
         $cmd->setLogicalId($new);
+
+        if ($currentModeValue == $old) {
+          log::add('digiaction', 'debug', '│ currentMode <' . $currentModeValue . '> is the one renamed <' . $old . '>  -- updating current mode');
+          $eqLogic->checkAndUpdateCmd('currentMode', $new);
+        }
+
         log::add('digiaction', 'debug', '│ Cmd renamed done from "' . $old . '" to "' . $new . '"');
         $cmd->save();
       }
