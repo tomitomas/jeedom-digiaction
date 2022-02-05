@@ -541,7 +541,7 @@ class digiaction extends eqLogic {
 
    public function getAvailableModeHTML() {
 
-      self::addLogTemplate('CREATE HTML CODE FOR AVAILABLE MODES');
+      self::addLogTemplate('CREATE HTML CODE FOR AVAILABLE MODES [' . $this->getName() . ']');
       $modes = $this->getModeDetails();
 
       $result = '';
