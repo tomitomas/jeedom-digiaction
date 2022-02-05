@@ -1,0 +1,17 @@
+.pass_show{
+  position: relative
+} 
+
+.pass_show .eye { 
+  position: absolute; 
+  top: 60% !important; 
+  right: 20px; 
+  z-index: 1; 
+  margin-top: -10px; 
+  cursor: pointer; 
+  transition: .3s ease all; 
+} 
+
+.noPaddingLeft {
+  padding-left: 0px !important;
+}
