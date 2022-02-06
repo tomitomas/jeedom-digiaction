@@ -1,0 +1,1 @@
+La documentation du plugin DigiAction est disponible à cette adresse https://tomitomas.github.io/jeedom_doc/DigiAction/
