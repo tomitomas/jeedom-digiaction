@@ -123,6 +123,32 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							</div>
 
 							<div class="col-lg-12">
+								<legend><i class="fas fa-spell-check"></i> {{Textes}}</legend>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{Temps d'affichage des messages}}</label>
+									<div class="col-sm-7">
+										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="countdown" placeholder="{{(en secondes) -1 illimité / 10sec par défaut}}" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{Changement de mode réalisé}}
+										<sup>
+											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="#eqId# => numéro de l’équipement DigiAction<br/>#eqName# => nom de l’équipement DigiAction<br/>#modeName# => nom du mode qui tente d’être activé<br/>#nbWrongPwd# => nombre de mauvais code saisi"></i>
+										</sup>
+									</label>
+									<div class="col-sm-7">
+										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="textOK" placeholder="{{Actions réalisées pour #modeName#}}" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{Mauvais code saisi}}</label>
+									<div class="col-sm-7">
+										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="textCodeKO" placeholder="{{Code inconnu}}" />
+									</div>
+								</div>
+							</div>
+
+							<div class="col-lg-12">
 								<legend><i class="fa fa-cogs"></i> {{Paramètres}}</legend>
 								<div class="form-group">
 									<label class="col-sm-3 control-label">{{Chaque mode s'auto-appelle}}</label>
@@ -130,14 +156,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="autocall" />Autoriser</label>
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Temps d'affichage du mode}}</label>
-									<div class="col-sm-7">
-										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="countdown" placeholder="{{(en secondes) -1 illimité / 10sec par défaut}}" />
-									</div>
-								</div>
-
-
 							</div>
 
 						</div>
