@@ -382,6 +382,13 @@ class digiaction extends eqLogic {
       return $checkResult;
    }
 
+   public function replaceCustomData(string $data, string $modeName = '') {
+
+      $arrResearch = array('#eqId#', '#eqName#', '#modeName#', '#nbWrongPwd#');
+      $arrReplace = array($this->getId(), $this->getName(), $modeName, $this->getConfiguration('currentWrongPwd', 0));
+
+      return str_replace($arrResearch, $arrReplace, $data);
+   }
 
    public function doAction($_mode, $_type, $is_panic = false) {
       if (!is_array($this->getConfiguration('modes'))) {
@@ -398,9 +405,6 @@ class digiaction extends eqLogic {
             continue;
          }
          log::add('digiaction', 'debug', '│ *** action(s) ' . $_type . ' will be executed ***');
-
-         $arrResearch = array('#eqId#', '#eqName#', '#modeName#', '#nbWrongPwd#');
-         $arrReplace = array($this->getId(), $this->getName(), $_mode, $this->getConfiguration('currentWrongPwd', 0));
 
          foreach ($value[$_type] as $action) {
             try {
@@ -421,10 +425,10 @@ class digiaction extends eqLogic {
                }
 
                if (isset($options['tags'])) {
-                  $options['tags'] = str_replace($arrResearch, $arrReplace, $options['tags']);
+                  $options['tags'] =  $this->replaceCustomData($options['tags'], $_mode);
                }
                if (isset($options['message'])) {
-                  $options['message'] = str_replace($arrResearch, $arrReplace, $options['message']);
+                  $options['message'] =  $this->replaceCustomData($options['message'], $_mode);
                }
                $tmpAction = scenarioExpression::createAndExec('action', $action['cmd'], $options);
 
@@ -855,7 +859,10 @@ class digiactionCmd extends cmd {
                log::add('digiaction', 'debug', '│ global check TRUE');
                $eqLogic->doAction($newMode, 'doAction', $isPanic);
                $currentMode->event($newMode);
-               $eqLogic->checkAndUpdateCmd('digimessage', 'Commande réalisée pour ' . $newMode);
+
+               $txtOKtemp = $eqLogic->getConfiguration('textOK', 'Actions réalisées pour ' . $newMode);
+               $txtOK = $eqLogic->replaceCustomData($txtOKtemp, $newMode);
+               $eqLogic->checkAndUpdateCmd('digimessage', $txtOK);
                if (!empty($_options['userName'])) {
                   log::add('digiaction', 'info', '│ Commande "' . $this->getName() . '" a été réalisée par : ' . $_options['userName']);
                } else {

@@ -84,7 +84,8 @@ try {
       $eqLogic->checkAndUpdateCmd('digimessage', '');
       list($verif, $userName, $isPanic) = $eqLogic->verifCodeUser(init('userCode'), init('cmdId'));
       if (!$verif) {
-        $eqLogic->checkAndUpdateCmd('digimessage', 'Code inconnu');
+        $txtKO = $eqLogic->getConfiguration('textCodeKO', 'Code inconnu');
+        $eqLogic->checkAndUpdateCmd('digimessage', $txtKO);
         $data = "ko";
       } else {
         $digiCmd = digiactionCmd::byId(init('cmdId'));
@@ -109,7 +110,8 @@ try {
       $eqLogic->checkAndUpdateCmd('digimessage', '');
       list($verif, $userName, $isPanic) = $eqLogic->verifCodeUser(init('userCode'), init('cmdId'));
       if (!$verif) {
-        $eqLogic->checkAndUpdateCmd('digimessage', 'Code inconnu');
+        $txtKO = $eqLogic->getConfiguration('textCodeKO', 'Code inconnu');
+        $eqLogic->checkAndUpdateCmd('digimessage', $txtKO);
         $data = "code inconnu";
       } else {
         $digiCmd = digiactionCmd::byId(init('cmdId'));
