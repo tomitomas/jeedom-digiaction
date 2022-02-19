@@ -207,6 +207,8 @@ class digiaction extends eqLogic {
       log::add(__CLASS__, 'debug', '| set default color for ' . $this->getName());
       $this->setConfiguration('colorBgDefault', "#3c8dbc");
       $this->setConfiguration('colorTextDefault', "#ffffff");
+      $this->setConfiguration('colorBgActif', "#3c8dbc");
+      $this->setConfiguration('colorTextActif', "#ffffff");
    }
 
    public static function checkOrInitUserValidityDate($configUsers, $eqHumanName, $_force = false) {
