@@ -85,6 +85,7 @@ class digiaction extends eqLogic {
    /*     * *********************Méthodes d'instance************************* */
    // Fonction exécutée automatiquement avant la création de l'équipement 
    public function preInsert() {
+      $this->setDefaultColor();
    }
 
    // Fonction exécutée automatiquement après la création de l'équipement 
@@ -202,6 +203,11 @@ class digiaction extends eqLogic {
       $this->refreshWidget();
    }
 
+   public function setDefaultColor() {
+      log::add(__CLASS__, 'debug', '| set default color for ' . $this->getName());
+      $this->setConfiguration('colorBgDefault', "#3c8dbc");
+      $this->setConfiguration('colorTextDefault', "#ffffff");
+   }
 
    public static function checkOrInitUserValidityDate($configUsers, $eqHumanName, $_force = false) {
 
@@ -543,10 +549,20 @@ class digiaction extends eqLogic {
       return $detailedList;
    }
 
+   public function getCurrentMode() {
+      $cmd = $this->getCmd('info',  'currentMode');
+      $currentMode = is_object($cmd) ? $cmd->execCmd() : '';
+
+      return $currentMode;
+   }
+
    public function getAvailableModeHTML() {
 
       self::addLogTemplate('CREATE HTML CODE FOR AVAILABLE MODES [' . $this->getName() . ']');
       $modes = $this->getModeDetails();
+      $defaultBgColor = $this->getConfiguration('colorBgDefault');
+      $defaultTextColor = $this->getConfiguration('colorTextDefault');
+
 
       $result = '';
       foreach ($modes as $mode) {
@@ -559,7 +575,9 @@ class digiaction extends eqLogic {
             $tmpResult .= '<li class="digiActionMode digiActionNoBg ' . $digi . '" digi-action="' . $mode['name'] . '" digi-cmdId="' . $cmdId . '" digi-timer="' . $mode['timer'] . '" title="mode ' . $mode['name'] . '">';
             $tmpResult .= str_replace("img-responsive", "", $mode['icon']);
          } else {
-            $tmpResult .= '<li class="digiActionMode digiActionText ' . $digi . '" digi-action="' . $mode['name'] . '" digi-cmdId="' . $cmdId . '" digi-timer="' . $mode['timer'] . '" >';
+            $style = 'style="background-color:' . $defaultBgColor . '!important;color:' . $defaultTextColor . '!important;"';
+
+            $tmpResult .= '<li class="digiActionMode digiActionText ' . $digi . '" digi-action="' . $mode['name'] . '" digi-cmdId="' . $cmdId . '" digi-timer="' . $mode['timer'] . '" ' . $style . '>';
             $tmpResult .= $mode['name'];
          }
          $tmpResult .= '</li></div>';
