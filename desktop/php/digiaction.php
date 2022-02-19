@@ -203,6 +203,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 										</ul>
 									</div>
 								</div>
+
 							</div>
 
 						</div>

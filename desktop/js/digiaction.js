@@ -812,7 +812,6 @@ $('body').on('change', '.choiceAlertMode', function () {
   if (display != 'none' && elt.val() == -1) elt.val(1);
 });
 
-
 $('input[type="color"]').on('change', function () {
   var elt = $(this).parents('.customColor').find('li.digiActionExample');
   var type = $(this).data('type');
@@ -838,6 +837,7 @@ $('.btReinitColor').off('click').on('click', function () {
 
 
 })
+
 
 customActifModeColor()
 

@@ -19,16 +19,21 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 // Fonction exécutée automatiquement après l'installation du plugin
-  function digiaction_install() {
-
-  }
+function digiaction_install() {
+}
 
 // Fonction exécutée automatiquement après la mise à jour du plugin
-  function digiaction_update() {
+function digiaction_update() {
 
+  // update eqLogic to set the new default color required
+  foreach (eqLogic::byType('digiaction') as $eqlogic) {
+    if ($eqlogic->getConfiguration('colorBgDefault') == '') {
+      $eqlogic->setDefaultColor();
+      $eqlogic->save(true);
+    }
   }
+}
 
 // Fonction exécutée automatiquement après la suppression du plugin
-  function digiaction_remove() {
-
-  }
+function digiaction_remove() {
+}

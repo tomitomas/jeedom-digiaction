@@ -564,9 +564,9 @@ class digiaction extends eqLogic {
       $modes = $this->getModeDetails();
       $currentMode = $this->getCurrentMode();
       $defaultBgColor = $this->getConfiguration('colorBgDefault');
-      $actifBgColor = $this->getConfiguration('colorBgActif');
-
       $defaultTextColor = $this->getConfiguration('colorTextDefault');
+
+      $actifBgColor = $this->getConfiguration('colorBgActif');
       $actifTextColor = $this->getConfiguration('colorTextActif');
 
       $result = '';
@@ -580,7 +580,6 @@ class digiaction extends eqLogic {
             $tmpResult .= '<li class="digiActionMode digiActionNoBg ' . $digi . '" digi-action="' . $mode['name'] . '" digi-cmdId="' . $cmdId . '" digi-timer="' . $mode['timer'] . '" title="mode ' . $mode['name'] . '">';
             $tmpResult .= str_replace("img-responsive", "", $mode['icon']);
          } else {
-
             $backgoundColor = ($currentMode == $mode['name']) ? $actifBgColor : $defaultBgColor;
             $textColor = ($currentMode == $mode['name']) ? $actifTextColor : $defaultTextColor;
             $style = 'style="background-color:' . $backgoundColor . '!important;color:' . $textColor . '!important;"';
