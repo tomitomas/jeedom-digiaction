@@ -232,7 +232,7 @@ function saveEqLogic(_eqLogic) {
 }
 
 function checkDate(startDt, endDt) {
-  console.log('checking : >' + startDt + '< and >' + endDt + '<');
+  // console.log('checking : >' + startDt + '< and >' + endDt + '<');
   if (startDt == "" || endDt == "") return true;
 
   return (new Date(startDt).getTime() < new Date(endDt).getTime())
@@ -542,7 +542,13 @@ function addAction(_action, _type, _name, _el) {
 
 $('input[data-l1key=configuration][data-l2key=autocall]').change(function () {
   updateCheckboxMode();
+  customActifModeColor()
 });
+
+function customActifModeColor() {
+  var autocall = $('input[data-l1key=configuration][data-l2key=autocall]').is(':checked') ? 'block' : 'none';
+  $('.autoCallActif').css("display", autocall);
+}
 
 
 function updateCheckboxMode() {
@@ -831,6 +837,9 @@ $('.btReinitColor').off('click').on('click', function () {
 
 
 })
+
+
+customActifModeColor()
 
 // update color with defined one at first display
 $(".customColor").each(function () {
