@@ -123,6 +123,16 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							</div>
 
 							<div class="col-lg-12">
+								<legend><i class="fa fa-cogs"></i> {{Paramètres}}</legend>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{Chaque mode s'auto-appelle}}</label>
+									<div class="col-sm-7">
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="autocall" />Autoriser</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-lg-12">
 								<legend><i class="fas fa-spell-check"></i> {{Textes}}</legend>
 								<div class="form-group">
 									<label class="col-sm-3 control-label">{{Temps d'affichage des messages}}</label>
@@ -149,13 +159,34 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							</div>
 
 							<div class="col-lg-12">
-								<legend><i class="fa fa-cogs"></i> {{Paramètres}}</legend>
+								<legend><i class="fas fa-paint-brush"></i> {{Couleurs}}</legend>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Chaque mode s'auto-appelle}}</label>
-									<div class="col-sm-7">
-										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="autocall" />Autoriser</label>
+									<label class="col-sm-3 control-label"></label>
+									<div class="col-sm-2">
+										<label class="text-center" style="width: 48%; display: inline-block;"> {{Arrière-plan}}</label>
+										<label class="text-center" style="width: 48%; display: inline-block;"> {{Texte}}</label>
 									</div>
 								</div>
+
+								<div class="form-group customColor">
+									<label class="col-sm-3 control-label">
+										<!-- {{Par défaut}}
+										<sup>
+											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Couleur que prendra un mode si aucun icône n'est défini"></i>
+										</sup> -->
+									</label>
+									<div class="col-sm-2">
+										<input type="color" class="eqLogicAttr form-control input-sm cursor" data-l1key="configuration" data-type="background-color" data-l2key="colorBgDefault" style="width: 48%; display: inline-block;">
+										<input type="color" class="eqLogicAttr form-control input-sm cursor" data-l1key="configuration" data-type="color" data-l2key="colorTextDefault" style="width: 48%; display: inline-block;">
+									</div>
+									<div class="col-sm-2 ">
+										<ul class="digiaction">
+											<li class="digiActionExample">Exemple</li>
+											<a class="btReinitColor" style="padding-left:10px" title="Reinitialer avec les couleurs par défaut"><i class="fas fa-eraser"></i></a>
+										</ul>
+									</div>
+								</div>
+
 							</div>
 
 						</div>
