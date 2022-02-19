@@ -232,7 +232,7 @@ function saveEqLogic(_eqLogic) {
 }
 
 function checkDate(startDt, endDt) {
-  console.log('checking : >' + startDt + '< and >' + endDt + '<');
+  // console.log('checking : >' + startDt + '< and >' + endDt + '<');
   if (startDt == "" || endDt == "") return true;
 
   return (new Date(startDt).getTime() < new Date(endDt).getTime())
@@ -542,7 +542,13 @@ function addAction(_action, _type, _name, _el) {
 
 $('input[data-l1key=configuration][data-l2key=autocall]').change(function () {
   updateCheckboxMode();
+  customActifModeColor()
 });
+
+function customActifModeColor() {
+  var autocall = $('input[data-l1key=configuration][data-l2key=autocall]').is(':checked') ? 'block' : 'none';
+  $('.autoCallActif').css("display", autocall);
+}
 
 
 function updateCheckboxMode() {
@@ -804,4 +810,45 @@ $('body').on('change', '.choiceAlertMode', function () {
 
   var elt = $(this).closest('.addActionWrongPwd').find('.modeAttr[data-l1key=nbWrongPwd]')
   if (display != 'none' && elt.val() == -1) elt.val(1);
+});
+
+
+$('input[type="color"]').on('change', function () {
+  var elt = $(this).parents('.customColor').find('li.digiActionExample');
+  var type = $(this).data('type');
+  var color = $(this).value();
+
+  var currentStyle = elt.attr('style');
+
+  style = currentStyle + ';' + type + ':' + color + ' !important;';
+
+  elt.attr('style', style);
+
+});
+
+$('.btReinitColor').off('click').on('click', function () {
+  var elt = $(this).parents('.customColor').find('li.digiActionExample');
+  var bg = '#3c8dbc';
+  var txt = '#ffffff';
+
+  elt.attr('style', '');
+
+  $(this).parents('.customColor').find('input[type="color"][data-type=background-color]').val(bg);
+  $(this).parents('.customColor').find('input[type="color"][data-type=color]').val(txt);
+
+
+})
+
+customActifModeColor()
+
+// update color with defined one at first display
+$(".customColor").each(function () {
+  var bg = $(this).find('li.digiActionExample[data-type=background-color]').value();
+  var txt = $(this).find('li.digiActionExample[data-type=color]').value();
+
+  var currentStyle = $(this).attr('style');
+
+  style = currentStyle + ';backgound-color:' + bg + ' !important;color:' + txt + ' !important;';
+
+  $(this).attr('style', style);
 });
