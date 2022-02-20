@@ -130,6 +130,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
 										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="autocall" />Autoriser</label>
 									</div>
 								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{Clavier dans un pop-up}}</label>
+									<div class="col-sm-7">
+										<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="pinOnModale" />
+									</div>
+								</div>
 							</div>
 
 							<div class="col-lg-12">

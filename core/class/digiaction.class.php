@@ -200,14 +200,14 @@ class digiaction extends eqLogic {
          }
       }
 
-      $this->refreshWidget();
+      // $this->refreshWidget();
    }
 
    public function setDefaultColor() {
       log::add(__CLASS__, 'debug', '| set default color for ' . $this->getName());
       $this->setConfiguration('colorBgDefault', "#3c8dbc");
-      $this->setConfiguration('colorBgActif', "#3c8dbc");
       $this->setConfiguration('colorTextDefault', "#ffffff");
+      $this->setConfiguration('colorBgActif', "#3c8dbc");
       $this->setConfiguration('colorTextActif', "#ffffff");
    }
 
@@ -426,7 +426,7 @@ class digiaction extends eqLogic {
                   continue;
                }
 
-               log::add('digiaction', 'debug', '│ will check for panic => current cmd :' . ($options['panic'] ? 'true' : 'false') . ' // panic user : ' . ($is_panic ? 'true' : 'false'));
+               log::add('digiaction', 'debug', '│ will check for panic => current cmd :' . (($options['panic'] ?? false) ? 'true' : 'false') . ' // panic user : ' . ($is_panic ? 'true' : 'false'));
                if (isset($options['panic']) && $options['panic'] && !$is_panic) {
                   log::add('digiaction', 'debug', '│ action skipped -- not in panic mode ! ');
                   continue;
@@ -477,21 +477,38 @@ class digiaction extends eqLogic {
 
       $version = jeedom::versionAlias($_version);
 
-      foreach (($this->getCmd('info')) as $cmd) {
-         $replace['#' . $cmd->getLogicalId() . '_id#'] = $cmd->getId();
-         $replace['#' . $cmd->getLogicalId() . '#'] = $cmd->execCmd();
+      $hasModal = $this->getConfiguration('pinOnModale', false);
+      $replace['#pinmodal#'] = $hasModal;
+
+      if ($hasModal) {
+         // affichage keyboard mode modale
+         $pathKeyboard = __DIR__ . '/../template/dashboard/digiactionKeyboardModal.html';
+         $replace['#keyboard#'] = file_get_contents($pathKeyboard);
+         $replace['#timerboard#'] = '';
+      } else {
+         // affichage keyboard mode standard dans le widget
+         $replace['#keyboard#'] = '#keyboardDefault#';
+         $replace['#timerboard#'] = '#timerboardDefault#';
       }
+      $replace['#timerboardDefault#'] = file_get_contents(__DIR__ . '/../template/dashboard/digiactionTimerboard.html');
+      $replace['#keyboardDefault#'] = file_get_contents(__DIR__ . '/../template/dashboard/digiactionKeyboard.html');
+      // $replace['#message#'] = $this->getCmd(null, 'digimessage')->execCmd();
 
       $replace['#eqLogic_id#'] = $this->getId();
 
       $replace['#title#'] = $this->getName();
 
       $countdown = $this->getConfiguration('countdown', 10);
-      $replace['#countdown#'] = empty($countdown) ? 10000 : ($countdown == -1 ? -1 : intval($countdown) * 1000);
+      $replace['#countdown#'] = empty($countdown) ? 10000000000 : ($countdown == -1 ? -1 : intval($countdown) * 1000);
+      // $replace['#countdown#'] = empty($countdown) ? 10000 : ($countdown == -1 ? -1 : intval($countdown) * 1000);
 
       $replace['#modeAvailable#'] = $this->getAvailableModeHTML();
       $replace['#currentMode#'] = $this->getCmd(null, 'currentMode')->execCmd();
-      // $replace['#message#'] = $this->getCmd(null, 'digimessage')->execCmd();
+
+      foreach (($this->getCmd('info')) as $cmd) {
+         $replace['#' . $cmd->getLogicalId() . '_id#'] = $cmd->getId();
+         $replace['#' . $cmd->getLogicalId() . '#'] = $cmd->execCmd();
+      }
 
       return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'digiaction', 'digiaction')));
    }
@@ -707,7 +724,7 @@ class digiaction extends eqLogic {
 
       self::addLogTemplate();
       $checkFinal = ($check == 1) ? true : false;
-      return array($checkFinal, $user['name'] ?? null, $userPanic);
+      return array($checkFinal, $user['name'] ?? null, $userPanic ?? false);
    }
 
    public static function checkIsAValidDate($myDateString) {
@@ -896,7 +913,7 @@ class digiactionCmd extends cmd {
             }
 
             digiaction::addLogTemplate();
-            $eqLogic->refreshWidget();
+            // $eqLogic->refreshWidget();
             return;
       }
    }

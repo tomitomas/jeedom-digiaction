@@ -1,7 +1,7 @@
 <div class="eqLogic eqLogic-widget digiaction allowResize allowReorderCmd #custom_layout# #eqLogic_class#"
-    data-eqType="#eqType#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#"
-    style="width: #width#;height: #height#;#style#" data-translate-category="#translate_category#"
-    data-category="#category#" data-tags="#tags#">
+    data-eqType="#eqType#" data-eqLogic_id="#id#" data-digimessage_id="#digimessage_id#" data-pinmodal="#pinmodal#"
+    data-eqLogic_uid="#uid#" data-version="#version#" style="width: #width#;height: #height#;#style#"
+    data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#">
     <center class="widget-name"><a href="#eqLink#" style="font-size : 1.1em;#hideEqLogicName#">#name_display# <span
                 class="object_name">#object_name# ici</span></a></center>
 
@@ -33,57 +33,12 @@
     </div>
 
 
-    <div class="digiActionHideDefault digiactionMainPanel digiactionPanelTimer">
-        <ul>
-            <div>
-                <li class="digiActionCountDownTimer digiActionNoBg"></li>
-            </div>
-            <div>
-                <li class="digiActionCancel digiFunctionTimerCancel digiActionBgRed">Annuler</li>
-            </div>
-        </ul>
-    </div>
-    <div class="digiActionHideDefault digiactionMainPanel digiactionPanelKeyboard ">
-        <ul class="digiActionKeyPressed"></ul>
-        <ul class="digiactionPanel digiActionCircle">
-            <div>
-                <li class="digiKeyboard">1</li>
-                <li class="digiKeyboard">2</li>
-                <li class="digiKeyboard">3</li>
-            </div>
-            <div>
-                <li class="digiKeyboard">4</li>
-                <li class="digiKeyboard">5</li>
-                <li class="digiKeyboard">6</li>
-            </div>
-            <div>
-                <li class="digiKeyboard">7</li>
-                <li class="digiKeyboard">8</li>
-                <li class="digiKeyboard">9</li>
-            </div>
-            <div>
-                <li class="digiKeyboard">A</li>
-                <li class="digiKeyboard">0</li>
-                <li class="digiKeyboard">B</li>
-            </div>
-            <div>
-                <li class="digiFunction digiFunctionValidate digiActionBgGreen">V</li>
-                <li class="digiReset digiActionBgYellow">RAZ</li>
-                <li class="digiFunction digiFunctionCancel digiActionBgRed">A</li>
-            </div>
-        </ul>
-    </div>
+    #timerboard#
+
+    #keyboard#
 
 
 </div>
-
-<!--
-<script>
-    $.include([ 'plugins/digiaction/core/template/dashboard/js/dashboard.digiaction.js',
-    'plugins/digiaction/core/template/dashboard/css/digiaction.css'
-    ]);
-</script>
--->
 
 <script src="plugins/digiaction/core/template/dashboard/js/dashboard.digiaction.js"></script>
 <link rel="stylesheet" href="plugins/digiaction/core/template/dashboard/css/digiaction.css" />

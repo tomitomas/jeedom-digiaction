@@ -1,11 +1,12 @@
 $('.digiaction').off('click', '.digiActionMode').on('click', '.digiActionMode', function (event) {
 
   eqId = $(this).closest('.eqLogic.digiaction').attr('data-eqlogic_id');
+  modal = $(this).closest('.eqLogic.digiaction').attr('data-pinmodal');
 
   var cmdId = $(this).attr('digi-cmdId');
   var timer = $(this).attr('digi-timer');
   if ($(this).hasClass('digiactionEnterPin')) {
-    showDigit(eqId, cmdId, timer);
+    showDigit(eqId, cmdId, timer, modal);
   }
   else {
     digiTimer(timer, eqId, null, cmdId);
@@ -17,7 +18,10 @@ $('.digiaction').off('click', '.digiActionMode').on('click', '.digiActionMode', 
 ** FUNCTION ON DIGICODE KEYBOARD
 **/
 
-function showDigit(_eqId, _cmdId, _timer) {
+function showDigit(_eqId, _cmdId, _timer, _modal) {
+  if (_modal) {
+    showOnly($('.digiaction[data-eqlogic_id=' + _eqId + ']'), '.digiactionModal');
+  }
   showOnly($('.digiaction[data-eqlogic_id=' + _eqId + ']'), '.digiactionPanelKeyboard');
 
   $('.digiaction[data-eqlogic_id=' + _eqId + ']').find('.digiFunctionValidate').attr('digi-cmdId', _cmdId)
@@ -29,11 +33,19 @@ function getEqLogicId(el) {
   return el.closest('.eqLogic.digiaction').attr('data-eqlogic_id');
 }
 
+function getMsgInfoId(el) {
+  return el.closest('.eqLogic.digiaction').attr('data-digimessage_id');
+}
+
 // click on Validate button
 $('.digiaction').off('click', '.digiFunctionValidate').on('click', '.digiFunctionValidate', function () {
   eqId = getEqLogicId($(this));
   cmdName = $(this).attr('digi-action');
   cmdId = $(this).attr('digi-cmdId');
+
+  cmdInfoId = getMsgInfoId($(this));
+  $('.cmd[data-cmd_id=' + cmdInfoId + ']').find('.digiMessage').empty();
+
   timer = $(this).attr('digi-timer');
 
   passwordCode = $(this).closest('.digiactionPanelKeyboard').find('.digiFilled').map(function () {
@@ -49,6 +61,7 @@ $('.digiaction').off('click', '.digiFunctionValidate').on('click', '.digiFunctio
 $('.digiaction').off('click', '.digiFunctionCancel').on('click', '.digiFunctionCancel', function () {
   showOnly($(this), '.digiactionPanelMode');
   $(this).closest('.digiactionPanelKeyboard').find('.digiActionKeyPressed').empty()
+  $(this).closest('.digiactionModal').css('display', 'none');
 })
 
 // click on digit : create the password code
@@ -69,6 +82,7 @@ $('.digiaction').off('click', '.digiFunctionTimerCancel').on('click', '.digiFunc
   clearInterval(window.interval);
   $(this).closest('.digiactionPanelTimer').find('.digiActionCountDownTimer').empty()
   showOnly($(this), '.digiactionPanelMode');
+  $(this).closest('.digiactionModal').css('display', 'none');
 })
 
 // hide all panel and show only the required one
@@ -140,6 +154,8 @@ function verifUserAndDoAction(_eqId, _userCode, _cmdId) {
           $('.digiaction[data-eqlogic_id=' + _eqId + ']').find('.digiactionPanelTimer').hide();
           $('.digiaction[data-eqlogic_id=' + _eqId + ']').find('.digiactionPanelKeyboard').hide();
           $('.digiaction[data-eqlogic_id=' + _eqId + ']').find('.digiactionPanelMode').show();
+          $('.digiaction[data-eqlogic_id=' + _eqId + ']').find('.digiactionModal').hide();
+
         }
       }
     }
