@@ -210,3 +210,9 @@ function countDown(time, update, complete) {
     else update(Math.floor(now / 1000));
   }, 100); // the smaller this number, the more accurate the timer will be
 }
+
+if (typeof jeedom.cmd.addUpdateFunction !== 'function') {
+  jeedom.cmd.addUpdateFunction = function (id, func) {
+    jeedom.cmd.update[id] = func;
+  }
+}
