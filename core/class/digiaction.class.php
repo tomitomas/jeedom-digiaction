@@ -438,6 +438,7 @@ class digiaction extends eqLogic {
                if (isset($options['message'])) {
                   $options['message'] =  $this->replaceCustomData($options['message'], $_mode);
                }
+               $options['source'] = __CLASS__;
                $tmpAction = scenarioExpression::createAndExec('action', $action['cmd'], $options);
 
                log::add('digiaction', 'debug', '│ action done : ' . $tmpAction);
