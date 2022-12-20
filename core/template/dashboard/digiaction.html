@@ -11,10 +11,6 @@
         <div class="digiMessage">
         </div>
         <script>
-            $.include(['plugins/digiaction/core/template/dashboard/js/dashboard.digiaction.js'
-            ]);
-        </script>
-        <script>
             jeedom.cmd.addUpdateFunction('#digimessage_id#', function (_options) {
                 var cmd = $('.cmd[data-cmd_id=#digimessage_id#]');
                 cmd.find('.digiMessage').empty().append(_options.display_value);
@@ -81,4 +77,13 @@
 
 </div>
 
+<!--
+<script>
+    $.include([ 'plugins/digiaction/core/template/dashboard/js/dashboard.digiaction.js',
+    'plugins/digiaction/core/template/dashboard/css/digiaction.css'
+    ]);
+</script>
+-->
+
+<script src="plugins/digiaction/core/template/dashboard/js/dashboard.digiaction.js"></script>
 <link rel="stylesheet" href="plugins/digiaction/core/template/dashboard/css/digiaction.css" />
