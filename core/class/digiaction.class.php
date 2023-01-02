@@ -85,6 +85,7 @@ class digiaction extends eqLogic {
    /*     * *********************Méthodes d'instance************************* */
    // Fonction exécutée automatiquement avant la création de l'équipement 
    public function preInsert() {
+      $this->setDefaultColor();
    }
 
    // Fonction exécutée automatiquement après la création de l'équipement 
@@ -202,6 +203,13 @@ class digiaction extends eqLogic {
       $this->refreshWidget();
    }
 
+   public function setDefaultColor() {
+      log::add(__CLASS__, 'debug', '| set default color for ' . $this->getName());
+      $this->setConfiguration('colorBgDefault', "#3c8dbc");
+      $this->setConfiguration('colorTextDefault', "#ffffff");
+      $this->setConfiguration('colorBgActif', "#3c8dbc");
+      $this->setConfiguration('colorTextActif', "#ffffff");
+   }
 
    public static function checkOrInitUserValidityDate($configUsers, $eqHumanName, $_force = false) {
 
@@ -382,6 +390,13 @@ class digiaction extends eqLogic {
       return $checkResult;
    }
 
+   public function replaceCustomData(string $data, string $modeName = '') {
+
+      $arrResearch = array('#eqId#', '#eqName#', '#modeName#', '#nbWrongPwd#');
+      $arrReplace = array($this->getId(), $this->getName(), $modeName, $this->getConfiguration('currentWrongPwd', 0));
+
+      return str_replace($arrResearch, $arrReplace, $data);
+   }
 
    public function doAction($_mode, $_type, $is_panic = false) {
       if (!is_array($this->getConfiguration('modes'))) {
@@ -398,9 +413,6 @@ class digiaction extends eqLogic {
             continue;
          }
          log::add('digiaction', 'debug', '│ *** action(s) ' . $_type . ' will be executed ***');
-
-         $arrResearch = array('#eqId#', '#eqName#', '#modeName#', '#nbWrongPwd#');
-         $arrReplace = array($this->getId(), $this->getName(), $_mode, $this->getConfiguration('currentWrongPwd', 0));
 
          foreach ($value[$_type] as $action) {
             try {
@@ -421,10 +433,10 @@ class digiaction extends eqLogic {
                }
 
                if (isset($options['tags'])) {
-                  $options['tags'] = str_replace($arrResearch, $arrReplace, $options['tags']);
+                  $options['tags'] =  $this->replaceCustomData($options['tags'], $_mode);
                }
                if (isset($options['message'])) {
-                  $options['message'] = str_replace($arrResearch, $arrReplace, $options['message']);
+                  $options['message'] =  $this->replaceCustomData($options['message'], $_mode);
                }
                $tmpAction = scenarioExpression::createAndExec('action', $action['cmd'], $options);
 
@@ -539,10 +551,20 @@ class digiaction extends eqLogic {
       return $detailedList;
    }
 
+   public function getCurrentMode() {
+      $cmd = $this->getCmd('info',  'currentMode');
+      $currentMode = is_object($cmd) ? $cmd->execCmd() : '';
+
+      return $currentMode;
+   }
+
    public function getAvailableModeHTML() {
 
       self::addLogTemplate('CREATE HTML CODE FOR AVAILABLE MODES [' . $this->getName() . ']');
       $modes = $this->getModeDetails();
+      $defaultBgColor = $this->getConfiguration('colorBgDefault');
+      $defaultTextColor = $this->getConfiguration('colorTextDefault');
+
 
       $result = '';
       foreach ($modes as $mode) {
@@ -555,7 +577,9 @@ class digiaction extends eqLogic {
             $tmpResult .= '<li class="digiActionMode digiActionNoBg ' . $digi . '" digi-action="' . $mode['name'] . '" digi-cmdId="' . $cmdId . '" digi-timer="' . $mode['timer'] . '" title="mode ' . $mode['name'] . '">';
             $tmpResult .= str_replace("img-responsive", "", $mode['icon']);
          } else {
-            $tmpResult .= '<li class="digiActionMode digiActionText ' . $digi . '" digi-action="' . $mode['name'] . '" digi-cmdId="' . $cmdId . '" digi-timer="' . $mode['timer'] . '" >';
+            $style = 'style="background-color:' . $defaultBgColor . '!important;color:' . $defaultTextColor . '!important;"';
+
+            $tmpResult .= '<li class="digiActionMode digiActionText ' . $digi . '" digi-action="' . $mode['name'] . '" digi-cmdId="' . $cmdId . '" digi-timer="' . $mode['timer'] . '" ' . $style . '>';
             $tmpResult .= $mode['name'];
          }
          $tmpResult .= '</li></div>';
@@ -855,7 +879,10 @@ class digiactionCmd extends cmd {
                log::add('digiaction', 'debug', '│ global check TRUE');
                $eqLogic->doAction($newMode, 'doAction', $isPanic);
                $currentMode->event($newMode);
-               $eqLogic->checkAndUpdateCmd('digimessage', 'Commande réalisée pour ' . $newMode);
+
+               $txtOKtemp = $eqLogic->getConfiguration('textOK', 'Actions réalisées pour ' . $newMode);
+               $txtOK = $eqLogic->replaceCustomData($txtOKtemp, $newMode);
+               $eqLogic->checkAndUpdateCmd('digimessage', $txtOK);
                if (!empty($_options['userName'])) {
                   log::add('digiaction', 'info', '│ Commande "' . $this->getName() . '" a été réalisée par : ' . $_options['userName']);
                } else {

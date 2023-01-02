@@ -13,3 +13,5 @@ docs/.sass-cache/
 .remote-sync.json
 
 jeedomStub.php
+
+.vscode*
