@@ -247,14 +247,14 @@ function addMode(_mode, _updateMode) {
   var div = '<div class="mode panel panel-default">';
   div += '<div class="panel-heading">';
   div += '<h3 class="panel-title">';
-  div += '<a class="accordion-toggle" data-toggle="collapse" data-parent="#div_modes" href="#collapse' + random + '">';
+  div += '<a class="accordion-toggle" data-toggle="collapse" href="#collapse' + random + '">';
   div += '<span class="name">' + _mode.name + '</span>';
   div += '</a>';
   div += '</h3>';
   div += '</div>';
   div += '<div class="div_alert"></div>';
 
-  div += '<div id="collapse' + random + '" class="panel-collapse collapse in">';
+  div += '<div id="collapse' + random + '" class="panel-collapse collapse">';
   div += '<div class="panel-body">';
   div += '<div class="well">';
 
@@ -406,7 +406,6 @@ function addMode(_mode, _updateMode) {
     }
   }
 
-  $('.collapse').collapse();
   $("#div_modes .mode:last .div_preCheck").sortable({ axis: "y", cursor: "move", items: ".preCheck", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
   $("#div_modes .mode:last .div_preCheckActionError").sortable({ axis: "y", cursor: "move", items: ".preCheckActionError", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
   $("#div_modes .mode:last .div_doAction").sortable({ axis: "y", cursor: "move", items: ".doAction", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
