@@ -86,6 +86,8 @@ class digiaction extends eqLogic {
    // Fonction exécutée automatiquement avant la création de l'équipement 
    public function preInsert() {
       $this->setDefaultColor();
+
+      $this->setIsEnable(1);
    }
 
    // Fonction exécutée automatiquement après la création de l'équipement 
