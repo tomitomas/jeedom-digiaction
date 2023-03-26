@@ -4,7 +4,7 @@
 	"description": "Ce plugin permet d'appliquer un mode réalisant une/des action(s) sous condition(s), et d'ajouter un contrôle par saisie de mot de passe (facultatif) via un digicode.",
 	"licence": "AGPL",
 	"author": "ToMiToMaS",
-	"require": "4.1.19",
+	"require": "4.2",
 	"category": "security",
 	"hasDependency": false,
 	"hasOwnDeamon": false,

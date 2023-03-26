@@ -115,8 +115,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<div class="form-group">
 									<label class="col-sm-3 control-label">{{Options}}</label>
 									<div class="col-sm-7">
-										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked />{{Activer}}</label>
-										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked />{{Visible}}</label>
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" />{{Activer}}</label>
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" />{{Visible}}</label>
 									</div>
 								</div>
 								<br />
@@ -170,14 +170,31 @@ $eqLogics = eqLogic::byType($plugin->getId());
 
 								<div class="form-group customColor">
 									<label class="col-sm-3 control-label">
-										<!-- {{Par défaut}}
+										{{Par défaut}}
 										<sup>
 											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Couleur que prendra un mode si aucun icône n'est défini"></i>
-										</sup> -->
+										</sup>
 									</label>
 									<div class="col-sm-2">
 										<input type="color" class="eqLogicAttr form-control input-sm cursor" data-l1key="configuration" data-type="background-color" data-l2key="colorBgDefault" style="width: 48%; display: inline-block;">
 										<input type="color" class="eqLogicAttr form-control input-sm cursor" data-l1key="configuration" data-type="color" data-l2key="colorTextDefault" style="width: 48%; display: inline-block;">
+									</div>
+									<div class="col-sm-2 ">
+										<ul class="digiaction">
+											<li class="digiActionExample">Exemple</li>
+											<a class="btReinitColor" style="padding-left:10px" title="Reinitialer avec les couleurs par défaut"><i class="fas fa-eraser"></i></a>
+										</ul>
+									</div>
+								</div>
+								<div class="form-group autoCallActif customColor" style="display:none;">
+									<label class="col-sm-3 control-label">{{Si le mode est actif}}
+										<sup>
+											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Couleur que prendra le mode actif"></i>
+										</sup>
+									</label>
+									<div class="col-sm-2">
+										<input type="color" class="eqLogicAttr form-control input-sm cursor" data-l1key="configuration" data-type="background-color" data-l2key="colorBgActif" style="width: 48%; display: inline-block;">
+										<input type="color" class="eqLogicAttr form-control input-sm cursor" data-l1key="configuration" data-type="color" data-l2key="colorTextActif" style="width: 48%; display: inline-block;">
 									</div>
 									<div class="col-sm-2 ">
 										<ul class="digiaction">
