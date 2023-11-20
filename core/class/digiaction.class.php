@@ -86,6 +86,8 @@ class digiaction extends eqLogic {
    // Fonction exécutée automatiquement avant la création de l'équipement 
    public function preInsert() {
       $this->setDefaultColor();
+
+      $this->setIsEnable(1);
    }
 
    // Fonction exécutée automatiquement après la création de l'équipement 
@@ -206,8 +208,8 @@ class digiaction extends eqLogic {
    public function setDefaultColor() {
       log::add(__CLASS__, 'debug', '| set default color for ' . $this->getName());
       $this->setConfiguration('colorBgDefault', "#3c8dbc");
-      $this->setConfiguration('colorTextDefault', "#ffffff");
       $this->setConfiguration('colorBgActif', "#3c8dbc");
+      $this->setConfiguration('colorTextDefault', "#ffffff");
       $this->setConfiguration('colorTextActif', "#ffffff");
    }
 
@@ -438,6 +440,7 @@ class digiaction extends eqLogic {
                if (isset($options['message'])) {
                   $options['message'] =  $this->replaceCustomData($options['message'], $_mode);
                }
+               $options['source'] = __CLASS__;
                $tmpAction = scenarioExpression::createAndExec('action', $action['cmd'], $options);
 
                log::add('digiaction', 'debug', '│ action done : ' . $tmpAction);
@@ -562,9 +565,12 @@ class digiaction extends eqLogic {
 
       self::addLogTemplate('CREATE HTML CODE FOR AVAILABLE MODES [' . $this->getName() . ']');
       $modes = $this->getModeDetails();
+      $currentMode = $this->getCurrentMode();
       $defaultBgColor = $this->getConfiguration('colorBgDefault');
       $defaultTextColor = $this->getConfiguration('colorTextDefault');
 
+      $actifBgColor = $this->getConfiguration('colorBgActif');
+      $actifTextColor = $this->getConfiguration('colorTextActif');
 
       $result = '';
       foreach ($modes as $mode) {
@@ -577,7 +583,9 @@ class digiaction extends eqLogic {
             $tmpResult .= '<li class="digiActionMode digiActionNoBg ' . $digi . '" digi-action="' . $mode['name'] . '" digi-cmdId="' . $cmdId . '" digi-timer="' . $mode['timer'] . '" title="mode ' . $mode['name'] . '">';
             $tmpResult .= str_replace("img-responsive", "", $mode['icon']);
          } else {
-            $style = 'style="background-color:' . $defaultBgColor . '!important;color:' . $defaultTextColor . '!important;"';
+            $backgoundColor = ($currentMode == $mode['name']) ? $actifBgColor : $defaultBgColor;
+            $textColor = ($currentMode == $mode['name']) ? $actifTextColor : $defaultTextColor;
+            $style = 'style="background-color:' . $backgoundColor . '!important;color:' . $textColor . '!important;"';
 
             $tmpResult .= '<li class="digiActionMode digiActionText ' . $digi . '" digi-action="' . $mode['name'] . '" digi-cmdId="' . $cmdId . '" digi-timer="' . $mode['timer'] . '" ' . $style . '>';
             $tmpResult .= $mode['name'];

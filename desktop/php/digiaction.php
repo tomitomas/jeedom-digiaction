@@ -11,19 +11,43 @@ $eqLogics = eqLogic::byType($plugin->getId());
 <div class="row row-overflow">
 	<!-- Page d'accueil du plugin -->
 	<div class="col-xs-12 eqLogicThumbnailDisplay">
-		<legend><i class="fas fa-cog"></i> {{Gestion}}</legend>
-		<!-- Boutons de gestion du plugin -->
-		<div class="eqLogicThumbnailContainer">
-			<div class="cursor eqLogicAction" style="color:rgb(180,40,40);" data-action="add">
-				<i class="fas fa-plus-circle"></i>
-				<br>
-				<span>{{Ajouter}}</span>
+		<div class="row">
+			<div class="col-sm-10">
+
+				<legend><i class="fas fa-cog"></i> {{Gestion}}</legend>
+				<!-- Boutons de gestion du plugin -->
+				<div class="eqLogicThumbnailContainer">
+					<div class="cursor eqLogicAction" style="color:var(--main-color);" data-action="add">
+						<i class="fas fa-plus-circle"></i>
+						<br>
+						<span>{{Ajouter}}</span>
+					</div>
+					<div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
+						<i class="fas fa-wrench" style="color:var(--main-color);"></i>
+						<br>
+						<span>{{Configuration}}</span>
+					</div>
+				</div>
 			</div>
-			<div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
-				<i class="fas fa-wrench" style="color:rgb(180,40,40);"></i>
-				<br>
-				<span>{{Configuration}}</span>
-			</div>
+			<?php
+			// uniquement si on est en version 4.4 ou supérieur
+			$jeedomVersion  = jeedom::version() ?? '0';
+			$displayInfoValue = version_compare($jeedomVersion, '4.4.0', '>=');
+			if ($displayInfoValue) {
+			?>
+				<div class="col-sm-2">
+					<legend><i class=" fas fa-comments"></i> {{Community}}</legend>
+					<div class="eqLogicThumbnailContainer">
+						<div class="cursor eqLogicAction logoSecondary" data-action="createCommunityPost" style="color:var(--main-color);">
+							<i class="fas fa-ambulance"></i>
+							<br>
+							<span style="color:var(--txt-color)">{{Créer un post Community}}</span>
+						</div>
+					</div>
+				</div>
+			<?php
+			}
+			?>
 		</div>
 		<legend><i class="fas fa-table"></i> {{Mes DigiActions}}</legend>
 		<!-- Champ de recherche -->
@@ -115,8 +139,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<div class="form-group">
 									<label class="col-sm-3 control-label">{{Options}}</label>
 									<div class="col-sm-7">
-										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked />{{Activer}}</label>
-										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked />{{Visible}}</label>
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" />{{Activer}}</label>
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" />{{Visible}}</label>
 									</div>
 								</div>
 								<br />
@@ -170,14 +194,31 @@ $eqLogics = eqLogic::byType($plugin->getId());
 
 								<div class="form-group customColor">
 									<label class="col-sm-3 control-label">
-										<!-- {{Par défaut}}
+										{{Par défaut}}
 										<sup>
 											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Couleur que prendra un mode si aucun icône n'est défini"></i>
-										</sup> -->
+										</sup>
 									</label>
 									<div class="col-sm-2">
 										<input type="color" class="eqLogicAttr form-control input-sm cursor" data-l1key="configuration" data-type="background-color" data-l2key="colorBgDefault" style="width: 48%; display: inline-block;">
 										<input type="color" class="eqLogicAttr form-control input-sm cursor" data-l1key="configuration" data-type="color" data-l2key="colorTextDefault" style="width: 48%; display: inline-block;">
+									</div>
+									<div class="col-sm-2 ">
+										<ul class="digiaction">
+											<li class="digiActionExample">Exemple</li>
+											<a class="btReinitColor" style="padding-left:10px" title="Reinitialer avec les couleurs par défaut"><i class="fas fa-eraser"></i></a>
+										</ul>
+									</div>
+								</div>
+								<div class="form-group autoCallActif customColor" style="display:none;">
+									<label class="col-sm-3 control-label">{{Si le mode est actif}}
+										<sup>
+											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Couleur que prendra le mode actif"></i>
+										</sup>
+									</label>
+									<div class="col-sm-2">
+										<input type="color" class="eqLogicAttr form-control input-sm cursor" data-l1key="configuration" data-type="background-color" data-l2key="colorBgActif" style="width: 48%; display: inline-block;">
+										<input type="color" class="eqLogicAttr form-control input-sm cursor" data-l1key="configuration" data-type="color" data-l2key="colorTextActif" style="width: 48%; display: inline-block;">
 									</div>
 									<div class="col-sm-2 ">
 										<ul class="digiaction">

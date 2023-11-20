@@ -69,7 +69,7 @@ $("body").off('click', '.listCmdInfo').on('click', '.listCmdInfo', function () {
     el.value(result.human);
     jeedom.cmd.displayActionOption(el.value(), '', function (html) {
       el.closest('.' + type).find('.actionOptions').html(html);
-      taAutosize();
+      jeedomUtils.taAutosize();
     });
   });
 });
@@ -82,7 +82,7 @@ $("body").off('click', '.listCmdAction').on('click', '.listCmdAction', function 
     el.value(result.human);
     jeedom.cmd.displayActionOption(el.value(), '', function (html) {
       el.closest('.' + type).find('.actionOptions').html(html);
-      taAutosize();
+      jeedomUtils.taAutosize();
     });
   });
 });
@@ -94,7 +94,7 @@ $("body").off('click', '.listAction').on('click', '.listAction', function () {
     el.value(result.human);
     jeedom.cmd.displayActionOption(el.value(), '', function (html) {
       el.closest('.' + type).find('.actionOptions').html(html);
-      taAutosize();
+      jeedomUtils.taAutosize();
     });
   });
 });
@@ -126,7 +126,7 @@ $('body').off('focusout', '.cmdAction.expressionAttr[data-l1key=cmd]').on('focus
   var el = $(this);
   jeedom.cmd.displayActionOption($(this).value(), init(expression[0].options), function (html) {
     el.closest('.' + type).find('.actionOptions').html(html);
-    taAutosize();
+    jeedomUtils.taAutosize();
   })
 });
 
@@ -137,7 +137,7 @@ $("#div_modes").off('click', '.bt_removeMode').on('click', '.bt_removeMode', fun
 
 $('body').off('click', '.mode .modeAction[data-l1key=chooseIcon]').on('click', '.mode .modeAction[data-l1key=chooseIcon]', function () {
   var mode = $(this).closest('.mode');
-  chooseIcon(function (_icon) {
+  jeedomUtils.chooseIcon(function (_icon) {
     mode.find('.modeAttr[data-l1key=icon]').empty().append(_icon);
   }, { img: true });
 });
@@ -148,13 +148,13 @@ $('body').off('click', '.mode .modeAttr[data-l1key=icon]').on('click', '.mode .m
 
 $('.nav-tabs li a').off('click').on('click', function () {
   setTimeout(function () {
-    taAutosize();
+    jeedomUtils.taAutosize();
   }, 50);
 })
 
 $('#div_modes').off('click', '.panel-heading').on('click', '.panel-heading', function () {
   setTimeout(function () {
-    taAutosize();
+    jeedomUtils.taAutosize();
   }, 50);
 })
 
@@ -183,7 +183,7 @@ function printEqLogic(_eqLogic) {
         for (var i in data) {
           $('#' + data[i].id).append(data[i].html.html);
         }
-        taAutosize();
+        jeedomUtils.taAutosize();
       }
     });
   }
@@ -232,7 +232,7 @@ function saveEqLogic(_eqLogic) {
 }
 
 function checkDate(startDt, endDt) {
-  console.log('checking : >' + startDt + '< and >' + endDt + '<');
+  // console.log('checking : >' + startDt + '< and >' + endDt + '<');
   if (startDt == "" || endDt == "") return true;
 
   return (new Date(startDt).getTime() < new Date(endDt).getTime())
@@ -247,14 +247,14 @@ function addMode(_mode, _updateMode) {
   var div = '<div class="mode panel panel-default">';
   div += '<div class="panel-heading">';
   div += '<h3 class="panel-title">';
-  div += '<a class="accordion-toggle" data-toggle="collapse" data-parent="#div_modes" href="#collapse' + random + '">';
+  div += '<a class="accordion-toggle" data-toggle="collapse" href="#collapse' + random + '">';
   div += '<span class="name">' + _mode.name + '</span>';
   div += '</a>';
   div += '</h3>';
   div += '</div>';
   div += '<div class="div_alert"></div>';
 
-  div += '<div id="collapse' + random + '" class="panel-collapse collapse in">';
+  div += '<div id="collapse' + random + '" class="panel-collapse collapse">';
   div += '<div class="panel-body">';
   div += '<div class="well">';
 
@@ -406,7 +406,6 @@ function addMode(_mode, _updateMode) {
     }
   }
 
-  $('.collapse').collapse();
   $("#div_modes .mode:last .div_preCheck").sortable({ axis: "y", cursor: "move", items: ".preCheck", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
   $("#div_modes .mode:last .div_preCheckActionError").sortable({ axis: "y", cursor: "move", items: ".preCheckActionError", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
   $("#div_modes .mode:last .div_doAction").sortable({ axis: "y", cursor: "move", items: ".doAction", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true });
@@ -513,7 +512,7 @@ function addAction(_action, _type, _name, _el) {
   div += '</span>';
   div += '</div>';
   div += '</div>';
-  var actionOption_id = uniqId();
+  var actionOption_id = jeedomUtils.uniqId();
   div += '<div class="col-sm-5 actionOptions" id="' + actionOption_id + '">';
   div += '</div>';
   div += '</div>';
@@ -542,7 +541,13 @@ function addAction(_action, _type, _name, _el) {
 
 $('input[data-l1key=configuration][data-l2key=autocall]').change(function () {
   updateCheckboxMode();
+  customActifModeColor()
 });
+
+function customActifModeColor() {
+  var autocall = $('input[data-l1key=configuration][data-l2key=autocall]').is(':checked') ? 'block' : 'none';
+  $('.autoCallActif').css("display", autocall);
+}
 
 
 function updateCheckboxMode() {
@@ -831,6 +836,9 @@ $('.btReinitColor').off('click').on('click', function () {
 
 
 })
+
+
+customActifModeColor()
 
 // update color with defined one at first display
 $(".customColor").each(function () {
