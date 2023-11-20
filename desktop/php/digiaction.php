@@ -17,13 +17,13 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<legend><i class="fas fa-cog"></i> {{Gestion}}</legend>
 				<!-- Boutons de gestion du plugin -->
 				<div class="eqLogicThumbnailContainer">
-					<div class="cursor eqLogicAction" style="color:rgb(180,40,40);" data-action="add">
+					<div class="cursor eqLogicAction" style="color:var(--main-color);" data-action="add">
 						<i class="fas fa-plus-circle"></i>
 						<br>
 						<span>{{Ajouter}}</span>
 					</div>
 					<div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
-						<i class="fas fa-wrench" style="color:rgb(180,40,40);"></i>
+						<i class="fas fa-wrench" style="color:var(--main-color);"></i>
 						<br>
 						<span>{{Configuration}}</span>
 					</div>
@@ -38,7 +38,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<div class="col-sm-2">
 					<legend><i class=" fas fa-comments"></i> {{Community}}</legend>
 					<div class="eqLogicThumbnailContainer">
-						<div class="cursor eqLogicAction logoSecondary" data-action="createCommunityPost" style="color:rgb(180,40,40);">
+						<div class="cursor eqLogicAction logoSecondary" data-action="createCommunityPost" style="color:var(--main-color);">
 							<i class="fas fa-ambulance"></i>
 							<br>
 							<span style="color:var(--txt-color)">{{Créer un post Community}}</span>

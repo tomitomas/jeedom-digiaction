@@ -1,26 +1,29 @@
-.pass_show{
-  position: relative
-} 
+:root {
+  --main-color: rgb(8, 138, 133);
+}
 
-.pass_show .eye { 
-  position: absolute; 
-  top: 60% !important; 
-  right: 20px; 
-  z-index: 1; 
-  margin-top: -10px; 
-  cursor: pointer; 
-  transition: .3s ease all; 
-} 
+.pass_show {
+  position: relative
+}
+
+.pass_show .eye {
+  position: absolute;
+  top: 60% !important;
+  right: 20px;
+  z-index: 1;
+  margin-top: -10px;
+  cursor: pointer;
+  transition: .3s ease all;
+}
 
 .noPaddingLeft {
   padding-left: 0px !important;
 }
 
-.digiaction .digiActionExample
-{
+.digiaction .digiActionExample {
   text-align: center;
   vertical-align: middle;
-  min-width:80px; 
+  min-width: 80px;
   width: auto;
   min-height: 30px !important;
   height: auto;
@@ -33,5 +36,5 @@
   -webkit-border-radius: 75px;
   font-size: 14px;
   color: rgb(255, 253, 255);
-  
+
 }
