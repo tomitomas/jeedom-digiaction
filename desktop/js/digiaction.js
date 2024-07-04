@@ -851,3 +851,43 @@ $(".customColor").each(function () {
 
   $(this).attr('style', style);
 });
+
+
+async function createCommunityPost() {
+
+  const infoPlugin = await $.post({
+    url: "core/ajax/plugin.ajax.php",
+    data: {
+      action: 'createCommunityPost',
+      type: eqType
+    },
+    cache: false,
+    dataType: 'json',
+    async: false,
+  });
+
+  if (infoPlugin.state != 'ok') {
+    $.fn.showAlert({
+      message: infoPlugin.result,
+      level: 'danger'
+    });
+    return;
+  }
+
+  var element = document.createElement('a');
+
+  element.setAttribute('href', infoPlugin.result.url);
+  element.setAttribute('target', '_blank');
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+
+}
+
+$('.eqLogicAction[data-action=createCommunityPost]').off('click').on('click', function () {
+  createCommunityPost();
+})
