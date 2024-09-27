@@ -495,6 +495,7 @@ class digiaction extends eqLogic {
       $replace['#modeAvailable#'] = $this->getAvailableModeHTML();
       $replace['#currentMode#'] = $this->getCmd(null, 'currentMode')->execCmd();
       // $replace['#message#'] = $this->getCmd(null, 'digimessage')->execCmd();
+      $replace['#randomkeys#'] = $this->getConfiguration('randomkeys', 0);
 
       return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'digiaction', 'digiaction')));
    }

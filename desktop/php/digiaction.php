@@ -154,6 +154,16 @@ $eqLogics = eqLogic::byType($plugin->getId());
 										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="autocall" />Autoriser</label>
 									</div>
 								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{Disposition aléatoire des touches numériques du clavier}}
+                                        <sup>
+											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Permet d'avoir un clavier différent à chaque utilisation.<br/>Les touches de 0 à 9 seront aléatoirement melangées pour plus de sécurité"></i>
+										</sup>
+</label>
+									<div class="col-sm-7">
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="randomkeys" />Autoriser</label>
+									</div>
+								</div>
 							</div>
 
 							<div class="col-lg-12">
@@ -253,7 +263,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<div id="div_modes" class="panel-group"></div>
 			</div><!-- /.tabpanel #actiontab-->
 
-			<!-- Onglet des Actions de l'équipement -->
+			<!-- Onglet des Utilisateurs de l'équipement -->
 			<div role="tabpanel" class="tab-pane" id="usertab">
 				<a class="btn btn-success pull-right" id="bt_addUser" style="margin-top: 5px;"><i class="fas fa-plus-circle"></i> {{Ajouter un code utilisateur}}</a><br /><br />
 				<br /><br />
