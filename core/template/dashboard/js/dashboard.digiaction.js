@@ -18,6 +18,7 @@ $('.digiaction').off('click', '.digiActionMode').on('click', '.digiActionMode', 
 **/
 
 function showDigit(_eqId, _cmdId, _timer) {
+  makePanelKeyboard($('.digiaction[data-eqlogic_id=' + _eqId + '] .digiactionPanelKeyboard'));
   showOnly($('.digiaction[data-eqlogic_id=' + _eqId + ']'), '.digiactionPanelKeyboard');
 
   $('.digiaction[data-eqlogic_id=' + _eqId + ']').find('.digiFunctionValidate').attr('digi-cmdId', _cmdId)
@@ -209,6 +210,41 @@ function countDown(time, update, complete) {
     }
     else update(Math.floor(now / 1000));
   }, 100); // the smaller this number, the more accurate the timer will be
+}
+
+function shuffle(_arr) {
+  for (let ii = _arr.length - 1; ii > 0; ii--) {
+    let jj = Math.floor(Math.random() * (ii + 1));
+    [_arr[ii], _arr[jj]] = [_arr[jj], _arr[ii]];
+  }
+  return _arr;
+}
+
+function makePanelKeyboard(_digiPanelKeyboard) {
+  let html = '';
+  let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  if (_digiPanelKeyboard.attr('data-randomkeys') == 1) {
+    arr = shuffle(arr);
+  }
+  for (let ii = 0; ii < 3; ii++) {
+    html += '<div>';
+    for (let jj = 0; jj < 3; jj++) {
+      html += '<li class="digiKeyboard">' + arr[ii * 3 + jj] + '</li>';
+    }
+    html += '</div>';
+  }
+  html += '<div>';
+  html += '<li class="digiKeyboard">A</li>';
+  html += '<li class="digiKeyboard">' + arr[arr.length - 1] + '</li>';
+  html += '<li class="digiKeyboard">B</li>';
+  html += '</div>';
+  html += '<div>';
+  html += '<li class="digiFunction digiFunctionValidate digiActionBgGreen">V</li>';
+  html += '<li class="digiReset digiActionBgYellow">RAZ</li>';
+  html += '<li class="digiFunction digiFunctionCancel digiActionBgRed">A</li>';
+  html += '</div>';
+
+  _digiPanelKeyboard.find('.digiactionPanel').html(html);
 }
 
 if (typeof jeedom.cmd.addUpdateFunction !== 'function') {
