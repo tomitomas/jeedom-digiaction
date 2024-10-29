@@ -156,10 +156,10 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label">{{Disposition aléatoire des touches numériques du clavier}}
-                                        <sup>
-											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Permet d'avoir un clavier différent à chaque utilisation.<br/>Les touches de 0 à 9 seront aléatoirement melangées pour plus de sécurité"></i>
+										<sup>
+											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Permet d'avoir un clavier différent à chaque utilisation.<br/>Les touches de 0 à 9 seront aléatoirement mélangées pour plus de sécurité"></i>
 										</sup>
-</label>
+									</label>
 									<div class="col-sm-7">
 										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="randomkeys" />Autoriser</label>
 									</div>
