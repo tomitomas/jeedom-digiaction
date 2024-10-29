@@ -182,11 +182,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Changement de mode réalisé}}
-										<sup>
-											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;"></i>
-										</sup>
-									</label>
+									<label class="col-sm-3 control-label">{{Changement de mode réalisé}}</label>
 									<div class="col-sm-7">
 										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="textOK" placeholder="{{Actions réalisées pour #modeName#}}" />
 									</div>

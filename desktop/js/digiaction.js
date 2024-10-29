@@ -286,7 +286,7 @@ function addMode(_mode, _updateMode) {
   div += '<div class="col-lg-2 col-sm-8">';
   div += `<label class="col-sm-7 control-label" style="margin-right:7px" >{{Délais (en sec)}}
             <sup>
-              <i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Délai avant l\'activation du mode"></i>
+              <i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="{{Délai avant l\'activation du mode}}"></i>
             </sup>
           </label>`;
   div += '<div class="col-sm-4">';
@@ -305,7 +305,7 @@ function addMode(_mode, _updateMode) {
   //-------
   div += '<hr/>';
   div += '<div class="div">';
-  div += '<label class="control-label" style="margin-right:7px">{{Mode Dispo}}</label>';
+  div += '<label class="control-label" style="margin-right:7px">{{Mode Disponible}}</label>';
   div += '<div class="modeAvailable">';
   div += '</div>';
   div += '</div>';
