@@ -34,7 +34,7 @@ if (!isConnect()) {
   <div class="form-group">
     <label class="col-lg-6 control-label">{{Activer plus de log}}
       <sup>
-        <i class="fas fa-question-circle floatright" title="Permet de mettre plus de log sur certaines fonctions"></i>
+        <i class="fas fa-question-circle floatright" title="{{Permet de mettre plus de log sur certaines fonctions}}"></i>
       </sup>
     </label>
     <div class="col-lg-3">

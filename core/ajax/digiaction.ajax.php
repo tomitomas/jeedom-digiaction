@@ -24,11 +24,6 @@ try {
   //     throw new Exception(__('401 - Accès non autorisé', __FILE__));
   // }
 
-  /* Fonction permettant l'envoi de l'entête 'Content-Type: application/json'
-    En V3 : indiquer l'argument 'true' pour contrôler le token d'accès Jeedom
-    En V4 : autoriser l'exécution d'une méthode 'action' en GET en indiquant le(s) nom(s) de(s) action(s) dans un tableau en argument
-  */
-  //ajax::init();
   switch (init('action')) {
     case 'updateCmdConfig':
       /*
@@ -74,17 +69,19 @@ try {
       break;
 
     case 'getAvailableMode':
+      /** @var digiaction $eqLogic */
       $eqLogic = digiaction::byId(init('eqId'));
       $modes = $eqLogic->getAvailableModeHTML();
       ajax::success(json_encode($modes));
       break;
 
     case 'verifUser':
+      /** @var digiaction $eqLogic */
       $eqLogic = digiaction::byId(init('eqId'));
       $eqLogic->checkAndUpdateCmd('digimessage', '');
       list($verif, $userName, $isPanic) = $eqLogic->verifCodeUser(init('userCode'), init('cmdId'));
       if (!$verif) {
-        $txtKO = $eqLogic->getConfiguration('textCodeKO', 'Code inconnu');
+        $txtKO = $eqLogic->getConfiguration('textCodeKO', __('Code inconnu', __FILE__));
         $eqLogic->checkAndUpdateCmd('digimessage', $txtKO);
         $data = "ko";
       } else {
@@ -93,7 +90,7 @@ try {
         $verifPreCheck = $eqLogic->doPreCheck($digiCmd->getLogicalId());
 
         if (!$verifPreCheck) {
-          $eqLogic->checkAndUpdateCmd('digimessage', 'Contrôle(s) en échec');
+          $eqLogic->checkAndUpdateCmd('digimessage', __('Contrôle(s) en échec', __FILE__));
           digiaction::addLogTemplate('PRE-CHECK FAILED - PROCEED WITH ERROR ACTION', true);
           $eqLogic->doAction($digiCmd->getLogicalId(), 'preCheckActionError');
           $data = "ko";
@@ -106,11 +103,12 @@ try {
       break;
 
     case 'verifUserAndDoAction':
+      /** @var digiaction $eqLogic */
       $eqLogic = digiaction::byId(init('eqId'));
       $eqLogic->checkAndUpdateCmd('digimessage', '');
       list($verif, $userName, $isPanic) = $eqLogic->verifCodeUser(init('userCode'), init('cmdId'));
       if (!$verif) {
-        $txtKO = $eqLogic->getConfiguration('textCodeKO', 'Code inconnu');
+        $txtKO = $eqLogic->getConfiguration('textCodeKO', __('Code inconnu', __FILE__));
         $eqLogic->checkAndUpdateCmd('digimessage', $txtKO);
         $data = "code inconnu";
       } else {
