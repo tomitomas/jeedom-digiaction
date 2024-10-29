@@ -1,7 +1,12 @@
 {
 	"id": "digiaction",
 	"name": "DigiAction",
-	"description": "Ce plugin permet d'appliquer un mode réalisant une/des action(s) sous condition(s), et d'ajouter un contrôle par saisie de mot de passe (facultatif) via un digicode.",
+	"description": {
+		"fr_FR": "Ce plugin permet d'appliquer un mode réalisant une/des action(s) sous condition(s), et d'ajouter un contrôle par saisie de mot de passe (facultatif) via un digicode.",
+		"en_US": "This plugin allows you to apply a mode that performs one or more actions under certain conditions, and to add password control (optional) via a keypad.",
+		"es_ES": "Este plugin permite aplicar un modo que realiza una o varias acciones en determinadas condiciones, y añadir el control mediante la introducción de una contraseña (opcional) a través de un teclado.",
+		"de_DE": "Mit diesem Plugin können Sie einen Modus anwenden, der eine/mehrere Aktion(en) unter bestimmten Bedingungen ausführt, und eine Steuerung durch Passworteingabe (optional) über einen Digicode hinzufügen."
+	},
 	"licence": "AGPL",
 	"author": "ToMiToMaS",
 	"require": "4.2",
@@ -17,6 +22,9 @@
 		"forum": "https://community.jeedom.com/tag/plugin-digiaction"
 	},
 	"language": [
+		"de_DE",
+		"en_US",
+		"es_ES",
 		"fr_FR"
 	],
 	"compatibility": [
