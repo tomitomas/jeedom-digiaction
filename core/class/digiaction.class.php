@@ -25,21 +25,6 @@ class digiaction extends eqLogic {
    public function __construct() {
       $this->_log_trace  = self::getTrace();
    }
-   /*     * *************************Attributs****************************** */
-
-   /*
-   * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
-   * Tableau multidimensionnel - exemple: array('custom' => true, 'custom::layout' => false)
-	public static $_widgetPossibility = array();
-   */
-
-   /*     * ***********************Methode static*************************** */
-
-   /*
-     * Fonction exécutée automatiquement toutes les minutes par Jeedom
-      public static function cron() {
-      }
-     */
 
    /*
      * Fonction exécutée automatiquement toutes les 5 minutes par Jeedom
@@ -50,35 +35,6 @@ class digiaction extends eqLogic {
       }
    }
 
-   /*
-     * Fonction exécutée automatiquement toutes les 10 minutes par Jeedom
-      public static function cron10() {
-      }
-     */
-
-   /*
-     * Fonction exécutée automatiquement toutes les 15 minutes par Jeedom
-      public static function cron15() {
-      }
-     */
-
-   /*
-     * Fonction exécutée automatiquement toutes les 30 minutes par Jeedom
-      public static function cron30() {
-      }
-     */
-
-   /*
-     * Fonction exécutée automatiquement toutes les heures par Jeedom
-      public static function cronHourly() {
-      }
-     */
-
-   /*
-     * Fonction exécutée automatiquement tous les jours par Jeedom
-      public static function cronDaily() {
-      }
-     */
 
 
 
@@ -88,26 +44,6 @@ class digiaction extends eqLogic {
       $this->setDefaultColor();
 
       $this->setIsEnable(1);
-   }
-
-   // Fonction exécutée automatiquement après la création de l'équipement 
-   public function postInsert() {
-   }
-
-   // Fonction exécutée automatiquement avant la mise à jour de l'équipement 
-   public function preUpdate() {
-   }
-
-   // Fonction exécutée automatiquement après la mise à jour de l'équipement 
-   public function postUpdate() {
-   }
-
-   // Fonction exécutée automatiquement avant la suppression de l'équipement 
-   public function preRemove() {
-   }
-
-   // Fonction exécutée automatiquement après la suppression de l'équipement 
-   public function postRemove() {
    }
 
    // Fonction exécutée automatiquement après la sauvegarde (création ou mise à jour) de l'équipement 
@@ -463,13 +399,6 @@ class digiaction extends eqLogic {
       return $checkAction;
    }
 
-   /*
-     * Non obligatoire : permet de modifier l'affichage du widget (également utilisable par les commandes)
-      public function toHtml($_version = 'dashboard') {
-
-      }
-     */
-
    public function toHtml($_version = 'dashboard') {
 
       $replace = $this->preToHtml($_version);
@@ -779,37 +708,9 @@ class digiaction extends eqLogic {
          log::add('digiaction', $level, '└────────────────────────────────────');
       }
    }
-
-   /*
-     * Non obligatoire : permet de déclencher une action après modification de variable de configuration
-    public static function postConfig_<Variable>() {
-    }
-     */
-
-   /*
-     * Non obligatoire : permet de déclencher une action avant modification de variable de configuration
-    public static function preConfig_<Variable>() {
-    }
-     */
-
-   /*     * **********************Getteur Setteur*************************** */
 }
 
 class digiactionCmd extends cmd {
-   /*     * *************************Attributs****************************** */
-
-   /*
-      public static $_widgetPossibility = array();
-    */
-
-   /*     * ***********************Methode static*************************** */
-
-
-   /*     * *********************Methode d'instance************************* */
-
-   /*
-     * Non obligatoire permet de demander de ne pas supprimer les commandes même si elles ne sont pas dans la nouvelle configuration de l'équipement envoyé en JS
-     */
    public function dontRemoveCmd() {
       return true;
    }
@@ -861,6 +762,7 @@ class digiactionCmd extends cmd {
 
          default:
             digiaction::addLogTemplate('CMD EXEC');
+            /** @var digiaction $eqLogic */
             $eqLogic = $this->getEqLogic();
 
             $currentMode = $eqLogic->getCmd(null, 'currentMode');

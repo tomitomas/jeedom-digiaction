@@ -99,7 +99,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<!-- Paramètres généraux de l'équipement -->
 				<form class="form-horizontal">
 					<fieldset>
-						<div class="col-lg-10">
+						<div class="col-lg-9">
 							<div class="col-lg-12">
 								<legend><i class="fas fa-wrench"></i> {{Général}}</legend>
 								<div class="form-group">
@@ -151,17 +151,20 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<div class="form-group">
 									<label class="col-sm-3 control-label">{{Chaque mode s'auto-appelle}}</label>
 									<div class="col-sm-7">
-										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="autocall" />Autoriser</label>
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="autocall" />{{Autoriser}}</label>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Disposition aléatoire des touches numériques du clavier}}
+									<label class="col-sm-3 control-label">{{Disposition des touches du clavier}}
 										<sup>
-											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Permet d'avoir un clavier différent à chaque utilisation.<br/>Les touches de 0 à 9 seront aléatoirement mélangées pour plus de sécurité"></i>
+											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="{{Option aléatoire permet d'avoir un clavier différent à chaque utilisation.<br/>Les touches de 0 à 9 seront aléatoirement mélangées pour plus de sécurité}}"></i>
 										</sup>
 									</label>
-									<div class="col-sm-7">
-										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="randomkeys" />Autoriser</label>
+									<div class="col-sm-2">
+										<select class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="randomkeys">
+											<option value="">{{Standard}}</option>
+											<option value="1">{{Aléatoire}}</option>
+										</select>
 									</div>
 								</div>
 							</div>
@@ -169,15 +172,19 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<div class="col-lg-12">
 								<legend><i class="fas fa-spell-check"></i> {{Textes}}</legend>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Temps d'affichage des messages}}</label>
+									<label class="col-sm-3 control-label">{{Temps d'affichage des messages}}
+										<sup>
+											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="{{en secondes}}"></i>
+										</sup>
+									</label>
 									<div class="col-sm-7">
-										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="countdown" placeholder="{{(en secondes) -1 illimité / 10sec par défaut}}" />
+										<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="countdown" placeholder="{{-1 illimité / 10sec par défaut}}" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label">{{Changement de mode réalisé}}
 										<sup>
-											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="#eqId# => numéro de l’équipement DigiAction<br/>#eqName# => nom de l’équipement DigiAction<br/>#modeName# => nom du mode qui tente d’être activé<br/>#nbWrongPwd# => nombre de mauvais code saisi"></i>
+											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;"></i>
 										</sup>
 									</label>
 									<div class="col-sm-7">
@@ -206,7 +213,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<label class="col-sm-3 control-label">
 										{{Par défaut}}
 										<sup>
-											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Couleur que prendra un mode si aucun icône n'est défini"></i>
+											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="{{Couleur que prendra un mode si aucun icône n'est défini}}"></i>
 										</sup>
 									</label>
 									<div class="col-sm-2">
@@ -215,15 +222,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									</div>
 									<div class="col-sm-2 ">
 										<ul class="digiaction">
-											<li class="digiActionExample">Exemple</li>
-											<a class="btReinitColor" style="padding-left:10px" title="Reinitialer avec les couleurs par défaut"><i class="fas fa-eraser"></i></a>
+											<li class="digiActionExample">{{Exemple}}</li>
+											<a class="btReinitColor" style="padding-left:10px" title="{{Reinitialer avec les couleurs par défaut}}"><i class="fas fa-eraser"></i></a>
 										</ul>
 									</div>
 								</div>
 								<div class="form-group autoCallActif customColor" style="display:none;">
 									<label class="col-sm-3 control-label">{{Si le mode est actif}}
 										<sup>
-											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Couleur que prendra le mode actif"></i>
+											<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="{{Couleur que prendra le mode actif}}"></i>
 										</sup>
 									</label>
 									<div class="col-sm-2">
@@ -232,8 +239,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									</div>
 									<div class="col-sm-2 ">
 										<ul class="digiaction">
-											<li class="digiActionExample">Exemple</li>
-											<a class="btReinitColor" style="padding-left:10px" title="Reinitialer avec les couleurs par défaut"><i class="fas fa-eraser"></i></a>
+											<li class="digiActionExample">{{Exemple}}</li>
+											<a class="btReinitColor" style="padding-left:10px" title="{{Reinitialer avec les couleurs par défaut}}"><i class="fas fa-eraser"></i></a>
 										</ul>
 									</div>
 								</div>
@@ -244,11 +251,26 @@ $eqLogics = eqLogic::byType($plugin->getId());
 
 						<!-- Partie droite de l'onglet "Équipement" -->
 						<!-- Affiche l'icône du plugin par défaut mais vous pouvez y afficher les informations de votre choix -->
-						<div class="col-lg-2">
+						<div class="col-lg-3">
 							<legend><i class="fas fa-info"></i> {{Informations}}</legend>
 							<div class="form-group">
 								<div class="text-center">
 									<img name="icon_visu" src="<?= $plugin->getPathImgIcon(); ?>" style="max-width:160px;" />
+								</div>
+							</div>
+
+							<div class="col-lg-12 noDate">
+								<legend><i class="fas fa-paint-brush"></i> {{Personnalisation}}</legend>
+								<div class="col-sm-12">
+									<span class="">
+										{{Pour les options des commandes dans les rappels, vous pouvez utiliser les tags suivants qui seront automatiquement remplacés lors de l'action}} :
+										<ul>
+											<li>#eqId# &rarr; numéro de l'équipement DigiAction</li>
+											<li>#eqName# &rarr; nom de l'équipement DigiAction</li>
+											<li>#modeName# &rarr; nom du mode qui tente d'être activé</li>
+											<li>#nbWrongPwd# &rarr; nombre de mauvais code saisi</li>
+										</ul>
+									</span>
 								</div>
 							</div>
 						</div>
@@ -263,7 +285,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<div id="div_modes" class="panel-group"></div>
 			</div><!-- /.tabpanel #actiontab-->
 
-			<!-- Onglet des Utilisateurs de l'équipement -->
+			<!-- Onglet des Actions de l'équipement -->
 			<div role="tabpanel" class="tab-pane" id="usertab">
 				<a class="btn btn-success pull-right" id="bt_addUser" style="margin-top: 5px;"><i class="fas fa-plus-circle"></i> {{Ajouter un code utilisateur}}</a><br /><br />
 				<br /><br />
@@ -274,22 +296,22 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<th>{{Actif}}</th>
 								<th>{{Panic}}
 									<sup>
-										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Spécifie l'utilisateur/code à utiliser pour activer les opérations correspondant aux actions 'panic'"></i>
+										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="{{Spécifie l'utilisateur/code à utiliser pour activer les opérations correspondant aux actions 'panic'}}"></i>
 									</sup>
 								</th>
 								<th>{{Nom}}</th>
 								<th>{{Code}}
 									<sup>
-										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Uniquement A ou B ou chiffres de 0 à 9"></i>
+										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="{{Uniquement A ou B ou chiffres de 0 à 9}}"></i>
 									</sup>
 								</th>
 								<th>{{Début}}
 									<sup>
-										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="Si non renseigné, actif immédiatement"></i>
+										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="{{Si non renseigné, actif immédiatement}}"></i>
 									</sup>
 								</th>
 								<th>{{Durée}}<sup>
-										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="(en minutes)<br/>si vide, alors infini"></i>
+										<i class="fas fa-question-circle floatright" style="color: var(--al-info-color) !important;" title="{{(en minutes)<br/>si vide, alors infini}}"></i>
 									</sup></th>
 								<th>{{Début de validité}}</th>
 								<th>{{Fin de validité}}</th>
