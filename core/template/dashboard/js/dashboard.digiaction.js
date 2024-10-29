@@ -222,20 +222,20 @@ function shuffle(_arr) {
 
 function makePanelKeyboard(_digiPanelKeyboard) {
   let html = '';
-  let arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   if (_digiPanelKeyboard.attr('data-randomkeys') == 1) {
     arr = shuffle(arr);
   }
   for (let ii = 0; ii < 3; ii++) {
     html += '<div>';
     for (let jj = 0; jj < 3; jj++) {
-      html += '<li class="digiKeyboard">'+arr[ii*3+jj]+'</li>';
+      html += '<li class="digiKeyboard">' + arr[ii * 3 + jj] + '</li>';
     }
     html += '</div>';
   }
   html += '<div>';
   html += '<li class="digiKeyboard">A</li>';
-  html += '<li class="digiKeyboard">'+arr[arr.length - 1]+'</li>';
+  html += '<li class="digiKeyboard">' + arr[arr.length - 1] + '</li>';
   html += '<li class="digiKeyboard">B</li>';
   html += '</div>';
   html += '<div>';
@@ -243,7 +243,7 @@ function makePanelKeyboard(_digiPanelKeyboard) {
   html += '<li class="digiReset digiActionBgYellow">RAZ</li>';
   html += '<li class="digiFunction digiFunctionCancel digiActionBgRed">A</li>';
   html += '</div>';
-                
+
   _digiPanelKeyboard.find('.digiactionPanel').html(html);
 }
 
